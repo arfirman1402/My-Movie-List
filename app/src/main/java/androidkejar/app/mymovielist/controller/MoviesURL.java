@@ -33,4 +33,12 @@ public class MoviesURL {
     public static String getMovieById(int idMovies) {
         return BASE_URL + "/movie/" + idMovies + "?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
     }
+
+    public static String getMovieCastById(int idMovies) {
+        return BASE_URL + "/movie/" + idMovies + "/credits" + "?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    }
+
+    public static String getMovieTrailerById(int idMovies) {
+        return BASE_URL + "/movie/" + idMovies + "/videos" + "?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    }
 }

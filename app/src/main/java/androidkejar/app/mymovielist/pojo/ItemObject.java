@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist;
+package androidkejar.app.mymovielist.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ItemObject {
 
-    public static class ListOfMovie {
+    public class ListOfMovie {
         @SerializedName("results")
         private List<MovieDetail> results;
 
@@ -262,6 +262,124 @@ public class ItemObject {
 
         public int getVoteCount() {
             return voteCount;
+        }
+    }
+
+    public class Credits {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("cast")
+        private List<Cast> casts;
+
+        @SerializedName("crew")
+        private List<Crew> crews;
+
+        public class Cast {
+            @SerializedName("cast_id")
+            private int castId;
+
+            @SerializedName("character")
+            private String character;
+
+            @SerializedName("credit_id")
+            private String creditId;
+
+            @SerializedName("id")
+            private int id;
+
+            @SerializedName("name")
+            private String name;
+
+            @SerializedName("order")
+            private int order;
+
+            @SerializedName("profile_path")
+            private String profilePath;
+
+            public int getCastId() {
+                return castId;
+            }
+
+            public String getCharacter() {
+                return character;
+            }
+
+            public String getCreditId() {
+                return creditId;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getOrder() {
+                return order;
+            }
+
+            public String getProfilePath() {
+                return profilePath;
+            }
+        }
+
+        public class Crew {
+            @SerializedName("credit_id")
+            private String creditId;
+
+            @SerializedName("department")
+            private String department;
+
+            @SerializedName("id")
+            private int id;
+
+            @SerializedName("job")
+            private String job;
+
+            @SerializedName("name")
+            private String name;
+
+            @SerializedName("profile_path")
+            private String profilePath;
+
+            public String getCreditId() {
+                return creditId;
+            }
+
+            public String getDepartment() {
+                return department;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public String getJob() {
+                return job;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getProfilePath() {
+                return profilePath;
+            }
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public List<Cast> getCasts() {
+            return casts;
+        }
+
+        public List<Crew> getCrews() {
+            return crews;
         }
     }
 }

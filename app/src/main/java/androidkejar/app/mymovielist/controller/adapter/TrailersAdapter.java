@@ -25,12 +25,12 @@ import androidkejar.app.mymovielist.controller.MoviesURL;
  * Created by alodokter-it on 12/11/16.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
+public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHolder> {
 
     Context context;
     List<ItemObject.ListOfMovie.MovieDetail> itemObjects;
 
-    public MoviesAdapter(Context context, List<ItemObject.ListOfMovie.MovieDetail> itemObjects) {
+    public TrailersAdapter(Context context, List<ItemObject.ListOfMovie.MovieDetail> itemObjects) {
         this.context = context;
         this.itemObjects = itemObjects;
     }

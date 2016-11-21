@@ -1,73 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="androidkejar.app.mymovielist.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:background="@color/colorBlackTransparent">
-
-        <TextView
-            android:id="@+id/main_movie_bigtitle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="NOW PLAYING"
-            android:textColor="@color/colorWhite"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ImageView
-            android:id="@+id/main_movie_pic"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorBlackTransparent"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:background="@color/colorBlackTransparent">
 
             <TextView
-                android:id="@+id/main_movie_title"
+                android:id="@+id/main_movie_bigtitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Movie Title"
+                android:text="NOW PLAYING"
                 android:textColor="@color/colorWhite"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/main_movie_desc"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/main_movie_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_launcher" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Movie Description Movie Description"
-                android:textColor="@color/colorWhite"
-                android:visibility="gone" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorBlackTransparent"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_movie_list"
+                <TextView
+                    android:id="@+id/main_movie_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:text="Movie Title"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_movie_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_movie_loading"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@color/colorBlackTransparent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</RelativeLayout>

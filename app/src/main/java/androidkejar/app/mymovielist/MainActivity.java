@@ -1,6 +1,7 @@
 package androidkejar.app.mymovielist;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -10,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +28,9 @@ import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.controller.adapter.MoviesAdapter;
+import androidkejar.app.mymovielist.pojo.ItemObject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesResult {
     private RecyclerView mainMovieList;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
@@ -34,10 +38,15 @@ public class MainActivity extends AppCompatActivity {
     private Runnable changeHeaderRunnable;
     private ImageView mainMoviePic;
     private TextView mainMovieTitle;
-    private TextView mainMovieDesc;
     private int randomList = -1;
     private String[] sortByList = new String[]{"Now Playing", "Top Rated", "Popular", "Coming Soon"};
     private TextView mainMovieBigTitle;
+    private RelativeLayout mainMovieLoading;
+
+    private String urlNowPlaying = MoviesURL.getListMovieNowPlaying();
+    private String urlTopRated = MoviesURL.getListMovieTopRated();
+    private String urlPopular = MoviesURL.getListMoviePopular();
+    private String urlComingSoon = MoviesURL.getListMovieUpcoming();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,51 +56,23 @@ public class MainActivity extends AppCompatActivity {
         mainMovieList = (RecyclerView) findViewById(R.id.main_movie_list);
         mainMoviePic = (ImageView) findViewById(R.id.main_movie_pic);
         mainMovieTitle = (TextView) findViewById(R.id.main_movie_title);
-        mainMovieDesc = (TextView) findViewById(R.id.main_movie_desc);
         mainMovieBigTitle = (TextView) findViewById(R.id.main_movie_bigtitle);
+        mainMovieLoading = (RelativeLayout) findViewById(R.id.main_movie_loading);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         mainMovieList.setLayoutManager(gridLayoutManager);
         mainMovieList.setHasFixedSize(true);
 
         mainMovieBigTitle.setText(sortByList[0].toUpperCase(Locale.getDefault()));
-        nowPlayingMovie();
+
+        mainMovieLoading.setVisibility(View.VISIBLE);
+
+        getMovies(urlNowPlaying);
     }
 
-    private void nowPlayingMovie() {
+    private void getMovies(String url) {
         MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getListMovieNowPlaying();
-
-        Log.d("nowPlayingMovie", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new NowPlayingResult());
-    }
-
-    private void topRatedMovie() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getListMovieTopRated();
-
-        Log.d("topRatedMovie", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new NowPlayingResult());
-    }
-
-    private void popularMovie() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getListMoviePopular();
-
-        Log.d("popularMovie", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new NowPlayingResult());
-    }
-
-    private void comingSoonMovie() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getListMovieUpcoming();
-
-        Log.d("comingSoonMovie", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new NowPlayingResult());
+        connecting.getData(getApplicationContext(), url, this);
     }
 
     private void convertToMovies(String response) {
@@ -103,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         MoviesAdapter moviesAdapter = new MoviesAdapter(this, movieList);
         mainMovieList.setAdapter(moviesAdapter);
+
+        mainMovieLoading.setVisibility(View.GONE);
 
         setHeaderLayout();
     }
@@ -132,12 +115,29 @@ public class MainActivity extends AppCompatActivity {
         randomList = tempRandomList;
 
         mainMovieTitle.setText(movieList.get(randomList).getTitle());
-        mainMovieDesc.setText(movieList.get(randomList).getOverview());
 
-        Glide.with(getApplicationContext())
-                .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdrop()))
-                .centerCrop()
-                .into(mainMoviePic);
+        if (movieList.get(randomList).getBackdrop() != null) {
+            Glide.with(getApplicationContext())
+                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdrop()))
+                    .centerCrop()
+                    .into(mainMoviePic);
+        } else {
+            Glide.with(getApplicationContext())
+                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getPoster()))
+                    .centerCrop()
+                    .into(mainMoviePic);
+        }
+
+
+        mainMoviePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+                Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+                i.putExtra("id", movieList.get(randomList).getId());
+                startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -175,37 +175,34 @@ public class MainActivity extends AppCompatActivity {
         mainMovieBigTitle.setText(sortByList[i].toUpperCase(Locale.getDefault()));
         changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
         mainMovieList.removeAllViews();
-
+        mainMovieLoading.setVisibility(View.VISIBLE);
         switch (i) {
             case 0:
-                nowPlayingMovie();
+                getMovies(urlNowPlaying);
                 break;
             case 1:
-                topRatedMovie();
+                getMovies(urlTopRated);
                 break;
             case 2:
-                popularMovie();
+                getMovies(urlPopular);
                 break;
             case 3:
-                comingSoonMovie();
+                getMovies(urlComingSoon);
                 break;
             default:
                 break;
         }
     }
 
-    private class NowPlayingResult implements MoviesResult {
+    @Override
+    public void resultData(String response) {
+        Log.d("resultData", response);
+        convertToMovies(response);
+    }
 
-        @Override
-        public void resultData(String response) {
-            Log.d("resultData", response);
-            convertToMovies(response);
-        }
-
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            Toast.makeText(getApplicationContext(), "Koneksi bermasalah. Silahkan ulangi kembali", Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public void errorResultData(String errorResponse) {
+        Log.e("errorResultData", errorResponse);
+        Toast.makeText(getApplicationContext(), "Koneksi bermasalah. Silahkan ulangi kembali", Toast.LENGTH_LONG).show();
     }
 }
