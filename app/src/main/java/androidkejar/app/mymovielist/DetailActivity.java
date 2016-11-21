@@ -2,6 +2,8 @@ package androidkejar.app.mymovielist;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import java.util.List;
 import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
+import androidkejar.app.mymovielist.controller.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 
 /**
@@ -34,8 +37,12 @@ public class DetailActivity extends AppCompatActivity {
     private TextView detailMovieRating;
     private TextView detailMovieReleaseDate;
     private RelativeLayout detailMovieLoading;
+    private RecyclerView detailMovieCasts;
+    private RecyclerView detailMovieCrews;
+    private RecyclerView detailMovieTrailers;
     private int idMovies;
     private List<ItemObject.Credits.Cast> castList;
+    private List<ItemObject.ListOfVideo.Video> trailerList;
     private List<ItemObject.Credits.Crew> crewList;
 
     @Override
@@ -51,6 +58,13 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieRating = (TextView) findViewById(R.id.detail_movie_rating);
         detailMovieReleaseDate = (TextView) findViewById(R.id.detail_movie_releasedate);
         detailMovieLoading = (RelativeLayout) findViewById(R.id.detail_movie_loading);
+        detailMovieCasts = (RecyclerView) findViewById(R.id.detail_movie_casts);
+        detailMovieCrews = (RecyclerView) findViewById(R.id.detail_movie_crews);
+        detailMovieTrailers = (RecyclerView) findViewById(R.id.detail_movie_trailers);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        detailMovieCasts.setLayoutManager(linearLayoutManager);
+        detailMovieCasts.setHasFixedSize(true);
 
         idMovies = getIntent().getExtras().getInt("id");
 
@@ -134,7 +148,23 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    private void showCastsMovie(String response) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        ItemObject.Credits allCredits = gson.fromJson(response, ItemObject.Credits.class);
+
+        castList = allCredits.getCasts();
+        CastsAdapter castsAdapter = new CastsAdapter(this, castList);
+        detailMovieCasts.setAdapter(castsAdapter);
+
+        crewList = allCredits.getCrews();
+
+        getTrailers();
+    }
+
     private class MovieCastResult implements MoviesResult {
+
         @Override
         public void resultData(String response) {
             Log.d("resultData", "response = " + response);
@@ -145,19 +175,7 @@ public class DetailActivity extends AppCompatActivity {
         public void errorResultData(String errorResponse) {
             Log.e("errorResultData", errorResponse);
         }
-    }
 
-    private void showCastsMovie(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        ItemObject.Credits allCredits = gson.fromJson(response, ItemObject.Credits.class);
-
-        castList = allCredits.getCasts();
-
-        crewList = allCredits.getCrews();
-
-        getTrailers();
     }
 
     private void getTrailers() {
@@ -184,6 +202,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void showTrailersMovie(String response) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        ItemObject.ListOfVideo allVideos = gson.fromJson(response, ItemObject.ListOfVideo.class);
+
+        trailerList = allVideos.getResults();
 
         detailMovieLoading.setVisibility(View.GONE);
     }
