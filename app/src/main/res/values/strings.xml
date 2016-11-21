@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Movie List</string>
+    <string name="sort_by">Sort by</string>
 </resources>

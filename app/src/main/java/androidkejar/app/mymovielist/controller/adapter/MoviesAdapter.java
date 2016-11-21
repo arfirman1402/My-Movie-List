@@ -1,6 +1,7 @@
 package androidkejar.app.mymovielist.controller.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import androidkejar.app.mymovielist.DetailActivity;
 import androidkejar.app.mymovielist.ItemObject;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesURL;
@@ -21,12 +23,12 @@ import androidkejar.app.mymovielist.controller.MoviesURL;
  * Created by alodokter-it on 12/11/16.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> implements View.OnClickListener {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
 
     Context context;
-    List<ItemObject.MovieDetail> itemObjects;
+    List<ItemObject.ListOfMovie.MovieDetail> itemObjects;
 
-    public MoviesAdapter(Context context, List<ItemObject.MovieDetail> itemObjects) {
+    public MoviesAdapter(Context context, List<ItemObject.ListOfMovie.MovieDetail> itemObjects) {
         this.context = context;
         this.itemObjects = itemObjects;
     }
@@ -42,22 +44,27 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
         holder.movieCardviewTitle.setText(itemObjects.get(position).getTitle());
         holder.movieCardviewRating.setText(itemObjects.get(position).getVoteAverage() + "");
         Glide.with(context)
-                .load(MoviesURL.getUrlImage() + itemObjects.get(position).getPoster())
-                .crossFade()
+                .load(MoviesURL.getUrlImage(itemObjects.get(position).getPoster()))
                 .centerCrop()
                 .into(holder.movieCardviewPic);
-        holder.movieCardviewLayout.setOnClickListener(this);
+        /*Glide.with(context)
+                .load(itemObjects.get(holder.getAdapterPosition()).getPosterDrawable())
+                .centerCrop()
+                .into(holder.movieCardviewPic);*/
+        holder.movieCardviewLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, DetailActivity.class);
+                i.putExtra("id", itemObjects.get(holder.getAdapterPosition()).getId());
+                context.startActivity(i);
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
         return itemObjects.size();
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
     class ListHolder extends RecyclerView.ViewHolder {
