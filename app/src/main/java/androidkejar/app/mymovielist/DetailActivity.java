@@ -21,6 +21,7 @@ import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.controller.adapter.CastsAdapter;
+import androidkejar.app.mymovielist.controller.adapter.CrewsAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 
 /**
@@ -62,9 +63,13 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCrews = (RecyclerView) findViewById(R.id.detail_movie_crews);
         detailMovieTrailers = (RecyclerView) findViewById(R.id.detail_movie_trailers);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        detailMovieCasts.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager linearLayoutManagerCasts = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        detailMovieCasts.setLayoutManager(linearLayoutManagerCasts);
         detailMovieCasts.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManagerCrews = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        detailMovieCrews.setLayoutManager(linearLayoutManagerCrews);
+        detailMovieCrews.setHasFixedSize(true);
 
         idMovies = getIntent().getExtras().getInt("id");
 
@@ -159,6 +164,8 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCasts.setAdapter(castsAdapter);
 
         crewList = allCredits.getCrews();
+        CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
+        detailMovieCrews.setAdapter(crewsAdapter);
 
         getTrailers();
     }

@@ -2,10 +2,13 @@ package androidkejar.app.mymovielist;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     private String[] sortByList = new String[]{"Now Playing", "Top Rated", "Popular", "Coming Soon"};
     private TextView mainMovieBigTitle;
     private RelativeLayout mainMovieLoading;
-
+    private SwipeRefreshLayout mainMovieRefresh;
+    private String urlList;
     private String urlNowPlaying = MoviesURL.getListMovieNowPlaying();
     private String urlTopRated = MoviesURL.getListMovieTopRated();
     private String urlPopular = MoviesURL.getListMoviePopular();
@@ -58,16 +62,29 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieTitle = (TextView) findViewById(R.id.main_movie_title);
         mainMovieBigTitle = (TextView) findViewById(R.id.main_movie_bigtitle);
         mainMovieLoading = (RelativeLayout) findViewById(R.id.main_movie_loading);
+        mainMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.main_movie_refresh);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         mainMovieList.setLayoutManager(gridLayoutManager);
         mainMovieList.setHasFixedSize(true);
 
+        mainMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
+        mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+                mainMovieList.removeAllViews();
+                getMovies(urlList);
+                mainMovieRefresh.setRefreshing(false);
+            }
+        });
+
         mainMovieBigTitle.setText(sortByList[0].toUpperCase(Locale.getDefault()));
 
         mainMovieLoading.setVisibility(View.VISIBLE);
 
-        getMovies(urlNowPlaying);
+        urlList = urlNowPlaying;
+        getMovies(urlList);
     }
 
     private void getMovies(String url) {
@@ -178,20 +195,21 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieLoading.setVisibility(View.VISIBLE);
         switch (i) {
             case 0:
-                getMovies(urlNowPlaying);
+                urlList = urlNowPlaying;
                 break;
             case 1:
-                getMovies(urlTopRated);
+                urlList = urlTopRated;
                 break;
             case 2:
-                getMovies(urlPopular);
+                urlList = urlPopular;
                 break;
             case 3:
-                getMovies(urlComingSoon);
+                urlList = urlComingSoon;
                 break;
             default:
                 break;
         }
+        getMovies(urlList);
     }
 
     @Override

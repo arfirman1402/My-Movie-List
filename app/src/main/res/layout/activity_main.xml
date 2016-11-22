@@ -60,11 +60,21 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/main_movie_list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/main_movie_refresh"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_weight="2">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/main_movie_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="true"
+                android:padding="10dp" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
     </LinearLayout>
 
     <RelativeLayout

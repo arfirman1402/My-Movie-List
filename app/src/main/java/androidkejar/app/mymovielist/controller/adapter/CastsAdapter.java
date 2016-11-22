@@ -42,6 +42,7 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> 
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
         holder.detailCastsName.setText(itemObjects.get(position).getName());
+        holder.detailCastsCharacter.setText(itemObjects.get(position).getCharacter());
         Glide.with(context)
                 .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
                 .centerCrop()
@@ -72,12 +73,14 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> 
 
     class ListHolder extends RecyclerView.ViewHolder {
         TextView detailCastsName;
+        TextView detailCastsCharacter;
         ImageView detailCastsPic;
         CardView detailCastsLayout;
 
         ListHolder(View itemView) {
             super(itemView);
             detailCastsName = (TextView) itemView.findViewById(R.id.detail_casts_name);
+            detailCastsCharacter = (TextView) itemView.findViewById(R.id.detail_casts_character);
             detailCastsPic = (ImageView) itemView.findViewById(R.id.detail_casts_pic);
             detailCastsLayout = (CardView) itemView.findViewById(R.id.detail_casts_layout);
         }
