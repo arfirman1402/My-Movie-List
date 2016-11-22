@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.controller.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.controller.adapter.CrewsAdapter;
+import androidkejar.app.mymovielist.controller.adapter.TrailersAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 
 /**
@@ -41,16 +43,16 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView detailMovieCasts;
     private RecyclerView detailMovieCrews;
     private RecyclerView detailMovieTrailers;
+    private LinearLayout detailMovieLayout;
+
     private int idMovies;
-    private List<ItemObject.Credits.Cast> castList;
-    private List<ItemObject.ListOfVideo.Video> trailerList;
-    private List<ItemObject.Credits.Crew> crewList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        detailMovieLayout = (LinearLayout) findViewById(R.id.detail_movie_layout);
         detailMoviePic = (ImageView) findViewById(R.id.detail_movie_pic);
         detailMovieTitle = (TextView) findViewById(R.id.detail_movie_title);
         detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
@@ -71,8 +73,13 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCrews.setLayoutManager(linearLayoutManagerCrews);
         detailMovieCrews.setHasFixedSize(true);
 
+        LinearLayoutManager linearLayoutManagerTrailers = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        detailMovieTrailers.setLayoutManager(linearLayoutManagerTrailers);
+        detailMovieTrailers.setHasFixedSize(true);
+
         idMovies = getIntent().getExtras().getInt("id");
 
+        detailMovieLayout.setVisibility(View.GONE);
         detailMovieLoading.setVisibility(View.VISIBLE);
 
         getMovies();
@@ -127,7 +134,17 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieRating.setText(myMovie.getVoteAverage() + "");
         detailMovieReleaseDate.setText(myMovie.getReleaseDate());
 
+        getReviews();
         getCasts();
+    }
+
+    private void getReviews() {
+        MoviesConnecting connecting = new MoviesConnecting();
+        String url = MoviesURL.getMovieReviewById(idMovies);
+
+        Log.d("getReviews", "url = " + url);
+
+        connecting.getData(getApplicationContext(), url, new MovieReviewResult());
     }
 
     private void getCasts() {
@@ -159,11 +176,11 @@ public class DetailActivity extends AppCompatActivity {
 
         ItemObject.Credits allCredits = gson.fromJson(response, ItemObject.Credits.class);
 
-        castList = allCredits.getCasts();
+        List<ItemObject.Credits.Cast> castList = allCredits.getCasts();
         CastsAdapter castsAdapter = new CastsAdapter(this, castList);
         detailMovieCasts.setAdapter(castsAdapter);
 
-        crewList = allCredits.getCrews();
+        List<ItemObject.Credits.Crew> crewList = allCredits.getCrews();
         CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
         detailMovieCrews.setAdapter(crewsAdapter);
 
@@ -214,8 +231,35 @@ public class DetailActivity extends AppCompatActivity {
 
         ItemObject.ListOfVideo allVideos = gson.fromJson(response, ItemObject.ListOfVideo.class);
 
-        trailerList = allVideos.getResults();
+        List<ItemObject.ListOfVideo.Video> trailerList = allVideos.getResults();
+
+        TrailersAdapter trailersAdapter = new TrailersAdapter(this, trailerList);
+        detailMovieTrailers.setAdapter(trailersAdapter);
 
         detailMovieLoading.setVisibility(View.GONE);
+        detailMovieLayout.setVisibility(View.VISIBLE);
+    }
+
+    private class MovieReviewResult implements MoviesResult {
+
+        @Override
+        public void resultData(String response) {
+            Log.d("resultData", "response = " + response);
+            showReviewsMovie(response);
+        }
+
+        @Override
+        public void errorResultData(String errorResponse) {
+            Log.e("errorResultData", errorResponse);
+        }
+    }
+
+    private void showReviewsMovie(String response) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        ItemObject.ListOfReview allReviews = gson.fromJson(response, ItemObject.ListOfReview.class);
+
+        List<ItemObject.ListOfReview.Review> reviewList = allReviews.getResults();
     }
 }

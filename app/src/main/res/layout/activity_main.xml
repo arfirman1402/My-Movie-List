@@ -7,6 +7,7 @@
     tools:context="androidkejar.app.mymovielist.MainActivity">
 
     <LinearLayout
+        android:id="@+id/main_movie_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

@@ -41,4 +41,8 @@ public class MoviesURL {
     public static String getMovieTrailerById(int idMovies) {
         return BASE_URL + "/movie/" + idMovies + "/videos" + "?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
     }
+
+    public static String getMovieReviewById(int idMovies) {
+        return BASE_URL + "/movie/" + idMovies + "/reviews" + "?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    }
 }

@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,18 +35,20 @@ import androidkejar.app.mymovielist.pojo.ItemObject;
 
 public class MainActivity extends AppCompatActivity implements MoviesResult {
     private RecyclerView mainMovieList;
+    private LinearLayout mainMovieLayout;
+    private ImageView mainMoviePic;
+    private TextView mainMovieTitle;
+    private TextView mainMovieBigTitle;
+    private RelativeLayout mainMovieLoading;
+    private SwipeRefreshLayout mainMovieRefresh;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
     private Handler changeHeaderHandler;
     private Runnable changeHeaderRunnable;
-    private ImageView mainMoviePic;
-    private TextView mainMovieTitle;
     private int randomList = -1;
-    private String[] sortByList = new String[]{"Now Playing", "Top Rated", "Popular", "Coming Soon"};
-    private TextView mainMovieBigTitle;
-    private RelativeLayout mainMovieLoading;
-    private SwipeRefreshLayout mainMovieRefresh;
     private String urlList;
+
+    private String[] sortByList = new String[]{"Now Playing", "Top Rated", "Popular", "Coming Soon"};
     private String urlNowPlaying = MoviesURL.getListMovieNowPlaying();
     private String urlTopRated = MoviesURL.getListMovieTopRated();
     private String urlPopular = MoviesURL.getListMoviePopular();
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainMovieLayout = (LinearLayout) findViewById(R.id.main_movie_layout);
         mainMovieList = (RecyclerView) findViewById(R.id.main_movie_list);
         mainMoviePic = (ImageView) findViewById(R.id.main_movie_pic);
         mainMovieTitle = (TextView) findViewById(R.id.main_movie_title);
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
 
         mainMovieBigTitle.setText(sortByList[0].toUpperCase(Locale.getDefault()));
 
+        mainMovieLayout.setVisibility(View.GONE);
         mainMovieLoading.setVisibility(View.VISIBLE);
 
         urlList = urlNowPlaying;
@@ -103,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieList.setAdapter(moviesAdapter);
 
         mainMovieLoading.setVisibility(View.GONE);
+        mainMovieLayout.setVisibility(View.VISIBLE);
 
         setHeaderLayout();
     }
@@ -192,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieBigTitle.setText(sortByList[i].toUpperCase(Locale.getDefault()));
         changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
         mainMovieList.removeAllViews();
+        mainMovieLayout.setVisibility(View.GONE);
         mainMovieLoading.setVisibility(View.VISIBLE);
         switch (i) {
             case 0:

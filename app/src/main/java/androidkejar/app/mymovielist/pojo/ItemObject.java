@@ -456,4 +456,71 @@ public class ItemObject {
             return results;
         }
     }
+
+    public class ListOfReview {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("pages")
+        private int pages;
+
+        @SerializedName("results")
+        private List<Review> results;
+
+        public class Review {
+            @SerializedName("id")
+            private String id;
+
+            @SerializedName("author")
+            private String author;
+
+            @SerializedName("content")
+            private String content;
+
+            @SerializedName("url")
+            private String url;
+
+            public String getId() {
+                return id;
+            }
+
+            public String getAuthor() {
+                return author;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public String getUrl() {
+                return url;
+            }
+        }
+
+        @SerializedName("total_pages")
+        private int totalPages;
+
+        @SerializedName("total_results")
+        private int totalResults;
+
+        public int getId() {
+            return id;
+        }
+
+        public int getPages() {
+            return pages;
+        }
+
+        public List<Review> getResults() {
+            return results;
+        }
+
+        public int getTotalPages() {
+            return totalPages;
+        }
+
+        public int getTotalResults() {
+            return totalResults;
+        }
+    }
 }
