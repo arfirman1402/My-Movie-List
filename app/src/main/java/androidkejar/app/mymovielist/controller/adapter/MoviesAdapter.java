@@ -17,9 +17,9 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import androidkejar.app.mymovielist.DetailActivity;
-import androidkejar.app.mymovielist.pojo.ItemObject;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesURL;
+import androidkejar.app.mymovielist.pojo.ItemObject;
 
 /**
  * Created by alodokter-it on 12/11/16.
@@ -65,8 +65,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
                 dialog.setContentView(R.layout.main_movie_bigpicture);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
                 TextView textView = (TextView) dialog.findViewById(R.id.bigpicture_title);
-                imageView.setImageDrawable(holder.movieCardviewPic.getDrawable());
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Glide.with(context)
+                        .load(MoviesURL.getUrlImage(itemObjects.get(holder.getAdapterPosition()).getPoster()))
+                        .centerCrop()
+                        .into(imageView);
                 textView.setText(itemObjects.get(holder.getAdapterPosition()).getTitle());
                 dialog.show();
                 return false;

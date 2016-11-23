@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     private TextView mainMovieBigTitle;
     private RelativeLayout mainMovieLoading;
     private SwipeRefreshLayout mainMovieRefresh;
+    private SearchView mainMovieSearch;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
     private Handler changeHeaderHandler;
@@ -93,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
 
     private void getMovies(String url) {
         MoviesConnecting connecting = new MoviesConnecting();
+
+        Log.d("getMovies", "url = " + url);
+
         connecting.getData(getApplicationContext(), url, this);
     }
 
@@ -165,6 +170,32 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mainMovieSearch = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mainMovieSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                /*Toast.makeText(getApplication(), "Searching" ,Toast.LENGTH_LONG).show();
+                String url = "";
+                url = "http://api.themoviedb.org/3/search/movie?" +
+                        FilmCategory +
+                        "&query=" + query +
+                        "&api_key=" + API_Key;
+                MyParsingGson(url);*/
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mainMovieBigTitle.setText(newText.toUpperCase(Locale.getDefault()));
+                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+                mainMovieList.removeAllViews();
+                mainMovieLayout.setVisibility(View.GONE);
+                mainMovieLoading.setVisibility(View.VISIBLE);
+                String strURL = MoviesURL.getListMovieBasedOnWord(newText);
+                getMovies(strURL);
+                return false;
+            }
+        });
         return true;
     }
 

@@ -1,11 +1,13 @@
 package androidkejar.app.mymovielist;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -105,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
-        ItemObject.Movie myMovie = gson.fromJson(response, ItemObject.Movie.class);
+        final ItemObject.Movie myMovie = gson.fromJson(response, ItemObject.Movie.class);
 
         detailMovieTitle.setText(myMovie.getTitle());
 
@@ -125,6 +127,24 @@ public class DetailActivity extends AppCompatActivity {
                 .load(MoviesURL.getUrlImage(myMovie.getPoster()))
                 .centerCrop()
                 .into(detailMoviePoster);
+
+        detailMoviePoster.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Dialog dialog = new Dialog(DetailActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.main_movie_bigpicture);
+                ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
+                TextView textView = (TextView) dialog.findViewById(R.id.bigpicture_title);
+                Glide.with(getApplicationContext())
+                        .load(MoviesURL.getUrlImage(myMovie.getPoster()))
+                        .centerCrop()
+                        .into(imageView);
+                textView.setText(myMovie.getTitle());
+                dialog.show();
+                return false;
+            }
+        });
 
         detailMovieOverview.setText(myMovie.getOverview());
         String strGenre = "";

@@ -10,7 +10,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <ImageView
@@ -40,7 +39,7 @@
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/ic_grade_black_24dp" />
 
                 <TextView
                     android:id="@+id/movie_cardview_rating"
