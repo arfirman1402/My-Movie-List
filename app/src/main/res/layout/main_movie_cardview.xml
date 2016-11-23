@@ -23,9 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/movie_cardview_title"
@@ -42,15 +40,13 @@
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:layout_gravity="center"
                     android:src="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/movie_cardview_rating"
                     android:layout_width="match_parent"
-                    android:layout_height="18dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
                     android:text="4.5" />
             </LinearLayout>
         </LinearLayout>

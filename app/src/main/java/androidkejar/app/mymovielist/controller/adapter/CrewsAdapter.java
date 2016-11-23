@@ -1,13 +1,11 @@
 package androidkejar.app.mymovielist.controller.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,21 +46,6 @@ public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> 
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(holder.detailCrewsPic);
-        holder.detailCrewsLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.main_movie_bigpicture);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
-                TextView textView = (TextView) dialog.findViewById(R.id.bigpicture_title);
-                imageView.setImageDrawable(holder.detailCrewsPic.getDrawable());
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                textView.setText(itemObjects.get(holder.getAdapterPosition()).getName());
-                dialog.show();
-                return false;
-            }
-        });
 
     }
 

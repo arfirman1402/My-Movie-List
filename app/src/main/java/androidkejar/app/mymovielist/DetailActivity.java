@@ -23,6 +23,7 @@ import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.controller.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.controller.adapter.CrewsAdapter;
+import androidkejar.app.mymovielist.controller.adapter.ReviewsAdapter;
 import androidkejar.app.mymovielist.controller.adapter.TrailersAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 
@@ -40,6 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView detailMovieRating;
     private TextView detailMovieReleaseDate;
     private RelativeLayout detailMovieLoading;
+    private RecyclerView detailMovieReviews;
     private RecyclerView detailMovieCasts;
     private RecyclerView detailMovieCrews;
     private RecyclerView detailMovieTrailers;
@@ -61,9 +63,14 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieRating = (TextView) findViewById(R.id.detail_movie_rating);
         detailMovieReleaseDate = (TextView) findViewById(R.id.detail_movie_releasedate);
         detailMovieLoading = (RelativeLayout) findViewById(R.id.detail_movie_loading);
+        detailMovieReviews = (RecyclerView) findViewById(R.id.detail_movie_reviews);
         detailMovieCasts = (RecyclerView) findViewById(R.id.detail_movie_casts);
         detailMovieCrews = (RecyclerView) findViewById(R.id.detail_movie_crews);
         detailMovieTrailers = (RecyclerView) findViewById(R.id.detail_movie_trailers);
+
+        LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
+        detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
+        detailMovieReviews.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManagerCasts = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         detailMovieCasts.setLayoutManager(linearLayoutManagerCasts);
@@ -131,11 +138,15 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         detailMovieGenre.setText(strGenre);
-        detailMovieRating.setText(myMovie.getVoteAverage() + "");
-        detailMovieReleaseDate.setText(myMovie.getReleaseDate());
+        String strRating = myMovie.getVoteAverage() + " of 10";
+        detailMovieRating.setText(strRating);
+        String strReleaseDate = myMovie.getReleaseDate();
+        String[] arrReleaseDate = strReleaseDate.split("-");
+        String[] arrMonth = new String[]{"January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December"};
+        String modifyReleaseDate = arrMonth[Integer.parseInt(arrReleaseDate[1]) - 1] + " " + arrReleaseDate[2] + ", " + arrReleaseDate[0];
+        detailMovieReleaseDate.setText(modifyReleaseDate);
 
         getReviews();
-        getCasts();
     }
 
     private void getReviews() {
@@ -261,5 +272,10 @@ public class DetailActivity extends AppCompatActivity {
         ItemObject.ListOfReview allReviews = gson.fromJson(response, ItemObject.ListOfReview.class);
 
         List<ItemObject.ListOfReview.Review> reviewList = allReviews.getResults();
+
+        ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, reviewList);
+        detailMovieReviews.setAdapter(reviewsAdapter);
+
+        getCasts();
     }
 }

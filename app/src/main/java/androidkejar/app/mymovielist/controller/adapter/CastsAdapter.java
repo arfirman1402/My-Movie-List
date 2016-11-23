@@ -48,22 +48,6 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> 
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(holder.detailCastsPic);
-        holder.detailCastsLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.main_movie_bigpicture);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
-                TextView textView = (TextView) dialog.findViewById(R.id.bigpicture_title);
-                imageView.setImageDrawable(holder.detailCastsPic.getDrawable());
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                textView.setText(itemObjects.get(holder.getAdapterPosition()).getName());
-                dialog.show();
-                return false;
-            }
-        });
-
     }
 
     @Override

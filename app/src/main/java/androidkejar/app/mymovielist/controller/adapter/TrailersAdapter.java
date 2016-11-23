@@ -1,6 +1,8 @@
 package androidkejar.app.mymovielist.controller.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +13,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import androidkejar.app.mymovielist.pojo.ItemObject;
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.pojo.ItemObject;
 
 /**
  * Created by alodokter-it on 12/11/16.
@@ -37,6 +39,15 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHo
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
         holder.detailTrailersName.setText(itemObjects.get(position).getName());
+        holder.detailTrailersSource.setText(itemObjects.get(position).getSite());
+        holder.detailTrailersLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String trailerURL = "https://youtube.com/watch?v=" + itemObjects.get(holder.getAdapterPosition()).getKey();
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -46,12 +57,14 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHo
 
     class ListHolder extends RecyclerView.ViewHolder {
         TextView detailTrailersName;
+        TextView detailTrailersSource;
         ImageView detailTrailersPic;
         CardView detailTrailersLayout;
 
         ListHolder(View itemView) {
             super(itemView);
             detailTrailersName = (TextView) itemView.findViewById(R.id.detail_trailer_name);
+            detailTrailersSource = (TextView) itemView.findViewById(R.id.detail_trailer_source);
             detailTrailersPic = (ImageView) itemView.findViewById(R.id.detail_trailer_pic);
             detailTrailersLayout = (CardView) itemView.findViewById(R.id.detail_trailer_layout);
         }

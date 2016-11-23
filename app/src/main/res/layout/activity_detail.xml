@@ -82,7 +82,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_local_movies_black_24dp" />
 
                     <TextView
                         android:id="@+id/detail_movie_genre"
@@ -102,7 +102,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_grade_black_24dp" />
 
                     <TextView
                         android:id="@+id/detail_movie_rating"
@@ -122,7 +122,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_event_available_black_24dp" />
 
                     <TextView
                         android:id="@+id/detail_movie_releasedate"
