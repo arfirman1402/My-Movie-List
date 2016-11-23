@@ -142,11 +142,25 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/detail_movie_reviews"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="true" />
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/detail_movie_reviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="true" />
+
+                    <TextView
+                        android:id="@+id/detail_movie_reviews_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Review isn't available"
+                        android:textStyle="italic"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -156,11 +170,25 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/detail_movie_casts"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="true" />
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/detail_movie_casts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="true" />
+
+                    <TextView
+                        android:id="@+id/detail_movie_casts_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Cast isn't available"
+                        android:textStyle="italic"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -170,10 +198,24 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/detail_movie_crews"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/detail_movie_crews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/detail_movie_crews_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Crew isn't available"
+                        android:textStyle="italic"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -183,10 +225,24 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/detail_movie_trailers"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/detail_movie_trailers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/detail_movie_trailers_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Trailer isn't available"
+                        android:textStyle="italic"
+                        android:visibility="gone" />
+                </RelativeLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

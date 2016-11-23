@@ -2,6 +2,7 @@ package androidkejar.app.mymovielist;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     private RelativeLayout mainMovieLoading;
     private SwipeRefreshLayout mainMovieRefresh;
     private SearchView mainMovieSearch;
+    private RelativeLayout mainMovieError;
+    private TextView mainMovieErrorContent;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
     private Handler changeHeaderHandler;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieBigTitle = (TextView) findViewById(R.id.main_movie_bigtitle);
         mainMovieLoading = (RelativeLayout) findViewById(R.id.main_movie_loading);
         mainMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.main_movie_refresh);
+        mainMovieError = (RelativeLayout) findViewById(R.id.main_movie_error);
+        mainMovieErrorContent = (TextView) findViewById(R.id.main_movie_error_content);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         mainMovieList.setLayoutManager(gridLayoutManager);
@@ -77,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mainMovieLayout.setVisibility(View.GONE);
+                mainMovieError.setVisibility(View.GONE);
+                mainMovieLoading.setVisibility(View.VISIBLE);
                 changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
                 mainMovieList.removeAllViews();
                 getMovies(urlList);
@@ -86,11 +93,17 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
 
         mainMovieBigTitle.setText(sortByList[0].toUpperCase(Locale.getDefault()));
 
+        mainMovieError.setVisibility(View.GONE);
         mainMovieLayout.setVisibility(View.GONE);
         mainMovieLoading.setVisibility(View.VISIBLE);
-
         urlList = urlNowPlaying;
         getMovies(urlList);
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private void getMovies(String url) {
@@ -108,13 +121,20 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         ItemObject.ListOfMovie myMovie = gson.fromJson(response, ItemObject.ListOfMovie.class);
         movieList = myMovie.getResults();
 
-        MoviesAdapter moviesAdapter = new MoviesAdapter(this, movieList);
-        mainMovieList.setAdapter(moviesAdapter);
+        if (movieList.size() > 0) {
 
-        mainMovieLoading.setVisibility(View.GONE);
-        mainMovieLayout.setVisibility(View.VISIBLE);
+            MoviesAdapter moviesAdapter = new MoviesAdapter(this, movieList);
+            mainMovieList.setAdapter(moviesAdapter);
 
-        setHeaderLayout();
+            mainMovieLoading.setVisibility(View.GONE);
+            mainMovieLayout.setVisibility(View.VISIBLE);
+
+            setHeaderLayout();
+        } else {
+            mainMovieLoading.setVisibility(View.GONE);
+            mainMovieError.setVisibility(View.VISIBLE);
+            mainMovieErrorContent.setText("No Movies Available.");
+        }
     }
 
     private void setHeaderLayout() {
@@ -174,25 +194,19 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                /*Toast.makeText(getApplication(), "Searching" ,Toast.LENGTH_LONG).show();
-                String url = "";
-                url = "http://api.themoviedb.org/3/search/movie?" +
-                        FilmCategory +
-                        "&query=" + query +
-                        "&api_key=" + API_Key;
-                MyParsingGson(url);*/
+                mainMovieBigTitle.setText(query.toUpperCase(Locale.getDefault()));
+                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+                mainMovieList.removeAllViews();
+                mainMovieLayout.setVisibility(View.GONE);
+                mainMovieError.setVisibility(View.GONE);
+                mainMovieLoading.setVisibility(View.VISIBLE);
+                urlList = MoviesURL.getListMovieBasedOnWord(query);
+                getMovies(urlList);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mainMovieBigTitle.setText(newText.toUpperCase(Locale.getDefault()));
-                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-                mainMovieList.removeAllViews();
-                mainMovieLayout.setVisibility(View.GONE);
-                mainMovieLoading.setVisibility(View.VISIBLE);
-                String strURL = MoviesURL.getListMovieBasedOnWord(newText);
-                getMovies(strURL);
                 return false;
             }
         });
@@ -229,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
         mainMovieList.removeAllViews();
         mainMovieLayout.setVisibility(View.GONE);
+        mainMovieError.setVisibility(View.GONE);
         mainMovieLoading.setVisibility(View.VISIBLE);
         switch (i) {
             case 0:
@@ -258,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     @Override
     public void errorResultData(String errorResponse) {
         Log.e("errorResultData", errorResponse);
-        Toast.makeText(getApplicationContext(), "Koneksi bermasalah. Silahkan ulangi kembali", Toast.LENGTH_LONG).show();
+        /*Toast.makeText(getApplicationContext(), "Koneksi bermasalah. Silahkan ulangi kembali", Toast.LENGTH_LONG).show();*/
+        mainMovieLoading.setVisibility(View.GONE);
+        mainMovieError.setVisibility(View.VISIBLE);
+        mainMovieErrorContent.setText("Koneksi bermasalah. Silahkan ulangi kembali");
     }
 }

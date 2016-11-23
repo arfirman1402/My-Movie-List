@@ -1,6 +1,7 @@
 package androidkejar.app.mymovielist;
 
 import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,7 +49,10 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView detailMovieCrews;
     private RecyclerView detailMovieTrailers;
     private LinearLayout detailMovieLayout;
-
+    private TextView detailMovieReviewsEmpty;
+    private TextView detailMovieCastsEmpty;
+    private TextView detailMovieCrewsEmpty;
+    private TextView detailMovieTrailersEmpty;
     private int idMovies;
 
     @Override
@@ -69,6 +73,10 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCasts = (RecyclerView) findViewById(R.id.detail_movie_casts);
         detailMovieCrews = (RecyclerView) findViewById(R.id.detail_movie_crews);
         detailMovieTrailers = (RecyclerView) findViewById(R.id.detail_movie_trailers);
+        detailMovieReviewsEmpty = (TextView) findViewById(R.id.detail_movie_reviews_empty);
+        detailMovieCastsEmpty = (TextView) findViewById(R.id.detail_movie_casts_empty);
+        detailMovieCrewsEmpty = (TextView) findViewById(R.id.detail_movie_crews_empty);
+        detailMovieTrailersEmpty = (TextView) findViewById(R.id.detail_movie_trailers_empty);
 
         LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
         detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
@@ -92,6 +100,11 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieLoading.setVisibility(View.VISIBLE);
 
         getMovies();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private void getMovies() {
@@ -208,12 +221,22 @@ public class DetailActivity extends AppCompatActivity {
         ItemObject.Credits allCredits = gson.fromJson(response, ItemObject.Credits.class);
 
         List<ItemObject.Credits.Cast> castList = allCredits.getCasts();
-        CastsAdapter castsAdapter = new CastsAdapter(this, castList);
-        detailMovieCasts.setAdapter(castsAdapter);
+        if (castList.size() > 0) {
+            detailMovieCastsEmpty.setVisibility(View.GONE);
+            CastsAdapter castsAdapter = new CastsAdapter(this, castList);
+            detailMovieCasts.setAdapter(castsAdapter);
+        } else {
+            detailMovieCastsEmpty.setVisibility(View.VISIBLE);
+        }
 
         List<ItemObject.Credits.Crew> crewList = allCredits.getCrews();
-        CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
-        detailMovieCrews.setAdapter(crewsAdapter);
+        if (crewList.size() > 0) {
+            detailMovieCrewsEmpty.setVisibility(View.GONE);
+            CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
+            detailMovieCrews.setAdapter(crewsAdapter);
+        } else {
+            detailMovieCrewsEmpty.setVisibility(View.VISIBLE);
+        }
 
         getTrailers();
     }
@@ -263,9 +286,13 @@ public class DetailActivity extends AppCompatActivity {
         ItemObject.ListOfVideo allVideos = gson.fromJson(response, ItemObject.ListOfVideo.class);
 
         List<ItemObject.ListOfVideo.Video> trailerList = allVideos.getResults();
-
-        TrailersAdapter trailersAdapter = new TrailersAdapter(this, trailerList);
-        detailMovieTrailers.setAdapter(trailersAdapter);
+        if (trailerList.size() > 0) {
+            detailMovieTrailersEmpty.setVisibility(View.GONE);
+            TrailersAdapter trailersAdapter = new TrailersAdapter(this, trailerList);
+            detailMovieTrailers.setAdapter(trailersAdapter);
+        } else {
+            detailMovieTrailersEmpty.setVisibility(View.VISIBLE);
+        }
 
         detailMovieLoading.setVisibility(View.GONE);
         detailMovieLayout.setVisibility(View.VISIBLE);
@@ -293,8 +320,13 @@ public class DetailActivity extends AppCompatActivity {
 
         List<ItemObject.ListOfReview.Review> reviewList = allReviews.getResults();
 
-        ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, reviewList);
-        detailMovieReviews.setAdapter(reviewsAdapter);
+        if (reviewList.size() > 0) {
+            detailMovieReviewsEmpty.setVisibility(View.GONE);
+            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, reviewList);
+            detailMovieReviews.setAdapter(reviewsAdapter);
+        } else {
+            detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
+        }
 
         getCasts();
     }
