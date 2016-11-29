@@ -15,8 +15,12 @@
         <ImageView
             android:id="@+id/movie_cardview_pic"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_height="210dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_genre" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,29 +29,20 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/movie_cardview_adult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Adult"
+                android:textColor="@color/colorRed"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/movie_cardview_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Huwala"
                 android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_grade_black_24dp" />
-
-                <TextView
-                    android:id="@+id/movie_cardview_rating"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="4.5" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

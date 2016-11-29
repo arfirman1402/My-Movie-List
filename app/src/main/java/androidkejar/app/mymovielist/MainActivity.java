@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -34,7 +36,7 @@ import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.controller.adapter.MoviesAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 
-public class MainActivity extends AppCompatActivity implements MoviesResult {
+public class MainActivity extends AppCompatActivity implements MoviesResult, View.OnClickListener {
     private RecyclerView mainMovieList;
     private LinearLayout mainMovieLayout;
     private ImageView mainMoviePic;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     private SearchView mainMovieSearch;
     private RelativeLayout mainMovieError;
     private TextView mainMovieErrorContent;
+    private FloatingActionButton mainMovieScrollTop;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
     private Handler changeHeaderHandler;
@@ -70,24 +73,39 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieBigTitle = (TextView) findViewById(R.id.main_movie_bigtitle);
         mainMovieLoading = (RelativeLayout) findViewById(R.id.main_movie_loading);
         mainMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.main_movie_refresh);
+        mainMovieScrollTop = (FloatingActionButton) findViewById(R.id.main_movie_scrolltop);
         mainMovieError = (RelativeLayout) findViewById(R.id.main_movie_error);
         mainMovieErrorContent = (TextView) findViewById(R.id.main_movie_error_content);
+
+        mainMovieScrollTop.setOnClickListener(this);
+        mainMovieScrollTop.hide();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         mainMovieList.setLayoutManager(gridLayoutManager);
         mainMovieList.setHasFixedSize(true);
+        mainMovieList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int verticalOffset = recyclerView.computeVerticalScrollOffset();
+                Log.d("onScrolled", "verticalOffset = " + verticalOffset);
+                if (verticalOffset > 550) mainMovieScrollTop.show();
+                else mainMovieScrollTop.hide();
+            }
+
+        });
 
         mainMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
         mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mainMovieRefresh.setRefreshing(false);
                 mainMovieLayout.setVisibility(View.GONE);
                 mainMovieError.setVisibility(View.GONE);
                 mainMovieLoading.setVisibility(View.VISIBLE);
                 changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
                 mainMovieList.removeAllViews();
                 getMovies(urlList);
-                mainMovieRefresh.setRefreshing(false);
             }
         });
 
@@ -98,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         mainMovieLoading.setVisibility(View.VISIBLE);
         urlList = urlNowPlaying;
         getMovies(urlList);
-
     }
 
     @Override
@@ -122,19 +139,17 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         movieList = myMovie.getResults();
 
         if (movieList.size() > 0) {
-
             MoviesAdapter moviesAdapter = new MoviesAdapter(this, movieList);
             mainMovieList.setAdapter(moviesAdapter);
-
-            mainMovieLoading.setVisibility(View.GONE);
             mainMovieLayout.setVisibility(View.VISIBLE);
-
             setHeaderLayout();
         } else {
-            mainMovieLoading.setVisibility(View.GONE);
             mainMovieError.setVisibility(View.VISIBLE);
             mainMovieErrorContent.setText("No Movies Available.");
         }
+
+        mainMovieLoading.setVisibility(View.GONE);
+        mainMovieList.scrollToPosition(movieList.size() - 1);
     }
 
     private void setHeaderLayout() {
@@ -166,12 +181,16 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
         if (movieList.get(randomList).getBackdrop() != null) {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdrop()))
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
+                    .placeholder(R.drawable.ic_genre)
                     .into(mainMoviePic);
         } else {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(movieList.get(randomList).getPoster()))
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
+                    .placeholder(R.drawable.ic_genre)
                     .into(mainMoviePic);
         }
 
@@ -273,9 +292,19 @@ public class MainActivity extends AppCompatActivity implements MoviesResult {
     @Override
     public void errorResultData(String errorResponse) {
         Log.e("errorResultData", errorResponse);
-        /*Toast.makeText(getApplicationContext(), "Koneksi bermasalah. Silahkan ulangi kembali", Toast.LENGTH_LONG).show();*/
         mainMovieLoading.setVisibility(View.GONE);
         mainMovieError.setVisibility(View.VISIBLE);
         mainMovieErrorContent.setText("Koneksi bermasalah. Silahkan ulangi kembali");
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.main_movie_scrolltop:
+                mainMovieList.smoothScrollToPosition(RecyclerView.SCROLL_INDICATOR_TOP);
+                break;
+            default:
+                break;
+        }
     }
 }

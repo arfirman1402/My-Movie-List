@@ -7,4 +7,5 @@
     <color name="colorGreenLeafDark">#388E3C</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlackTransparent">#77000000</color>
+    <color name="colorRed">#880000</color>
 </resources>

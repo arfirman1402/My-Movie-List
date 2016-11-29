@@ -11,14 +11,59 @@ import java.util.List;
 public class ItemObject {
 
     public class ListOfMovie {
+        @SerializedName("page")
+        private int page;
+
+        @SerializedName("total_pages")
+        private int totalPages;
+
+        @SerializedName("total_results")
+        private int totalResults;
+
         @SerializedName("results")
         private List<MovieDetail> results;
+
+        public int getPage() {
+            return page;
+        }
+
+        public int getTotalPages() {
+            return totalPages;
+        }
+
+        public int getTotalResults() {
+            return totalResults;
+        }
 
         public List<MovieDetail> getResults() {
             return results;
         }
 
         public class MovieDetail {
+            @SerializedName("adult")
+            private boolean adult;
+
+            @SerializedName("release_date")
+            private String releaseDate;
+
+            @SerializedName("genre_ids")
+            private List<Integer> genreIds;
+
+            @SerializedName("original_title")
+            private String originalTitle;
+
+            @SerializedName("original_language")
+            private String originalLanguage;
+
+            @SerializedName("popularity")
+            private double popularity;
+
+            @SerializedName("vote_count")
+            private int voteCount;
+
+            @SerializedName("video")
+            private boolean video;
+
             @SerializedName("poster_path")
             private String poster;
 
@@ -61,10 +106,44 @@ public class ItemObject {
                 return voteAverage;
             }
 
+            public boolean isAdult() {
+                return adult;
+            }
+
+            public String getReleaseDate() {
+                return releaseDate;
+            }
+
+            public List<Integer> getGenreIds() {
+                return genreIds;
+            }
+
+            public String getOriginalTitle() {
+                return originalTitle;
+            }
+
+            public String getOriginalLanguage() {
+                return originalLanguage;
+            }
+
+            public double getPopularity() {
+                return popularity;
+            }
+
+            public int getVoteCount() {
+                return voteCount;
+            }
+
+            public boolean isVideo() {
+                return video;
+            }
         }
     }
 
     public class Movie {
+        @SerializedName("adult")
+        private boolean adult;
+
         @SerializedName("backdrop_path")
         private String backdrop;
 
@@ -82,6 +161,9 @@ public class ItemObject {
 
         @SerializedName("imdb_id")
         private String imdbId;
+
+        @SerializedName("original_language")
+        private String originalLanguage;
 
         @SerializedName("original_title")
         private String originalTitle;
@@ -121,6 +203,9 @@ public class ItemObject {
 
         @SerializedName("title")
         private String title;
+
+        @SerializedName("video")
+        private boolean video;
 
         @SerializedName("vote_average")
         private double voteAverage;
@@ -262,6 +347,18 @@ public class ItemObject {
 
         public int getVoteCount() {
             return voteCount;
+        }
+
+        public boolean isAdult() {
+            return adult;
+        }
+
+        public String getOriginalLanguage() {
+            return originalLanguage;
+        }
+
+        public boolean isVideo() {
+            return video;
         }
     }
 

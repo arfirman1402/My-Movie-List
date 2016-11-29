@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -41,11 +42,12 @@ public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> 
     public void onBindViewHolder(final ListHolder holder, int position) {
         holder.detailCrewsName.setText(itemObjects.get(position).getName());
         holder.detailCrewsJob.setText(itemObjects.get(position).getJob());
-        Glide.with(context)
-                .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
-                .centerCrop()
-                .placeholder(R.mipmap.ic_launcher)
-                .into(holder.detailCrewsPic);
+            Glide.with(context)
+                    .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_person)
+                    .into(holder.detailCrewsPic);
 
     }
 

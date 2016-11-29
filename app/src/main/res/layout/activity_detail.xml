@@ -18,7 +18,7 @@
                 android:id="@+id/detail_movie_pic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/ic_genre" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                         android:id="@+id/detail_movie_poster"
                         android:layout_width="120dp"
                         android:layout_height="180dp"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_genre" />
 
                     <TextView
                         android:id="@+id/detail_movie_overview"
@@ -82,7 +82,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_local_movies_black_24dp" />
+                        android:src="@drawable/ic_genre" />
 
                     <TextView
                         android:id="@+id/detail_movie_genre"
@@ -102,7 +102,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_grade_black_24dp" />
+                        android:src="@drawable/ic_rating" />
 
                     <TextView
                         android:id="@+id/detail_movie_rating"
@@ -122,7 +122,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_event_available_black_24dp" />
+                        android:src="@drawable/ic_releasedate" />
 
                     <TextView
                         android:id="@+id/detail_movie_releasedate"

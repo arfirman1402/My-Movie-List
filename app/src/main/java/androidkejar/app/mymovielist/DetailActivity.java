@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -127,12 +128,16 @@ public class DetailActivity extends AppCompatActivity {
         if (myMovie.getBackdrop() != null) {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(myMovie.getBackdrop()))
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
+                    .placeholder(R.drawable.ic_genre)
                     .into(detailMoviePic);
         } else {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(myMovie.getPoster()))
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
+                    .placeholder(R.drawable.ic_genre)
                     .into(detailMoviePic);
         }
 
@@ -161,21 +166,29 @@ public class DetailActivity extends AppCompatActivity {
 
         detailMovieOverview.setText(myMovie.getOverview());
         String strGenre = "";
-        for (int i = 0; i < myMovie.getGenres().size(); i++) {
-            strGenre += myMovie.getGenres().get(i).getName();
-            if (myMovie.getGenres().size() != 1) {
-                if (i == myMovie.getGenres().size() - 1) strGenre += ".";
-                else if (myMovie.getGenres().size() != 2) strGenre += ", ";
-                else strGenre += " ";
-                if (i + 1 == myMovie.getGenres().size() - 1) strGenre += "and ";
+        if (myMovie.getGenres().size() > 0) {
+            for (int i = 0; i < myMovie.getGenres().size(); i++) {
+                strGenre += myMovie.getGenres().get(i).getName();
+                if (myMovie.getGenres().size() != 1) {
+                    if (i == myMovie.getGenres().size() - 1) strGenre += ".";
+                    else if (myMovie.getGenres().size() != 2) strGenre += ", ";
+                    else strGenre += " ";
+                    if (i + 1 == myMovie.getGenres().size() - 1) strGenre += "and ";
+                }
             }
+        } else {
+            strGenre = "No Genre Available";
         }
         detailMovieGenre.setText(strGenre);
-        String strRating = myMovie.getVoteAverage() + " of 10";
+        String strRating;
+        if (myMovie.getVoteAverage() > 3) strRating = myMovie.getVoteAverage() + " of 10";
+        else strRating = "Not Rated";
+
         detailMovieRating.setText(strRating);
+
         String strReleaseDate = myMovie.getReleaseDate();
         String[] arrReleaseDate = strReleaseDate.split("-");
-        String[] arrMonth = new String[]{"January", "February", "March", "April", "Mei", "June", "July", "August", "September", "October", "November", "December"};
+        String[] arrMonth = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         String modifyReleaseDate = arrMonth[Integer.parseInt(arrReleaseDate[1]) - 1] + " " + arrReleaseDate[2] + ", " + arrReleaseDate[0];
         detailMovieReleaseDate.setText(modifyReleaseDate);
 
