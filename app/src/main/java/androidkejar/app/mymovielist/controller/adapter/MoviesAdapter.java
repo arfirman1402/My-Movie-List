@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidkejar.app.mymovielist.DetailActivity;
@@ -33,9 +34,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
     Context context;
     List<ItemObject.ListOfMovie.MovieDetail> itemObjects;
 
-    public MoviesAdapter(Context context, List<ItemObject.ListOfMovie.MovieDetail> itemObjects) {
+    public MoviesAdapter(Context context) {
         this.context = context;
-        this.itemObjects = itemObjects;
+        itemObjects = new ArrayList<>();
+    }
+
+    public void addAll(List<ItemObject.ListOfMovie.MovieDetail> itemObjects) {
+        this.itemObjects.addAll(itemObjects);
+        notifyDataSetChanged();
+    }
+
+    public void resetData() {
+        this.itemObjects.clear();
+        notifyDataSetChanged();
     }
 
     @Override

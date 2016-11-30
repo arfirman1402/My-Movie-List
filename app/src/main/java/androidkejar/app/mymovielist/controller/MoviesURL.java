@@ -14,20 +14,20 @@ public class MoviesURL {
         return BASE_URL_IMAGE + icon;
     }
 
-    public static String getListMovieNowPlaying() {
-        return BASE_URL + "/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    public static String getListMovieNowPlaying(int page) {
+        return BASE_URL + "/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG_SOURCE + "&page=" + page;
     }
 
-    public static String getListMovieUpcoming() {
-        return BASE_URL + "/movie/upcoming?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    public static String getListMovieUpcoming(int page) {
+        return BASE_URL + "/movie/upcoming?api_key=" + API_KEY + "&language=" + LANG_SOURCE + "&page=" + page;
     }
 
-    public static String getListMoviePopular() {
-        return BASE_URL + "/movie/popular?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    public static String getListMoviePopular(int page) {
+        return BASE_URL + "/movie/popular?api_key=" + API_KEY + "&language=" + LANG_SOURCE + "&page=" + page;
     }
 
-    public static String getListMovieTopRated() {
-        return BASE_URL + "/movie/top_rated?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
+    public static String getListMovieTopRated(int page) {
+        return BASE_URL + "/movie/top_rated?api_key=" + API_KEY + "&language=" + LANG_SOURCE + "&page=" + page;
     }
 
     public static String getMovieById(int idMovies) {
@@ -46,8 +46,8 @@ public class MoviesURL {
         return BASE_URL + "/movie/" + idMovies + "/reviews" + "?api_key=" + API_KEY + "&language=" + LANG_SOURCE;
     }
 
-    public static String getListMovieBasedOnWord(String words) {
+    public static String getListMovieBasedOnWord(String words, int page) {
         String modifyWords = words.replace(' ', '+');
-        return BASE_URL + "/search/movie?api_key=" + API_KEY + "&query=" + modifyWords;
+        return BASE_URL + "/search/movie?api_key=" + API_KEY + "&query=" + modifyWords + "&page=" + page;
     }
 }

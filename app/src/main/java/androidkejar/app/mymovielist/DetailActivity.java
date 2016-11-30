@@ -20,7 +20,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
@@ -42,8 +44,12 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView detailMoviePoster;
     private TextView detailMovieOverview;
     private TextView detailMovieGenre;
+    private TextView detailMovieLanguage;
     private TextView detailMovieRating;
     private TextView detailMovieReleaseDate;
+    private TextView detailMovieRuntime;
+    private TextView detailMovieRevenue;
+    private TextView detailMovieBudget;
     private RelativeLayout detailMovieLoading;
     private RecyclerView detailMovieReviews;
     private RecyclerView detailMovieCasts;
@@ -67,8 +73,12 @@ public class DetailActivity extends AppCompatActivity {
         detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
         detailMovieOverview = (TextView) findViewById(R.id.detail_movie_overview);
         detailMovieGenre = (TextView) findViewById(R.id.detail_movie_genre);
+        detailMovieLanguage = (TextView) findViewById(R.id.detail_movie_language);
         detailMovieRating = (TextView) findViewById(R.id.detail_movie_rating);
         detailMovieReleaseDate = (TextView) findViewById(R.id.detail_movie_releasedate);
+        detailMovieRuntime = (TextView) findViewById(R.id.detail_movie_runtime);
+        detailMovieRevenue = (TextView) findViewById(R.id.detail_movie_revenue);
+        detailMovieBudget = (TextView) findViewById(R.id.detail_movie_budget);
         detailMovieLoading = (RelativeLayout) findViewById(R.id.detail_movie_loading);
         detailMovieReviews = (RecyclerView) findViewById(R.id.detail_movie_reviews);
         detailMovieCasts = (RecyclerView) findViewById(R.id.detail_movie_casts);
@@ -165,34 +175,104 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         detailMovieOverview.setText(myMovie.getOverview());
+
+        detailMovieGenre.setText(getStringGenre(myMovie.getGenres()));
+
+        detailMovieLanguage.setText(getStringLanguage(myMovie));
+
+        detailMovieRating.setText(getStringRating(myMovie.getVoteAverage()));
+
+        detailMovieRuntime.setText(getStringRuntime(myMovie.getRuntime()));
+
+        detailMovieRevenue.setText(getStringRevenue(myMovie.getRevenue()));
+
+        detailMovieBudget.setText(getStringBugdet(myMovie.getBudget()));
+
+        detailMovieReleaseDate.setText(getStringReleaseDate(myMovie.getReleaseDate()));
+
+        getReviews();
+    }
+
+    private String getStringLanguage(ItemObject.Movie myMovie) {
+        String strLanguage = "";
+        strLanguage += myMovie.getOriginalLanguage();
+        if (myMovie.getSpokenLanguages().size() > 0) {
+            strLanguage += " - ";
+            for (int i = 0; i < myMovie.getSpokenLanguages().size(); i++) {
+                strLanguage += myMovie.getSpokenLanguages().get(i).getIso_639_1() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")";
+                if (myMovie.getSpokenLanguages().size() > 1) {
+                    if (i != myMovie.getSpokenLanguages().size() - 1) {
+                        strLanguage += ", ";
+                    } else {
+                        strLanguage += ".";
+                    }
+                }
+            }
+        }
+        return strLanguage;
+    }
+
+    private String getStringBugdet(int budget) {
+        String strBudget = "";
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+        String moneyString = formatter.format(budget);
+        if (budget > 0) strBudget += "USD " + moneyString;
+        else strBudget += "Budget Not Recorded";
+        return strBudget;
+    }
+
+    private String getStringReleaseDate(String releaseDate) {
+        String[] arrReleaseDate = releaseDate.split("-");
+        String[] arrMonth = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        return arrMonth[Integer.parseInt(arrReleaseDate[1]) - 1] + " " + arrReleaseDate[2] + ", " + arrReleaseDate[0];
+    }
+
+    private String getStringRevenue(int revenue) {
+        String strRevenue = "";
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+        String moneyString = formatter.format(revenue);
+        if (revenue > 0) {
+            strRevenue += "USD " + moneyString;
+        } else strRevenue += "Revenue Not Recorded";
+        return strRevenue;
+    }
+
+    private String getStringRuntime(int runtime) {
+        String strRuntime = "";
+        int hRuntime = runtime / 60;
+        int mRuntime = runtime % 60;
+        if (hRuntime > 0) {
+            strRuntime += hRuntime + " h ";
+        }
+        strRuntime += mRuntime + " m";
+        return strRuntime;
+    }
+
+    private String getStringRating(double voteAverage) {
+        String strRating = "";
+        if (voteAverage > 3) {
+            if (((int) (voteAverage * 10)) % 10 != 0) strRating = voteAverage + " of 10";
+            else strRating = (int) voteAverage + " of 10";
+        } else strRating = "Not Rated";
+        return strRating;
+    }
+
+    private String getStringGenre(List<ItemObject.Movie.Genre> genres) {
         String strGenre = "";
-        if (myMovie.getGenres().size() > 0) {
-            for (int i = 0; i < myMovie.getGenres().size(); i++) {
-                strGenre += myMovie.getGenres().get(i).getName();
-                if (myMovie.getGenres().size() != 1) {
-                    if (i == myMovie.getGenres().size() - 1) strGenre += ".";
-                    else if (myMovie.getGenres().size() != 2) strGenre += ", ";
+        if (genres.size() > 0) {
+            for (int i = 0; i < genres.size(); i++) {
+                strGenre += genres.get(i).getName();
+                if (genres.size() != 1) {
+                    if (i == genres.size() - 1) strGenre += ".";
+                    else if (genres.size() != 2) strGenre += ", ";
                     else strGenre += " ";
-                    if (i + 1 == myMovie.getGenres().size() - 1) strGenre += "and ";
+                    if (i + 1 == genres.size() - 1) strGenre += "and ";
                 }
             }
         } else {
             strGenre = "No Genre Available";
         }
-        detailMovieGenre.setText(strGenre);
-        String strRating;
-        if (myMovie.getVoteAverage() > 3) strRating = myMovie.getVoteAverage() + " of 10";
-        else strRating = "Not Rated";
-
-        detailMovieRating.setText(strRating);
-
-        String strReleaseDate = myMovie.getReleaseDate();
-        String[] arrReleaseDate = strReleaseDate.split("-");
-        String[] arrMonth = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-        String modifyReleaseDate = arrMonth[Integer.parseInt(arrReleaseDate[1]) - 1] + " " + arrReleaseDate[2] + ", " + arrReleaseDate[0];
-        detailMovieReleaseDate.setText(modifyReleaseDate);
-
-        getReviews();
+        return strGenre;
     }
 
     private void getReviews() {

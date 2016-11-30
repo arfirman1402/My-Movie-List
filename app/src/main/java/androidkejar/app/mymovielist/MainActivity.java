@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,22 +47,23 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     private TextView mainMovieBigTitle;
     private RelativeLayout mainMovieLoading;
     private SwipeRefreshLayout mainMovieRefresh;
-    private SearchView mainMovieSearch;
     private RelativeLayout mainMovieError;
     private TextView mainMovieErrorContent;
     private FloatingActionButton mainMovieScrollTop;
+    private ProgressBar mainMovieListLoading;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
     private Handler changeHeaderHandler;
     private Runnable changeHeaderRunnable;
     private int randomList = -1;
     private String urlList;
-
-    private String[] sortByList = new String[]{"Now Playing", "Top Rated", "Popular", "Coming Soon"};
-    private String urlNowPlaying = MoviesURL.getListMovieNowPlaying();
-    private String urlTopRated = MoviesURL.getListMovieTopRated();
-    private String urlPopular = MoviesURL.getListMoviePopular();
-    private String urlComingSoon = MoviesURL.getListMovieUpcoming();
+    private int page = 1;
+    private int maxPage = 1;
+    private String[] sortByList = new String[]{"Now Playing", "Popular", "Top Rated", "Coming Soon"};
+    private int sortPosition = 0;
+    private boolean isSearching = false;
+    private String querySearch;
+    private MoviesAdapter moviesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
 
         mainMovieLayout = (LinearLayout) findViewById(R.id.main_movie_layout);
         mainMovieList = (RecyclerView) findViewById(R.id.main_movie_list);
+        mainMovieListLoading = (ProgressBar) findViewById(R.id.main_movie_list_loading);
         mainMoviePic = (ImageView) findViewById(R.id.main_movie_pic);
         mainMovieTitle = (TextView) findViewById(R.id.main_movie_title);
         mainMovieBigTitle = (TextView) findViewById(R.id.main_movie_bigtitle);
@@ -87,35 +92,103 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int verticalOffset = recyclerView.computeVerticalScrollOffset();
-                Log.d("onScrolled", "verticalOffset = " + verticalOffset);
-                if (verticalOffset > 550) mainMovieScrollTop.show();
-                else mainMovieScrollTop.hide();
+                if (recyclerView.getAdapter().getItemCount() != 0) {
+                    int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                    if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+                        Log.d("onScrolled", "isBottom");
+                        if (movieList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
+                            getMoviesfromBottom();
+                        }
+                    }
+                }
+                mainMovieScrollTop.hide();
             }
 
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int verticalOffset = recyclerView.computeVerticalScrollOffset();
+                    if (verticalOffset > 550) mainMovieScrollTop.show();
+                }
+            }
         });
+
+        moviesAdapter = new MoviesAdapter(this);
+        mainMovieList.setAdapter(moviesAdapter);
+
+        movieList = new ArrayList<>();
 
         mainMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
         mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mainMovieRefresh.setRefreshing(false);
-                mainMovieLayout.setVisibility(View.GONE);
-                mainMovieError.setVisibility(View.GONE);
-                mainMovieLoading.setVisibility(View.VISIBLE);
-                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-                mainMovieList.removeAllViews();
-                getMovies(urlList);
+                launchGetMovies();
             }
         });
 
-        mainMovieBigTitle.setText(sortByList[0].toUpperCase(Locale.getDefault()));
+        changeHeaderHandler = new Handler();
 
-        mainMovieError.setVisibility(View.GONE);
+        changeHeaderRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                setRandomHeader();
+                changeHeaderHandler.postDelayed(changeHeaderRunnable, 5000);
+            }
+        };
+
+        launchGetMovies();
+    }
+
+    private void getMoviesfromBottom() {
+        mainMovieListLoading.setVisibility(View.VISIBLE);
+        page += 1;
+        if (page != maxPage) {
+            mainMovieListLoading.setVisibility(View.VISIBLE);
+            changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+            setURLMovies();
+            getMovies(urlList);
+            mainMovieListLoading.setVisibility(View.GONE);
+        }
+    }
+
+    private void launchGetMovies() {
+        page = 1;
+        maxPage = 1;
+        movieList.clear();
+        moviesAdapter.resetData();
+        mainMovieRefresh.setRefreshing(false);
         mainMovieLayout.setVisibility(View.GONE);
+        mainMovieError.setVisibility(View.GONE);
         mainMovieLoading.setVisibility(View.VISIBLE);
-        urlList = urlNowPlaying;
+        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+        mainMovieList.removeAllViews();
+        setURLMovies();
         getMovies(urlList);
+    }
+
+    private void setURLMovies() {
+        if (isSearching) {
+            urlList = MoviesURL.getListMovieBasedOnWord(querySearch, page);
+            mainMovieBigTitle.setText(querySearch.toUpperCase(Locale.getDefault()));
+        } else {
+            mainMovieBigTitle.setText(sortByList[sortPosition].toUpperCase(Locale.getDefault()));
+            switch (sortPosition) {
+                case 0:
+                    urlList = MoviesURL.getListMovieNowPlaying(page);
+                    break;
+                case 1:
+                    urlList = MoviesURL.getListMoviePopular(page);
+                    break;
+                case 2:
+                    urlList = MoviesURL.getListMovieTopRated(page);
+                    break;
+                case 3:
+                    urlList = MoviesURL.getListMovieUpcoming(page);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -136,11 +209,13 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         Gson gson = gsonBuilder.create();
 
         ItemObject.ListOfMovie myMovie = gson.fromJson(response, ItemObject.ListOfMovie.class);
-        movieList = myMovie.getResults();
+
+        maxPage = myMovie.getTotalPages();
+
+        movieList.addAll(myMovie.getResults());
+        moviesAdapter.addAll(myMovie.getResults());
 
         if (movieList.size() > 0) {
-            MoviesAdapter moviesAdapter = new MoviesAdapter(this, movieList);
-            mainMovieList.setAdapter(moviesAdapter);
             mainMovieLayout.setVisibility(View.VISIBLE);
             setHeaderLayout();
         } else {
@@ -149,21 +224,9 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         }
 
         mainMovieLoading.setVisibility(View.GONE);
-        mainMovieList.scrollToPosition(movieList.size() - 1);
     }
 
     private void setHeaderLayout() {
-        changeHeaderHandler = new Handler();
-
-        changeHeaderRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                setRandomHeader();
-                changeHeaderHandler.postDelayed(changeHeaderRunnable, 5000);
-            }
-        };
-
         setRandomHeader();
         changeHeaderHandler.postDelayed(changeHeaderRunnable, 5000);
     }
@@ -209,18 +272,14 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        mainMovieSearch = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        final SearchView mainMovieSearch = (SearchView) menu.findItem(R.id.action_search).getActionView();
         mainMovieSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mainMovieBigTitle.setText(query.toUpperCase(Locale.getDefault()));
-                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-                mainMovieList.removeAllViews();
-                mainMovieLayout.setVisibility(View.GONE);
-                mainMovieError.setVisibility(View.GONE);
-                mainMovieLoading.setVisibility(View.VISIBLE);
-                urlList = MoviesURL.getListMovieBasedOnWord(query);
-                getMovies(urlList);
+                isSearching = true;
+                querySearch = query;
+                launchGetMovies();
+                mainMovieSearch.clearFocus();
                 return false;
             }
 
@@ -258,29 +317,9 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     }
 
     private void sortListMovieBy(int i) {
-        mainMovieBigTitle.setText(sortByList[i].toUpperCase(Locale.getDefault()));
-        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-        mainMovieList.removeAllViews();
-        mainMovieLayout.setVisibility(View.GONE);
-        mainMovieError.setVisibility(View.GONE);
-        mainMovieLoading.setVisibility(View.VISIBLE);
-        switch (i) {
-            case 0:
-                urlList = urlNowPlaying;
-                break;
-            case 1:
-                urlList = urlTopRated;
-                break;
-            case 2:
-                urlList = urlPopular;
-                break;
-            case 3:
-                urlList = urlComingSoon;
-                break;
-            default:
-                break;
-        }
-        getMovies(urlList);
+        isSearching = false;
+        sortPosition = i;
+        launchGetMovies();
     }
 
     @Override
@@ -294,14 +333,14 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         Log.e("errorResultData", errorResponse);
         mainMovieLoading.setVisibility(View.GONE);
         mainMovieError.setVisibility(View.VISIBLE);
-        mainMovieErrorContent.setText("Koneksi bermasalah. Silahkan ulangi kembali");
+        mainMovieErrorContent.setText("Connection Problem. Please try again.");
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_movie_scrolltop:
-                mainMovieList.smoothScrollToPosition(RecyclerView.SCROLL_INDICATOR_TOP);
+                mainMovieList.smoothScrollToPosition(0);
                 break;
             default:
                 break;

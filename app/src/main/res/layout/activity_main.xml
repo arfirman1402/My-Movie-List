@@ -73,6 +73,14 @@
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <ProgressBar
+        android:id="@+id/main_movie_list_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/bg_progressbar_primary"
+        android:visibility="gone" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/main_movie_scrolltop"
         android:layout_width="wrap_content"

@@ -147,7 +147,7 @@ public class ItemObject {
         @SerializedName("backdrop_path")
         private String backdrop;
 
-        @SerializedName("bugdet")
+        @SerializedName("budget")
         private int budget;
 
         @SerializedName("genres")
