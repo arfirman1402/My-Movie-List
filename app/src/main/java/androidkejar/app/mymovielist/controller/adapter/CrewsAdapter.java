@@ -46,7 +46,6 @@ public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> 
                     .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_person)
                     .into(holder.detailCrewsPic);
 
     }

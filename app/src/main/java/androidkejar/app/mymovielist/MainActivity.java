@@ -19,8 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +29,6 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
@@ -41,28 +38,28 @@ import androidkejar.app.mymovielist.pojo.ItemObject;
 
 public class MainActivity extends AppCompatActivity implements MoviesResult, View.OnClickListener {
     private RecyclerView mainMovieList;
-    private LinearLayout mainMovieLayout;
+    private RelativeLayout mainMovieLayout;
+    private RelativeLayout mainMovieError;
+    private RelativeLayout mainMovieLoading;
     private ImageView mainMoviePic;
     private TextView mainMovieTitle;
-    private TextView mainMovieBigTitle;
-    private RelativeLayout mainMovieLoading;
-    private SwipeRefreshLayout mainMovieRefresh;
-    private RelativeLayout mainMovieError;
     private TextView mainMovieErrorContent;
+    private ImageView mainMovieErrorPic;
+    private SwipeRefreshLayout mainMovieRefresh;
     private FloatingActionButton mainMovieScrollTop;
-    private ProgressBar mainMovieListLoading;
 
     private List<ItemObject.ListOfMovie.MovieDetail> movieList;
     private Handler changeHeaderHandler;
     private Runnable changeHeaderRunnable;
     private int randomList = -1;
-    private String urlList;
     private int page = 1;
     private int maxPage = 1;
+    private String urlList;
     private String[] sortByList = new String[]{"Now Playing", "Popular", "Top Rated", "Coming Soon"};
+    private String querySearch;
     private int sortPosition = 0;
     private boolean isSearching = false;
-    private String querySearch;
+
     private MoviesAdapter moviesAdapter;
 
     @Override
@@ -70,16 +67,15 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainMovieLayout = (LinearLayout) findViewById(R.id.main_movie_layout);
+        mainMovieLayout = (RelativeLayout) findViewById(R.id.main_movie_layout);
         mainMovieList = (RecyclerView) findViewById(R.id.main_movie_list);
-        mainMovieListLoading = (ProgressBar) findViewById(R.id.main_movie_list_loading);
         mainMoviePic = (ImageView) findViewById(R.id.main_movie_pic);
         mainMovieTitle = (TextView) findViewById(R.id.main_movie_title);
-        mainMovieBigTitle = (TextView) findViewById(R.id.main_movie_bigtitle);
         mainMovieLoading = (RelativeLayout) findViewById(R.id.main_movie_loading);
         mainMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.main_movie_refresh);
         mainMovieScrollTop = (FloatingActionButton) findViewById(R.id.main_movie_scrolltop);
         mainMovieError = (RelativeLayout) findViewById(R.id.main_movie_error);
+        mainMovieErrorPic = (ImageView) findViewById(R.id.main_movie_error_pic);
         mainMovieErrorContent = (TextView) findViewById(R.id.main_movie_error_content);
 
         mainMovieScrollTop.setOnClickListener(this);
@@ -142,14 +138,11 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     }
 
     private void getMoviesfromBottom() {
-        mainMovieListLoading.setVisibility(View.VISIBLE);
         page += 1;
         if (page != maxPage) {
-            mainMovieListLoading.setVisibility(View.VISIBLE);
             changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
             setURLMovies();
             getMovies(urlList);
-            mainMovieListLoading.setVisibility(View.GONE);
         }
     }
 
@@ -171,9 +164,11 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     private void setURLMovies() {
         if (isSearching) {
             urlList = MoviesURL.getListMovieBasedOnWord(querySearch, page);
-            mainMovieBigTitle.setText(querySearch.toUpperCase(Locale.getDefault()));
+            /*mainMovieBigTitle.setText(querySearch.toUpperCase(Locale.getDefault()));*/
+            this.setTitle(querySearch);
         } else {
-            mainMovieBigTitle.setText(sortByList[sortPosition].toUpperCase(Locale.getDefault()));
+            /*mainMovieBigTitle.setText(sortByList[sortPosition].toUpperCase(Locale.getDefault()));*/
+            this.setTitle(sortByList[sortPosition]);
             switch (sortPosition) {
                 case 0:
                     urlList = MoviesURL.getListMovieNowPlaying(page);
@@ -219,8 +214,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
             mainMovieLayout.setVisibility(View.VISIBLE);
             setHeaderLayout();
         } else {
-            mainMovieError.setVisibility(View.VISIBLE);
-            mainMovieErrorContent.setText("No Movies Available.");
+            setErrorLayout("No Movies Available");
         }
 
         mainMovieLoading.setVisibility(View.GONE);
@@ -246,14 +240,12 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
                     .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdrop()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_genre)
                     .into(mainMoviePic);
         } else {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(movieList.get(randomList).getPoster()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_genre)
                     .into(mainMoviePic);
         }
 
@@ -273,6 +265,21 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         final SearchView mainMovieSearch = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mainMovieSearch.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainMovieLayout.setVisibility(View.GONE);
+            }
+        });
+
+        mainMovieSearch.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mainMovieLayout.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
         mainMovieSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -317,9 +324,11 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     }
 
     private void sortListMovieBy(int i) {
-        isSearching = false;
-        sortPosition = i;
-        launchGetMovies();
+        if (sortPosition != i) {
+            isSearching = false;
+            sortPosition = i;
+            launchGetMovies();
+        }
     }
 
     @Override
@@ -331,9 +340,14 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     @Override
     public void errorResultData(String errorResponse) {
         Log.e("errorResultData", errorResponse);
+        setErrorLayout("Connection Problem. Please try again.");
+    }
+
+    private void setErrorLayout(String error) {
+        mainMovieLayout.setVisibility(View.GONE);
         mainMovieLoading.setVisibility(View.GONE);
         mainMovieError.setVisibility(View.VISIBLE);
-        mainMovieErrorContent.setText("Connection Problem. Please try again.");
+        mainMovieErrorContent.setText(error);
     }
 
     @Override

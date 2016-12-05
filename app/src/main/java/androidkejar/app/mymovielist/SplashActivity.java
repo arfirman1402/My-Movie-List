@@ -15,7 +15,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        long time = 2000;
+        long time = 1500;
         Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override

@@ -12,12 +12,22 @@
         android:layout_margin="10dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/detail_crews_pic"
+        <RelativeLayout
             android:layout_width="60dp"
             android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_person" />
+            android:background="@color/colorGray">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_person" />
+
+            <ImageView
+                android:id="@+id/detail_crews_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

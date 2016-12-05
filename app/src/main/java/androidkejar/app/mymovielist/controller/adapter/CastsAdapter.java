@@ -46,7 +46,6 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> 
                 .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
-                .placeholder(R.drawable.ic_person)
                 .into(holder.detailCastsPic);
     }
 

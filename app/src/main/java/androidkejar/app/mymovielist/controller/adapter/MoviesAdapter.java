@@ -66,7 +66,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
                 .load(MoviesURL.getUrlImage(itemObjects.get(position).getPoster()))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
-                .placeholder(R.drawable.ic_genre)
                 .into(holder.movieCardviewPic);
 
         holder.movieCardviewLayout.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +87,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
                 } else {
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("id", itemObjects.get(holder.getAdapterPosition()).getId());
+                    intent.putExtra("title", itemObjects.get(holder.getAdapterPosition()).getTitle());
                     context.startActivity(intent);
                 }
 

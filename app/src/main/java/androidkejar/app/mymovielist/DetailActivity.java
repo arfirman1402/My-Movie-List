@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -40,7 +38,6 @@ import androidkejar.app.mymovielist.pojo.ItemObject;
 public class DetailActivity extends AppCompatActivity {
 
     private ImageView detailMoviePic;
-    private TextView detailMovieTitle;
     private ImageView detailMoviePoster;
     private TextView detailMovieOverview;
     private TextView detailMovieGenre;
@@ -55,21 +52,24 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView detailMovieCasts;
     private RecyclerView detailMovieCrews;
     private RecyclerView detailMovieTrailers;
-    private LinearLayout detailMovieLayout;
+    private RelativeLayout detailMovieLayout;
     private TextView detailMovieReviewsEmpty;
     private TextView detailMovieCastsEmpty;
     private TextView detailMovieCrewsEmpty;
     private TextView detailMovieTrailersEmpty;
+    private RelativeLayout detailMovieError;
+    private ImageView detailMovieErrorPic;
+    private TextView detailMovieErrorContent;
     private int idMovies;
+    private String titleMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        detailMovieLayout = (LinearLayout) findViewById(R.id.detail_movie_layout);
+        detailMovieLayout = (RelativeLayout) findViewById(R.id.detail_movie_layout);
         detailMoviePic = (ImageView) findViewById(R.id.detail_movie_pic);
-        detailMovieTitle = (TextView) findViewById(R.id.detail_movie_title);
         detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
         detailMovieOverview = (TextView) findViewById(R.id.detail_movie_overview);
         detailMovieGenre = (TextView) findViewById(R.id.detail_movie_genre);
@@ -88,6 +88,9 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCastsEmpty = (TextView) findViewById(R.id.detail_movie_casts_empty);
         detailMovieCrewsEmpty = (TextView) findViewById(R.id.detail_movie_crews_empty);
         detailMovieTrailersEmpty = (TextView) findViewById(R.id.detail_movie_trailers_empty);
+        detailMovieError = (RelativeLayout) findViewById(R.id.detail_movie_error);
+        detailMovieErrorPic = (ImageView) findViewById(R.id.detail_movie_error_pic);
+        detailMovieErrorContent = (TextView) findViewById(R.id.detail_movie_error_content);
 
         LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
         detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
@@ -101,11 +104,14 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCrews.setLayoutManager(linearLayoutManagerCrews);
         detailMovieCrews.setHasFixedSize(true);
 
-        LinearLayoutManager linearLayoutManagerTrailers = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManagerTrailers = new LinearLayoutManager(getApplicationContext());
         detailMovieTrailers.setLayoutManager(linearLayoutManagerTrailers);
         detailMovieTrailers.setHasFixedSize(true);
 
         idMovies = getIntent().getExtras().getInt("id");
+        titleMovies = getIntent().getExtras().getString("title");
+
+        this.setTitle(titleMovies);
 
         detailMovieLayout.setVisibility(View.GONE);
         detailMovieLoading.setVisibility(View.VISIBLE);
@@ -133,21 +139,17 @@ public class DetailActivity extends AppCompatActivity {
 
         final ItemObject.Movie myMovie = gson.fromJson(response, ItemObject.Movie.class);
 
-        detailMovieTitle.setText(myMovie.getTitle());
-
         if (myMovie.getBackdrop() != null) {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(myMovie.getBackdrop()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_genre)
                     .into(detailMoviePic);
         } else {
             Glide.with(getApplicationContext())
                     .load(MoviesURL.getUrlImage(myMovie.getPoster()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_genre)
                     .into(detailMoviePic);
         }
 
@@ -303,7 +305,7 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void errorResultData(String errorResponse) {
             Log.e("errorResultData", errorResponse);
-            Toast.makeText(getApplicationContext(), "Koneksi bermasalah. Silahkan ulangi kembali", Toast.LENGTH_LONG).show();
+            setErrorLayout("Connection Problem. Please try again.");
         }
     }
 
@@ -345,6 +347,7 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void errorResultData(String errorResponse) {
             Log.e("errorResultData", errorResponse);
+            setErrorLayout("Connection Problem. Please try again.");
         }
 
     }
@@ -369,6 +372,7 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void errorResultData(String errorResponse) {
             Log.e("errorResultData", errorResponse);
+            setErrorLayout("Connection Problem. Please try again.");
         }
     }
 
@@ -402,7 +406,15 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void errorResultData(String errorResponse) {
             Log.e("errorResultData", errorResponse);
+            setErrorLayout("Connection Problem. Please try again.");
         }
+    }
+
+    private void setErrorLayout(String error) {
+        detailMovieLayout.setVisibility(View.GONE);
+        detailMovieLoading.setVisibility(View.GONE);
+        detailMovieError.setVisibility(View.VISIBLE);
+        detailMovieErrorContent.setText(error);
     }
 
     private void showReviewsMovie(String response) {
