@@ -9,13 +9,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@color/colorGray">
+            android:background="@color/colorRed">
 
             <ImageView
                 android:layout_width="100dp"
@@ -32,7 +31,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <TextView

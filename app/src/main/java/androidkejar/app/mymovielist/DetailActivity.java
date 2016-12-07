@@ -1,12 +1,17 @@
 package androidkejar.app.mymovielist;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -19,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,6 +69,9 @@ public class DetailActivity extends AppCompatActivity {
     private TextView detailMovieErrorContent;
     private int idMovies;
     private String titleMovies;
+    private ItemObject.Movie myMovie;
+    private ItemObject.ListOfVideo allVideos;
+    private SwipeRefreshLayout detailMovieRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +101,7 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieError = (RelativeLayout) findViewById(R.id.detail_movie_error);
         detailMovieErrorPic = (ImageView) findViewById(R.id.detail_movie_error_pic);
         detailMovieErrorContent = (TextView) findViewById(R.id.detail_movie_error_content);
+        detailMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.detail_movie_refresh);
 
         LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
         detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
@@ -113,8 +124,21 @@ public class DetailActivity extends AppCompatActivity {
 
         this.setTitle(titleMovies);
 
+        detailMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
+        detailMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDetailMovies();
+            }
+        });
+
+        getDetailMovies();
+    }
+
+    private void getDetailMovies() {
         detailMovieLayout.setVisibility(View.GONE);
         detailMovieLoading.setVisibility(View.VISIBLE);
+        detailMovieRefresh.setRefreshing(false);
 
         getMovies();
     }
@@ -137,7 +161,7 @@ public class DetailActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
-        final ItemObject.Movie myMovie = gson.fromJson(response, ItemObject.Movie.class);
+        myMovie = gson.fromJson(response, ItemObject.Movie.class);
 
         if (myMovie.getBackdrop() != null) {
             Glide.with(getApplicationContext())
@@ -165,12 +189,10 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.main_movie_bigpicture);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
-                TextView textView = (TextView) dialog.findViewById(R.id.bigpicture_title);
                 Glide.with(getApplicationContext())
                         .load(MoviesURL.getUrlImage(myMovie.getPoster()))
                         .centerCrop()
                         .into(imageView);
-                textView.setText(myMovie.getTitle());
                 dialog.show();
                 return false;
             }
@@ -214,12 +236,61 @@ public class DetailActivity extends AppCompatActivity {
         return strLanguage;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                shareMovie();
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareMovie() {
+        String contentMovies = getMovieToShare();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, contentMovies);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    private String getMovieToShare() {
+        String content = "[My Movie List - Info]\n";
+        content += myMovie.getTitle() + " ";
+        if (isPlaying(myMovie.getReleaseDate()))
+            content += "Release on " + getStringReleaseDate(myMovie.getReleaseDate()) + " ";
+        content += MoviesURL.getYoutubeLink(allVideos.getResults().get(0).getKey()) + "\n";
+        content += "Download My Movie List App to get more info about movies.";
+        return content;
+    }
+
+    private boolean isPlaying(String releaseDate) {
+        String[] arrReleaseDate = releaseDate.split("-");
+        Calendar calToday = GregorianCalendar.getInstance();
+        calToday.add(GregorianCalendar.MONTH, -1);
+        Calendar calReleaseDate = GregorianCalendar.getInstance();
+        calReleaseDate.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(arrReleaseDate[2]));
+        calReleaseDate.set(GregorianCalendar.MONTH, Integer.parseInt(arrReleaseDate[1]) - 1);
+        calReleaseDate.set(GregorianCalendar.YEAR, Integer.parseInt(arrReleaseDate[0]));
+        return calToday.before(calReleaseDate);
+    }
+
     private String getStringBugdet(int budget) {
-        String strBudget = "";
+        String strBudget;
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
         String moneyString = formatter.format(budget);
-        if (budget > 0) strBudget += "USD " + moneyString;
-        else strBudget += "Budget Not Recorded";
+        if (budget > 0) strBudget = "USD " + moneyString;
+        else strBudget = "Budget Not Recorded";
         return strBudget;
     }
 
@@ -230,12 +301,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private String getStringRevenue(int revenue) {
-        String strRevenue = "";
+        String strRevenue;
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
         String moneyString = formatter.format(revenue);
-        if (revenue > 0) {
-            strRevenue += "USD " + moneyString;
-        } else strRevenue += "Revenue Not Recorded";
+        if (revenue > 0) strRevenue = "USD " + moneyString;
+        else strRevenue = "Revenue Not Recorded";
         return strRevenue;
     }
 
@@ -251,7 +321,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private String getStringRating(double voteAverage) {
-        String strRating = "";
+        String strRating;
         if (voteAverage > 3) {
             if (((int) (voteAverage * 10)) % 10 != 0) strRating = voteAverage + " of 10";
             else strRating = (int) voteAverage + " of 10";
@@ -316,6 +386,7 @@ public class DetailActivity extends AppCompatActivity {
         ItemObject.Credits allCredits = gson.fromJson(response, ItemObject.Credits.class);
 
         List<ItemObject.Credits.Cast> castList = allCredits.getCasts();
+
         if (castList.size() > 0) {
             detailMovieCastsEmpty.setVisibility(View.GONE);
             CastsAdapter castsAdapter = new CastsAdapter(this, castList);
@@ -325,6 +396,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         List<ItemObject.Credits.Crew> crewList = allCredits.getCrews();
+
         if (crewList.size() > 0) {
             detailMovieCrewsEmpty.setVisibility(View.GONE);
             CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
@@ -380,9 +452,10 @@ public class DetailActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
-        ItemObject.ListOfVideo allVideos = gson.fromJson(response, ItemObject.ListOfVideo.class);
+        allVideos = gson.fromJson(response, ItemObject.ListOfVideo.class);
 
         List<ItemObject.ListOfVideo.Video> trailerList = allVideos.getResults();
+
         if (trailerList.size() > 0) {
             detailMovieTrailersEmpty.setVisibility(View.GONE);
             TrailersAdapter trailersAdapter = new TrailersAdapter(this, trailerList);
@@ -415,6 +488,7 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieLoading.setVisibility(View.GONE);
         detailMovieError.setVisibility(View.VISIBLE);
         detailMovieErrorContent.setText(error);
+        detailMovieErrorPic.setImageResource(R.drawable.ic_signal);
     }
 
     private void showReviewsMovie(String response) {

@@ -78,17 +78,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
                     builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(context, DetailActivity.class);
-                            intent.putExtra("id", itemObjects.get(holder.getAdapterPosition()).getId());
-                            context.startActivity(intent);
+                            sendIntent(itemObjects.get(holder.getAdapterPosition()));
                         }
                     });
                     builder.show();
                 } else {
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra("id", itemObjects.get(holder.getAdapterPosition()).getId());
-                    intent.putExtra("title", itemObjects.get(holder.getAdapterPosition()).getTitle());
-                    context.startActivity(intent);
+                    sendIntent(itemObjects.get(holder.getAdapterPosition()));
                 }
 
             }
@@ -109,6 +104,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
             }
         });
 
+    }
+
+    private void sendIntent(ItemObject.ListOfMovie.MovieDetail movieDetail) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra("id", movieDetail.getId());
+        intent.putExtra("title", movieDetail.getTitle());
+        context.startActivity(intent);
     }
 
     @Override

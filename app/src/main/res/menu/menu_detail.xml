@@ -4,9 +4,9 @@
     tools:context="androidkejar.app.testing.MainActivity">
 
     <item
-        android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Search Here"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="Share Movies"
         app:showAsAction="ifRoom" />
+
 </menu>

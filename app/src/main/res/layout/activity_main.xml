@@ -1,120 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/main_movie_refresh"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/main_movie_toolbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <RelativeLayout
-            android:id="@+id/main_movie_layout"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_movie_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+    </android.support.design.widget.AppBarLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorGray">
-
-                        <ImageView
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/ic_panorama" />
-
-                        <ImageView
-                            android:id="@+id/main_movie_pic"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/main_movie_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/colorBlackTransparent"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="Movie Title"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/main_movie_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="true"
-                    android:layout_margin="10dp"/>
-            </LinearLayout>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/main_movie_scrolltop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="16dp"
-                android:src="@drawable/ic_scroll_top"
-                app:backgroundTint="@color/colorPrimaryDark" />
-        </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <RelativeLayout
-        android:id="@+id/main_movie_loading"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/main_movie_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBlackTransparent">
+        android:layout_below="@id/main_movie_toolbar_layout"
+        tools:openDrawer="start">
 
-        <ProgressBar
+        <include
+            layout="@layout/main_movie_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/main_movie_nav"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminateDrawable="@drawable/bg_progressbar" />
-    </RelativeLayout>
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/main_movie_nav_header"
+            app:menu="@menu/activity_main_drawer" />
 
-    <RelativeLayout
-        android:id="@+id/main_movie_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/main_movie_error_pic"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@drawable/ic_app" />
-
-            <TextView
-                android:id="@+id/main_movie_error_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No movies are avaiable now."
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </RelativeLayout>
+    </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

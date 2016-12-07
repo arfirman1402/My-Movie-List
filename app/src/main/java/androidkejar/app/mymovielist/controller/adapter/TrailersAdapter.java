@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 
 /**
@@ -40,10 +44,15 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHo
     public void onBindViewHolder(final ListHolder holder, int position) {
         holder.detailTrailersName.setText(itemObjects.get(position).getName());
         holder.detailTrailersSource.setText(itemObjects.get(position).getSite());
+        Glide.with(context)
+                .load(MoviesURL.getUrlYoutubeImage(itemObjects.get(position).getKey()))
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .centerCrop()
+                .into(holder.detailTrailersPic);
         holder.detailTrailersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String trailerURL = "https://youtube.com/watch?v=" + itemObjects.get(holder.getAdapterPosition()).getKey();
+                String trailerURL = MoviesURL.getYoutubeLink(itemObjects.get(holder.getAdapterPosition()).getKey());
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
                 context.startActivity(i);
             }

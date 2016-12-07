@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Sort by">
+        <menu>
+            <item
+                android:id="@+id/nav_now_playing"
+                android:icon="@drawable/ic_arrow_left"
+                android:title="Now Playing" />
+            <item
+                android:id="@+id/nav_popular"
+                android:icon="@drawable/ic_arrow_left"
+                android:title="Popular" />
+            <item
+                android:id="@+id/nav_top_rated"
+                android:icon="@drawable/ic_arrow_left"
+                android:title="Top Rated" />
+            <item
+                android:id="@+id/nav_coming_soon"
+                android:icon="@drawable/ic_arrow_left"
+                android:title="Coming Soon" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_arrow_left"
+        android:title="About" />
+</menu>

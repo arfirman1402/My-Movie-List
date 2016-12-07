@@ -42,11 +42,11 @@ public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> 
     public void onBindViewHolder(final ListHolder holder, int position) {
         holder.detailCrewsName.setText(itemObjects.get(position).getName());
         holder.detailCrewsJob.setText(itemObjects.get(position).getJob());
-            Glide.with(context)
-                    .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .centerCrop()
-                    .into(holder.detailCrewsPic);
+        Glide.with(context)
+                .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .centerCrop()
+                .into(holder.detailCrewsPic);
 
     }
 
