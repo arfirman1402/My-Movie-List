@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist;
+package androidkejar.app.mymovielist.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -33,13 +33,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.controller.adapter.MoviesAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.utility.Pref;
+import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
 public class MainActivity extends AppCompatActivity implements MoviesResult, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mainMovieList;
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     private ErrorType mainErrorType;
     private DrawerLayout mainMovieDrawer;
     private boolean isAbout;
+    private boolean isFavorite;
 
     private enum ErrorType {
         CONNECTION,
@@ -107,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
                 if (recyclerView.getAdapter().getItemCount() != 0) {
                     int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                     if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
-                        Log.d("onScrolled", "isBottom");
                         if (movieList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
                             getMoviesfromBottom();
                         }
@@ -155,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         mainMovieDrawer = (DrawerLayout) findViewById(R.id.main_movie_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mainMovieDrawer, mainMovieToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        /*drawer.setDrawerListener(toggle);*/
         mainMovieDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -405,12 +407,63 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
             case R.id.nav_about:
                 showAbout();
                 break;
+            case R.id.nav_favorite:
+                showFavorites();
+                break;
             default:
                 break;
 
         }
+
+        mainMovieSearch.onActionViewCollapsed();
+        isSearching = false;
+
         mainMovieDrawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showFavorites() {
+        isFavorite = true;
+        this.setTitle("Favorites");
+        sortPosition = -1;
+        page = 1;
+        maxPage = 1;
+        isAbout = false;
+        movieList.clear();
+        moviesAdapter.resetData();
+        mainMovieRefresh.setRefreshing(false);
+        mainMovieLayout.setVisibility(View.GONE);
+        mainMovieError.setVisibility(View.GONE);
+        mainMovieAbout.setVisibility(View.GONE);
+        mainMovieLoading.setVisibility(View.VISIBLE);
+        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+        mainMovieList.removeAllViews();
+        String jsonFavoritesMovies = Pref.getFavorite(this);
+        getListFavoriteMovies(jsonFavoritesMovies);
+    }
+
+    private void getListFavoriteMovies(String jsonFavoritesMovies) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        ItemObject.ListOfMovie.MovieDetail[] myMovie = gson.fromJson(jsonFavoritesMovies, ItemObject.ListOfMovie.MovieDetail[].class);
+
+        if (myMovie == null) {
+            myMovie = new ItemObject.ListOfMovie.MovieDetail[]{};
+        }
+
+        movieList.addAll(Arrays.asList(myMovie));
+        moviesAdapter.addAll(Arrays.asList(myMovie));
+
+        if (movieList.size() > 0) {
+            mainMovieLayout.setVisibility(View.VISIBLE);
+            setHeaderLayout();
+        } else {
+            mainErrorType = ErrorType.EMPTY;
+            setErrorLayout("No Favorites Movies Available");
+        }
+
+        mainMovieLoading.setVisibility(View.GONE);
     }
 
     private void showAbout() {

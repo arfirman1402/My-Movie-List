@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist.controller.adapter;
+package androidkejar.app.mymovielist.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;

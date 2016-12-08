@@ -40,6 +40,14 @@ public class ItemObject {
         }
 
         public class MovieDetail {
+
+            public MovieDetail(String poster, String backdrop, int id, String title) {
+                this.poster = poster;
+                this.backdrop = backdrop;
+                this.id = id;
+                this.title = title;
+            }
+
             @SerializedName("adult")
             private boolean adult;
 

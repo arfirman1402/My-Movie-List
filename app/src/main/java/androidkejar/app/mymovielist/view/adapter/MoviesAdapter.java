@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist.controller.adapter;
+package androidkejar.app.mymovielist.view.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidkejar.app.mymovielist.DetailActivity;
+import androidkejar.app.mymovielist.view.DetailActivity;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.pojo.ItemObject;

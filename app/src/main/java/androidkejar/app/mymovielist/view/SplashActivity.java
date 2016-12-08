@@ -1,9 +1,11 @@
-package androidkejar.app.mymovielist;
+package androidkejar.app.mymovielist.view;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidkejar.app.mymovielist.R;
 
 /**
  * Created by alodokter-it on 29/11/16.

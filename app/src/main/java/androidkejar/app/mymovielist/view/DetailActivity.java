@@ -1,9 +1,10 @@
-package androidkejar.app.mymovielist;
+package androidkejar.app.mymovielist.view;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,19 +25,24 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.controller.adapter.CastsAdapter;
-import androidkejar.app.mymovielist.controller.adapter.CrewsAdapter;
-import androidkejar.app.mymovielist.controller.adapter.ReviewsAdapter;
-import androidkejar.app.mymovielist.controller.adapter.TrailersAdapter;
 import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.utility.Pref;
+import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
+import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
+import androidkejar.app.mymovielist.view.adapter.ReviewsAdapter;
+import androidkejar.app.mymovielist.view.adapter.TrailersAdapter;
 
 /**
  * Created by alodokter-it on 20/11/16.
@@ -46,6 +52,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private ImageView detailMoviePic;
     private ImageView detailMoviePoster;
+    private ImageView detailMovieFavorite;
     private TextView detailMovieOverview;
     private TextView detailMovieGenre;
     private TextView detailMovieLanguage;
@@ -81,6 +88,7 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieLayout = (RelativeLayout) findViewById(R.id.detail_movie_layout);
         detailMoviePic = (ImageView) findViewById(R.id.detail_movie_pic);
         detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
+        detailMovieFavorite = (ImageView) findViewById(R.id.detail_movie_favorite);
         detailMovieOverview = (TextView) findViewById(R.id.detail_movie_overview);
         detailMovieGenre = (TextView) findViewById(R.id.detail_movie_genre);
         detailMovieLanguage = (TextView) findViewById(R.id.detail_movie_language);
@@ -132,7 +140,62 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        detailMovieFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setFavoriteMovie();
+            }
+        });
+
         getDetailMovies();
+    }
+
+    private void checkFavoriteMovies() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        String jsonFavoriteMovies = Pref.getFavorite(this);
+        List<ItemObject.Movie> listFavoriteMovies = new ArrayList<>();
+        if (!jsonFavoriteMovies.equals("")) {
+            LinkedList<ItemObject.Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, ItemObject.Movie[].class)));
+            listFavoriteMovies.addAll(tempFavoriteMovies);
+        }
+
+        detailMovieFavorite.setImageResource(R.drawable.ic_favorite_off);
+
+        for (int i = 0; i < listFavoriteMovies.size(); i++) {
+            if (listFavoriteMovies.get(i).getTitle().equals(myMovie.getTitle())) {
+                detailMovieFavorite.setImageResource(R.drawable.ic_favorite_on);
+                break;
+            }
+        }
+    }
+
+    private void setFavoriteMovie() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        String jsonFavoriteMovies = Pref.getFavorite(this);
+        List<ItemObject.Movie> listFavoriteMovies = new ArrayList<>();
+        if (!jsonFavoriteMovies.equals("")) {
+            LinkedList<ItemObject.Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, ItemObject.Movie[].class)));
+            listFavoriteMovies.addAll(tempFavoriteMovies);
+        }
+        boolean isSame = false;
+        for (int i = 0; i < listFavoriteMovies.size(); i++) {
+            if (listFavoriteMovies.get(i).getTitle().equals(myMovie.getTitle())) {
+                listFavoriteMovies.remove(i);
+                isSame = true;
+                break;
+            }
+        }
+
+        if (isSame) {
+            detailMovieFavorite.setImageResource(R.drawable.ic_favorite_off);
+        } else {
+            listFavoriteMovies.add(myMovie);
+            detailMovieFavorite.setImageResource(R.drawable.ic_favorite_on);
+        }
+        jsonFavoriteMovies = gson.toJson(listFavoriteMovies.toArray());
+        Pref.putFavorite(this, jsonFavoriteMovies);
     }
 
     private void getDetailMovies() {
@@ -466,6 +529,8 @@ public class DetailActivity extends AppCompatActivity {
 
         detailMovieLoading.setVisibility(View.GONE);
         detailMovieLayout.setVisibility(View.VISIBLE);
+
+        checkFavoriteMovies();
     }
 
     private class MovieReviewResult implements MoviesResult {

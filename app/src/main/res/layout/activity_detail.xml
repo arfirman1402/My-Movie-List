@@ -8,48 +8,56 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/detail_movie_layout"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:scrollbars="none">
 
                 <RelativeLayout
+                    android:id="@+id/detail_movie_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@color/colorGray">
+                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_panorama" />
-
-                    <ImageView
-                        android:id="@+id/detail_movie_pic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </RelativeLayout>
-
-                <android.support.v4.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="2">
-
-                    <ScrollView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scrollbars="none">
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:background="@color/colorGray">
+
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_panorama" />
+
+                            <ImageView
+                                android:id="@+id/detail_movie_pic"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                            <ImageView
+                                android:id="@+id/detail_movie_favorite"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="10dp"
+                                android:src="@drawable/ic_favorite_off" />
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:padding="10dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -318,10 +326,10 @@
                                     android:visibility="gone" />
                             </RelativeLayout>
                         </LinearLayout>
-                    </ScrollView>
-                </android.support.v4.widget.NestedScrollView>
-            </LinearLayout>
-        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
