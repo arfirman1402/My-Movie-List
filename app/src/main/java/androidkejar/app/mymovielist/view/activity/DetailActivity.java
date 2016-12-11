@@ -1,10 +1,9 @@
-package androidkejar.app.mymovielist.view;
+package androidkejar.app.mymovielist.view.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -34,10 +33,10 @@ import java.util.List;
 import java.util.Locale;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesConnecting;
+import androidkejar.app.mymovielist.controller.MoviesConnectingVolley;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.model.ItemObject;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
@@ -212,7 +211,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovies() {
-        MoviesConnecting connecting = new MoviesConnecting();
+        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
         String url = MoviesURL.getMovieById(idMovies);
 
         Log.d("getMovies", "url = " + url);
@@ -411,7 +410,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getReviews() {
-        MoviesConnecting connecting = new MoviesConnecting();
+        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
         String url = MoviesURL.getMovieReviewById(idMovies);
 
         Log.d("getReviews", "url = " + url);
@@ -420,7 +419,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getCasts() {
-        MoviesConnecting connecting = new MoviesConnecting();
+        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
         String url = MoviesURL.getMovieCastById(idMovies);
 
         Log.d("getCasts", "url = " + url);
@@ -488,7 +487,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getTrailers() {
-        MoviesConnecting connecting = new MoviesConnecting();
+        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
         String url = MoviesURL.getMovieTrailerById(idMovies);
 
         Log.d("getTrailers", "url = " + url);

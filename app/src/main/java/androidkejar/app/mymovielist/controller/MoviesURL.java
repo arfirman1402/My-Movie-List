@@ -17,6 +17,14 @@ public class MoviesURL {
         return BASE_URL_IMAGE + icon;
     }
 
+    public static String getBaseUrl() {
+        return BASE_URL;
+    }
+
+    public static String getApiKey() {
+        return API_KEY;
+    }
+
     public static String getListMovieNowPlaying(int page) {
         return BASE_URL + "/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG_SOURCE + "&page=" + page;
     }

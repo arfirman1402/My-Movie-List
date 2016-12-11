@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist.pojo;
+package androidkejar.app.mymovielist.model;
 
 import com.google.gson.annotations.SerializedName;
 

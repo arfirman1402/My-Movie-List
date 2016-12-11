@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist.view;
+package androidkejar.app.mymovielist.view.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -37,10 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesConnecting;
+import androidkejar.app.mymovielist.controller.MoviesConnectingVolley;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.model.ItemObject;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     }
 
     private void getMovies(String url) {
-        MoviesConnecting connecting = new MoviesConnecting();
+        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
 
         Log.d("getMovies", "url = " + url);
 

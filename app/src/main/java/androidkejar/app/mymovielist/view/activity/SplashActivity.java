@@ -1,4 +1,4 @@
-package androidkejar.app.mymovielist.view;
+package androidkejar.app.mymovielist.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;

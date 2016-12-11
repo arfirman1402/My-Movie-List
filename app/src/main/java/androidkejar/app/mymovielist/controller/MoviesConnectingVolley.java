@@ -13,7 +13,7 @@ import com.android.volley.toolbox.Volley;
  * Created by alodokter-it on 05/11/16.
  */
 
-public class MoviesConnecting {
+public class MoviesConnectingVolley {
     public void getData(Context context, String url, final MoviesResult result) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

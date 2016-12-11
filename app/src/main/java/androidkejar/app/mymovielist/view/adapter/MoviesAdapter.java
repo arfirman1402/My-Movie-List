@@ -20,10 +20,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidkejar.app.mymovielist.view.DetailActivity;
+import androidkejar.app.mymovielist.view.activity.DetailActivity;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.model.ItemObject;
 
 /**
  * Created by alodokter-it on 12/11/16.
