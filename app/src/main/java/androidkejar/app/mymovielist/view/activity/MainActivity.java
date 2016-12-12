@@ -37,10 +37,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesConnectingVolley;
+import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.model.ItemObject;
+import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
+import androidkejar.app.mymovielist.restapi.RestAPIResult;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
@@ -164,6 +166,19 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_movie_nav);
         navigationView.setNavigationItemSelectedListener(this);
 
+        RestAPIConnecting apiConnect = new RestAPIConnecting();
+        apiConnect.getDataTopRated(new RestAPIResult() {
+            @Override
+            public void resultData(String response) {
+                Log.d("MainActivity", "response = " + response.toString());
+            }
+
+            @Override
+            public void errorResultData(String errorResponse) {
+                Log.e("MainActivity", "errorResponse = " + errorResponse.toString());
+            }
+        });
+
         launchGetMovies();
     }
 
@@ -222,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     }
 
     private void getMovies(String url) {
-        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
+        MoviesConnecting connecting = new MoviesConnecting();
 
         Log.d("getMovies", "url = " + url);
 

@@ -1,6 +1,6 @@
 package androidkejar.app.mymovielist.controller.retrofit;
 
-import androidkejar.app.mymovielist.model.ItemObject;
+import androidkejar.app.mymovielist.pojo.ItemObject;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

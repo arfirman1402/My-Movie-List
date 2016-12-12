@@ -33,10 +33,10 @@ import java.util.List;
 import java.util.Locale;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesConnectingVolley;
+import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.model.ItemObject;
+import androidkejar.app.mymovielist.pojo.ItemObject;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
@@ -211,7 +211,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovies() {
-        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
+        MoviesConnecting connecting = new MoviesConnecting();
         String url = MoviesURL.getMovieById(idMovies);
 
         Log.d("getMovies", "url = " + url);
@@ -410,7 +410,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getReviews() {
-        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
+        MoviesConnecting connecting = new MoviesConnecting();
         String url = MoviesURL.getMovieReviewById(idMovies);
 
         Log.d("getReviews", "url = " + url);
@@ -419,7 +419,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getCasts() {
-        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
+        MoviesConnecting connecting = new MoviesConnecting();
         String url = MoviesURL.getMovieCastById(idMovies);
 
         Log.d("getCasts", "url = " + url);
@@ -487,7 +487,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getTrailers() {
-        MoviesConnectingVolley connecting = new MoviesConnectingVolley();
+        MoviesConnecting connecting = new MoviesConnecting();
         String url = MoviesURL.getMovieTrailerById(idMovies);
 
         Log.d("getTrailers", "url = " + url);
