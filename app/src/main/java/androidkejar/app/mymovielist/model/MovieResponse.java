@@ -18,7 +18,7 @@ public class MovieResponse {
     private List<Movie> results;
 
     @SerializedName("dates")
-    private List<Dates> dates;
+    private Dates dates;
 
     @SerializedName("total_pages")
     private int totalPages;
@@ -34,7 +34,7 @@ public class MovieResponse {
         return results;
     }
 
-    public List<Dates> getDates() {
+    public Dates getDates() {
         return dates;
     }
 

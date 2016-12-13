@@ -16,7 +16,7 @@ public class RestAPIConnecting {
     RestAPIInterface apiService = RestAPIClient.getClient().create(RestAPIInterface.class);
 
     public void getDataNowPlaying(int pages, final RestAPIMovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getNowPlayingMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages);
+        Call<MovieResponse> call = apiService.getNowPlayingMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -31,7 +31,7 @@ public class RestAPIConnecting {
     }
 
     public void getDataUpcoming(int pages, final RestAPIMovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getUpcomingMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages);
+        Call<MovieResponse> call = apiService.getUpcomingMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -46,7 +46,7 @@ public class RestAPIConnecting {
     }
 
     public void getDataPopular(int pages, final RestAPIMovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getPopularMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages);
+        Call<MovieResponse> call = apiService.getPopularMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -61,7 +61,7 @@ public class RestAPIConnecting {
     }
 
     public void getDataTopRated(int pages, final RestAPIMovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getTopRatedMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages);
+        Call<MovieResponse> call = apiService.getTopRatedMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {

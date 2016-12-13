@@ -33,10 +33,18 @@ import java.util.List;
 import java.util.Locale;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesConnecting;
-import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
+import androidkejar.app.mymovielist.model.CreditResponse;
+import androidkejar.app.mymovielist.model.Genre;
+import androidkejar.app.mymovielist.model.Movie;
+import androidkejar.app.mymovielist.model.Review;
+import androidkejar.app.mymovielist.model.Video;
+import androidkejar.app.mymovielist.model.credit.Cast;
+import androidkejar.app.mymovielist.model.credit.Crew;
 import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
+import androidkejar.app.mymovielist.restapi.RestAPIMovieResult;
+import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
@@ -48,7 +56,6 @@ import androidkejar.app.mymovielist.view.adapter.TrailersAdapter;
  */
 
 public class DetailActivity extends AppCompatActivity {
-
     private ImageView detailMoviePic;
     private ImageView detailMoviePoster;
     private ImageView detailMovieFavorite;
@@ -74,10 +81,10 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView detailMovieErrorPic;
     private TextView detailMovieErrorContent;
     private int idMovies;
-    private String titleMovies;
-    private ItemObject.Movie myMovie;
-    private ItemObject.ListOfVideo allVideos;
+    private Movie myMovie;
+    private List<Video> allVideos;
     private SwipeRefreshLayout detailMovieRefresh;
+    private RestAPIConnecting apiConnecting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +134,7 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieTrailers.setHasFixedSize(true);
 
         idMovies = getIntent().getExtras().getInt("id");
-        titleMovies = getIntent().getExtras().getString("title");
+        String titleMovies = getIntent().getExtras().getString("title");
 
         this.setTitle(titleMovies);
 
@@ -173,9 +180,9 @@ public class DetailActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         String jsonFavoriteMovies = Pref.getFavorite(this);
-        List<ItemObject.Movie> listFavoriteMovies = new ArrayList<>();
+        List<Movie> listFavoriteMovies = new ArrayList<>();
         if (!jsonFavoriteMovies.equals("")) {
-            LinkedList<ItemObject.Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, ItemObject.Movie[].class)));
+            LinkedList<Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, Movie[].class)));
             listFavoriteMovies.addAll(tempFavoriteMovies);
         }
         boolean isSame = false;
@@ -211,36 +218,28 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovies() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getMovieById(idMovies);
-
-        Log.d("getMovies", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new MovieDetailResult());
+        apiConnecting = new RestAPIConnecting();
+        apiConnecting.getDataMovie(idMovies, new MovieResult());
     }
 
-    private void convertToMovieDetail(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        myMovie = gson.fromJson(response, ItemObject.Movie.class);
-
-        if (myMovie.getBackdrop() != null) {
+    private void setDataResponse(Movie body) {
+        myMovie = body;
+        if (myMovie.getBackdropPath() != null) {
             Glide.with(getApplicationContext())
-                    .load(MoviesURL.getUrlImage(myMovie.getBackdrop()))
+                    .load(RestAPIURL.getUrlImage(myMovie.getBackdropPath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(detailMoviePic);
         } else {
             Glide.with(getApplicationContext())
-                    .load(MoviesURL.getUrlImage(myMovie.getPoster()))
+                    .load(RestAPIURL.getUrlImage(myMovie.getPosterPath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(detailMoviePic);
         }
 
         Glide.with(getApplicationContext())
-                .load(MoviesURL.getUrlImage(myMovie.getPoster()))
+                .load(RestAPIURL.getUrlImage(myMovie.getPosterPath()))
                 .centerCrop()
                 .into(detailMoviePoster);
 
@@ -252,7 +251,7 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.setContentView(R.layout.main_movie_bigpicture);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
                 Glide.with(getApplicationContext())
-                        .load(MoviesURL.getUrlImage(myMovie.getPoster()))
+                        .load(RestAPIURL.getUrlImage(myMovie.getPosterPath()))
                         .centerCrop()
                         .into(imageView);
                 dialog.show();
@@ -276,16 +275,68 @@ public class DetailActivity extends AppCompatActivity {
 
         detailMovieReleaseDate.setText(getStringReleaseDate(myMovie.getReleaseDate()));
 
-        getReviews();
+        setReviewsMovie(myMovie.getReviewResponse().getResults());
+
+        setCreditsMovie(myMovie.getCredits());
+
+        setVideosMovie(myMovie.getVideoResponse().getResults());
+
+        checkFavoriteMovies();
     }
 
-    private String getStringLanguage(ItemObject.Movie myMovie) {
+    private void setVideosMovie(List<Video> results) {
+        allVideos = results;
+        if (results.size() > 0) {
+            detailMovieTrailersEmpty.setVisibility(View.GONE);
+            TrailersAdapter trailersAdapter = new TrailersAdapter(this, results);
+            detailMovieTrailers.setAdapter(trailersAdapter);
+        } else {
+            detailMovieTrailersEmpty.setVisibility(View.VISIBLE);
+        }
+
+        detailMovieLoading.setVisibility(View.GONE);
+        detailMovieLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void setCreditsMovie(CreditResponse credits) {
+        List<Cast> castList = credits.getCasts();
+
+        if (castList.size() > 0) {
+            detailMovieCastsEmpty.setVisibility(View.GONE);
+            CastsAdapter castsAdapter = new CastsAdapter(this, castList);
+            detailMovieCasts.setAdapter(castsAdapter);
+        } else {
+            detailMovieCastsEmpty.setVisibility(View.VISIBLE);
+        }
+
+        List<Crew> crewList = credits.getCrews();
+
+        if (crewList.size() > 0) {
+            detailMovieCrewsEmpty.setVisibility(View.GONE);
+            CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
+            detailMovieCrews.setAdapter(crewsAdapter);
+        } else {
+            detailMovieCrewsEmpty.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setReviewsMovie(List<Review> reviews) {
+        if (reviews.size() > 0) {
+            detailMovieReviewsEmpty.setVisibility(View.GONE);
+            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, myMovie.getReviewResponse().getResults());
+            detailMovieReviews.setAdapter(reviewsAdapter);
+        } else {
+            detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private String getStringLanguage(Movie myMovie) {
         String strLanguage = "";
         strLanguage += myMovie.getOriginalLanguage();
         if (myMovie.getSpokenLanguages().size() > 0) {
             strLanguage += " - ";
             for (int i = 0; i < myMovie.getSpokenLanguages().size(); i++) {
-                strLanguage += myMovie.getSpokenLanguages().get(i).getIso_639_1() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")";
+                strLanguage += myMovie.getSpokenLanguages().get(i).getIsoLanguage() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")";
                 if (myMovie.getSpokenLanguages().size() > 1) {
                     if (i != myMovie.getSpokenLanguages().size() - 1) {
                         strLanguage += ", ";
@@ -331,7 +382,7 @@ public class DetailActivity extends AppCompatActivity {
         content += myMovie.getTitle() + " ";
         if (isPlaying(myMovie.getReleaseDate()))
             content += "Release on " + getStringReleaseDate(myMovie.getReleaseDate()) + " ";
-        content += MoviesURL.getYoutubeLink(allVideos.getResults().get(0).getKey()) + "\n";
+        content += MoviesURL.getYoutubeLink(allVideos.get(0).getKey()) + "\n";
         content += "Download My Movie List App to get more info about movies.";
         return content;
     }
@@ -391,7 +442,7 @@ public class DetailActivity extends AppCompatActivity {
         return strRating;
     }
 
-    private String getStringGenre(List<ItemObject.Movie.Genre> genres) {
+    private String getStringGenre(List<Genre> genres) {
         String strGenre = "";
         if (genres.size() > 0) {
             for (int i = 0; i < genres.size(); i++) {
@@ -409,144 +460,6 @@ public class DetailActivity extends AppCompatActivity {
         return strGenre;
     }
 
-    private void getReviews() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getMovieReviewById(idMovies);
-
-        Log.d("getReviews", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new MovieReviewResult());
-    }
-
-    private void getCasts() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getMovieCastById(idMovies);
-
-        Log.d("getCasts", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new MovieCastResult());
-    }
-
-    private class MovieDetailResult implements MoviesResult {
-        @Override
-        public void resultData(String response) {
-            Log.d("resultData", "response = " + response);
-            convertToMovieDetail(response);
-        }
-
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            setErrorLayout("Connection Problem. Please try again.");
-        }
-    }
-
-    private void showCastsMovie(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        ItemObject.Credits allCredits = gson.fromJson(response, ItemObject.Credits.class);
-
-        List<ItemObject.Credits.Cast> castList = allCredits.getCasts();
-
-        if (castList.size() > 0) {
-            detailMovieCastsEmpty.setVisibility(View.GONE);
-            CastsAdapter castsAdapter = new CastsAdapter(this, castList);
-            detailMovieCasts.setAdapter(castsAdapter);
-        } else {
-            detailMovieCastsEmpty.setVisibility(View.VISIBLE);
-        }
-
-        List<ItemObject.Credits.Crew> crewList = allCredits.getCrews();
-
-        if (crewList.size() > 0) {
-            detailMovieCrewsEmpty.setVisibility(View.GONE);
-            CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
-            detailMovieCrews.setAdapter(crewsAdapter);
-        } else {
-            detailMovieCrewsEmpty.setVisibility(View.VISIBLE);
-        }
-
-        getTrailers();
-    }
-
-    private class MovieCastResult implements MoviesResult {
-
-        @Override
-        public void resultData(String response) {
-            Log.d("resultData", "response = " + response);
-            showCastsMovie(response);
-        }
-
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            setErrorLayout("Connection Problem. Please try again.");
-        }
-
-    }
-
-    private void getTrailers() {
-        MoviesConnecting connecting = new MoviesConnecting();
-        String url = MoviesURL.getMovieTrailerById(idMovies);
-
-        Log.d("getTrailers", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, new MovieTrailerResult());
-    }
-
-    private class MovieTrailerResult implements MoviesResult {
-
-        @Override
-        public void resultData(String response) {
-            Log.d("resultData", "response = " + response);
-            showTrailersMovie(response);
-        }
-
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            setErrorLayout("Connection Problem. Please try again.");
-        }
-    }
-
-    private void showTrailersMovie(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        allVideos = gson.fromJson(response, ItemObject.ListOfVideo.class);
-
-        List<ItemObject.ListOfVideo.Video> trailerList = allVideos.getResults();
-
-        if (trailerList.size() > 0) {
-            detailMovieTrailersEmpty.setVisibility(View.GONE);
-            TrailersAdapter trailersAdapter = new TrailersAdapter(this, trailerList);
-            detailMovieTrailers.setAdapter(trailersAdapter);
-        } else {
-            detailMovieTrailersEmpty.setVisibility(View.VISIBLE);
-        }
-
-        detailMovieLoading.setVisibility(View.GONE);
-        detailMovieLayout.setVisibility(View.VISIBLE);
-
-        checkFavoriteMovies();
-    }
-
-    private class MovieReviewResult implements MoviesResult {
-
-        @Override
-        public void resultData(String response) {
-            Log.d("resultData", "response = " + response);
-            showReviewsMovie(response);
-        }
-
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            setErrorLayout("Connection Problem. Please try again.");
-        }
-    }
-
     private void setErrorLayout(String error) {
         detailMovieLayout.setVisibility(View.GONE);
         detailMovieLoading.setVisibility(View.GONE);
@@ -555,22 +468,17 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieErrorPic.setImageResource(R.drawable.ic_signal);
     }
 
-    private void showReviewsMovie(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        ItemObject.ListOfReview allReviews = gson.fromJson(response, ItemObject.ListOfReview.class);
-
-        List<ItemObject.ListOfReview.Review> reviewList = allReviews.getResults();
-
-        if (reviewList.size() > 0) {
-            detailMovieReviewsEmpty.setVisibility(View.GONE);
-            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, reviewList);
-            detailMovieReviews.setAdapter(reviewsAdapter);
-        } else {
-            detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
+    private class MovieResult implements RestAPIMovieResult {
+        @Override
+        public void resultData(String message, Movie body) {
+            Log.d("resultData", message);
+            setDataResponse(body);
         }
 
-        getCasts();
+        @Override
+        public void errorResultData(String errorResponse) {
+            Log.e("errorResultData", errorResponse);
+            setErrorLayout("Connection Problem. Please try again.");
+        }
     }
 }

@@ -37,17 +37,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesConnecting;
-import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
+import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
-import androidkejar.app.mymovielist.pojo.ItemObject;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
 import androidkejar.app.mymovielist.restapi.RestAPIMovieResponseResult;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
-public class MainActivity extends AppCompatActivity implements MoviesResult, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mainMovieList;
     private RelativeLayout mainMovieLayout;
     private RelativeLayout mainMovieError;
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     private SearchView mainMovieSearch;
     private ScrollView mainMovieAbout;
 
-    private List<ItemObject.ListOfMovie.MovieDetail> movieList;
+    private List<Movie> movieList;
     private Handler changeHeaderHandler;
     private Runnable changeHeaderRunnable;
     private int randomList = -1;
@@ -78,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     private DrawerLayout mainMovieDrawer;
     private boolean isAbout;
     private boolean isFavorite;
+
+    private RestAPIConnecting apiConnecting;
 
     private enum ErrorType {
         CONNECTION,
@@ -141,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                launchGetMovies();
+                if (isFavorite) showFavorites();
+                else launchGetMovies();
             }
         });
 
@@ -167,9 +168,6 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_movie_nav);
         navigationView.setNavigationItemSelectedListener(this);
 
-        RestAPIConnecting apiConnect = new RestAPIConnecting();
-        apiConnect.getDataTopRated(1, new MovieResponseResult());
-
         launchGetMovies();
     }
 
@@ -177,8 +175,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         page += 1;
         if (page != maxPage) {
             changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-            setURLMovies();
-            getMovies(urlList);
+            getMovies();
         }
     }
 
@@ -195,28 +192,28 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         mainMovieLoading.setVisibility(View.VISIBLE);
         changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
         mainMovieList.removeAllViews();
-        setURLMovies();
-        getMovies(urlList);
+        getMovies();
     }
 
-    private void setURLMovies() {
+    private void getMovies() {
+        apiConnecting = new RestAPIConnecting();
         if (isSearching) {
-            urlList = MoviesURL.getListMovieBasedOnWord(querySearch, page);
             this.setTitle(querySearch);
+            apiConnecting.getDataSearch(querySearch, page, new MovieResponseResult());
         } else {
             this.setTitle(sortByList[sortPosition]);
             switch (sortPosition) {
                 case 0:
-                    urlList = MoviesURL.getListMovieNowPlaying(page);
+                    apiConnecting.getDataNowPlaying(page, new MovieResponseResult());
                     break;
                 case 1:
-                    urlList = MoviesURL.getListMoviePopular(page);
+                    apiConnecting.getDataPopular(page, new MovieResponseResult());
                     break;
                 case 2:
-                    urlList = MoviesURL.getListMovieTopRated(page);
+                    apiConnecting.getDataTopRated(page, new MovieResponseResult());
                     break;
                 case 3:
-                    urlList = MoviesURL.getListMovieUpcoming(page);
+                    apiConnecting.getDataUpcoming(page, new MovieResponseResult());
                     break;
             }
         }
@@ -227,24 +224,11 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         super.onConfigurationChanged(newConfig);
     }
 
-    private void getMovies(String url) {
-        MoviesConnecting connecting = new MoviesConnecting();
+    private void setDataResponse(MovieResponse body) {
+        maxPage = body.getTotalPages();
 
-        Log.d("getMovies", "url = " + url);
-
-        connecting.getData(getApplicationContext(), url, this);
-    }
-
-    private void convertToMovies(String response) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        ItemObject.ListOfMovie myMovie = gson.fromJson(response, ItemObject.ListOfMovie.class);
-
-        maxPage = myMovie.getTotalPages();
-
-        movieList.addAll(myMovie.getResults());
-        moviesAdapter.addAll(myMovie.getResults());
+        movieList.addAll(body.getResults());
+        moviesAdapter.addAll(body.getResults());
 
         if (movieList.size() > 0) {
             mainMovieLayout.setVisibility(View.VISIBLE);
@@ -272,15 +256,15 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
 
         mainMovieTitle.setText(movieList.get(randomList).getTitle());
 
-        if (movieList.get(randomList).getBackdrop() != null) {
+        if (movieList.get(randomList).getBackdropPath() != null) {
             Glide.with(getApplicationContext())
-                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdrop()))
+                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdropPath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(mainMoviePic);
         } else {
             Glide.with(getApplicationContext())
-                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getPoster()))
+                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getPosterPath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(mainMoviePic);
@@ -340,23 +324,9 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
 
         if (sortPosition != i) {
             isSearching = false;
-            isAbout = false;
             sortPosition = i;
             launchGetMovies();
         }
-    }
-
-    @Override
-    public void resultData(String response) {
-        Log.d("resultData", response);
-        convertToMovies(response);
-    }
-
-    @Override
-    public void errorResultData(String errorResponse) {
-        Log.e("errorResultData", errorResponse);
-        mainErrorType = ErrorType.CONNECTION;
-        setErrorLayout("Connection Problem. Please try again.");
     }
 
     private void setErrorLayout(String error) {
@@ -387,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         } else if (!mainMovieSearch.isIconified() || isSearching || sortPosition != 0 || isAbout) {
             mainMovieSearch.onActionViewCollapsed();
             isSearching = false;
-            isAbout = false;
             sortPosition = 0;
             launchGetMovies();
         } else {
@@ -452,10 +421,10 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
 
-        ItemObject.ListOfMovie.MovieDetail[] myMovie = gson.fromJson(jsonFavoritesMovies, ItemObject.ListOfMovie.MovieDetail[].class);
+        Movie[] myMovie = gson.fromJson(jsonFavoritesMovies, Movie[].class);
 
         if (myMovie == null) {
-            myMovie = new ItemObject.ListOfMovie.MovieDetail[]{};
+            myMovie = new Movie[]{};
         }
 
         movieList.addAll(Arrays.asList(myMovie));
@@ -482,12 +451,15 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
     private class MovieResponseResult implements RestAPIMovieResponseResult {
         @Override
         public void resultData(String message, MovieResponse body) {
-
+            Log.d("resultData", message);
+            setDataResponse(body);
         }
 
         @Override
         public void errorResultData(String errorResponse) {
-
+            Log.e("errorResultData", errorResponse);
+            mainErrorType = ErrorType.CONNECTION;
+            setErrorLayout("Connection Problem. Please try again.");
         }
     }
 }

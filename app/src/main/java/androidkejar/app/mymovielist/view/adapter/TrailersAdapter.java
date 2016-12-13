@@ -17,8 +17,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.model.Video;
+import androidkejar.app.mymovielist.restapi.RestAPIURL;
 
 /**
  * Created by alodokter-it on 12/11/16.
@@ -27,9 +27,9 @@ import androidkejar.app.mymovielist.pojo.ItemObject;
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHolder> {
 
     Context context;
-    List<ItemObject.ListOfVideo.Video> itemObjects;
+    List<Video> itemObjects;
 
-    public TrailersAdapter(Context context, List<ItemObject.ListOfVideo.Video> itemObjects) {
+    public TrailersAdapter(Context context, List<Video> itemObjects) {
         this.context = context;
         this.itemObjects = itemObjects;
     }
@@ -45,14 +45,14 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHo
         holder.detailTrailersName.setText(itemObjects.get(position).getName());
         holder.detailTrailersSource.setText(itemObjects.get(position).getSite());
         Glide.with(context)
-                .load(MoviesURL.getUrlYoutubeImage(itemObjects.get(position).getKey()))
+                .load(RestAPIURL.getUrlYoutubeImage(itemObjects.get(position).getKey()))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(holder.detailTrailersPic);
         holder.detailTrailersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String trailerURL = MoviesURL.getYoutubeLink(itemObjects.get(holder.getAdapterPosition()).getKey());
+                String trailerURL = RestAPIURL.getYoutubeLink(itemObjects.get(holder.getAdapterPosition()).getKey());
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
                 context.startActivity(i);
             }

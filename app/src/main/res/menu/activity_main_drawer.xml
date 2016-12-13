@@ -22,7 +22,8 @@
             <item
                 android:id="@+id/nav_favorite"
                 android:icon="@drawable/ic_favorite_on"
-                android:title="Favorite" />
+                android:title="Favorite"
+                android:visible="false" />
         </menu>
     </item>
     <item

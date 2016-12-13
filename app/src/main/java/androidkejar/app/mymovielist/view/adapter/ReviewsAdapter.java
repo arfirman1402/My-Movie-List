@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.pojo.ItemObject;
+import androidkejar.app.mymovielist.model.Review;
 
 /**
  * Created by alodokter-it on 12/11/16.
@@ -22,9 +22,9 @@ import androidkejar.app.mymovielist.pojo.ItemObject;
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ListHolder> {
 
     Context context;
-    List<ItemObject.ListOfReview.Review> itemObjects;
+    List<Review> itemObjects;
 
-    public ReviewsAdapter(Context context, List<ItemObject.ListOfReview.Review> itemObjects) {
+    public ReviewsAdapter(Context context, List<Review> itemObjects) {
         this.context = context;
         this.itemObjects = itemObjects;
     }
