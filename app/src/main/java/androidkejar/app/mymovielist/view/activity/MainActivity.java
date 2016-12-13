@@ -40,9 +40,10 @@ import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MoviesConnecting;
 import androidkejar.app.mymovielist.controller.MoviesResult;
 import androidkejar.app.mymovielist.controller.MoviesURL;
+import androidkejar.app.mymovielist.model.MovieResponse;
 import androidkejar.app.mymovielist.pojo.ItemObject;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
-import androidkejar.app.mymovielist.restapi.RestAPIResult;
+import androidkejar.app.mymovielist.restapi.RestAPIMovieResponseResult;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
@@ -167,17 +168,7 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         navigationView.setNavigationItemSelectedListener(this);
 
         RestAPIConnecting apiConnect = new RestAPIConnecting();
-        apiConnect.getDataTopRated(new RestAPIResult() {
-            @Override
-            public void resultData(String response) {
-                Log.d("MainActivity", "response = " + response.toString());
-            }
-
-            @Override
-            public void errorResultData(String errorResponse) {
-                Log.e("MainActivity", "errorResponse = " + errorResponse.toString());
-            }
-        });
+        apiConnect.getDataTopRated(1, new MovieResponseResult());
 
         launchGetMovies();
     }
@@ -486,5 +477,17 @@ public class MainActivity extends AppCompatActivity implements MoviesResult, Vie
         this.setTitle("About");
         mainMovieAbout.setVisibility(View.VISIBLE);
         sortPosition = -1;
+    }
+
+    private class MovieResponseResult implements RestAPIMovieResponseResult {
+        @Override
+        public void resultData(String message, MovieResponse body) {
+
+        }
+
+        @Override
+        public void errorResultData(String errorResponse) {
+
+        }
     }
 }
