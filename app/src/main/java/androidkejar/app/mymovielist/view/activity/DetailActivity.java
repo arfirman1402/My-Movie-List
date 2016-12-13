@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Locale;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.model.CreditResponse;
 import androidkejar.app.mymovielist.model.Genre;
 import androidkejar.app.mymovielist.model.Movie;
@@ -41,7 +40,6 @@ import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
 import androidkejar.app.mymovielist.model.credit.Cast;
 import androidkejar.app.mymovielist.model.credit.Crew;
-import androidkejar.app.mymovielist.pojo.ItemObject;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
 import androidkejar.app.mymovielist.restapi.RestAPIMovieResult;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
@@ -160,9 +158,9 @@ public class DetailActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         String jsonFavoriteMovies = Pref.getFavorite(this);
-        List<ItemObject.Movie> listFavoriteMovies = new ArrayList<>();
+        List<Movie> listFavoriteMovies = new ArrayList<>();
         if (!jsonFavoriteMovies.equals("")) {
-            LinkedList<ItemObject.Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, ItemObject.Movie[].class)));
+            LinkedList<Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, Movie[].class)));
             listFavoriteMovies.addAll(tempFavoriteMovies);
         }
 
@@ -382,7 +380,7 @@ public class DetailActivity extends AppCompatActivity {
         content += myMovie.getTitle() + " ";
         if (isPlaying(myMovie.getReleaseDate()))
             content += "Release on " + getStringReleaseDate(myMovie.getReleaseDate()) + " ";
-        content += MoviesURL.getYoutubeLink(allVideos.get(0).getKey()) + "\n";
+        content += RestAPIURL.getYoutubeLink(allVideos.get(0).getKey()) + "\n";
         content += "Download My Movie List App to get more info about movies.";
         return content;
     }

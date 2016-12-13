@@ -37,11 +37,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesURL;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
 import androidkejar.app.mymovielist.restapi.RestAPIMovieResponseResult;
+import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton mainMovieScrollTop;
     private SearchView mainMovieSearch;
     private ScrollView mainMovieAbout;
+    private ImageView mainMovieAboutAndroidKejar;
+    private ImageView mainMovieAboutGoogleDev;
 
     private List<Movie> movieList;
     private Handler changeHeaderHandler;
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieError = (RelativeLayout) findViewById(R.id.main_movie_error);
         mainMovieErrorPic = (ImageView) findViewById(R.id.main_movie_error_pic);
         mainMovieErrorContent = (TextView) findViewById(R.id.main_movie_error_content);
+        mainMovieAboutAndroidKejar = (ImageView) findViewById(R.id.main_movie_about_androidkejar);
+        mainMovieAboutGoogleDev = (ImageView) findViewById(R.id.main_movie_about_googledev);
 
         mainMovieScrollTop.setOnClickListener(this);
         mainMovieScrollTop.hide();
@@ -142,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onRefresh() {
                 if (isFavorite) showFavorites();
-                else launchGetMovies();
+                else if (!isAbout) launchGetMovies();
             }
         });
 
@@ -258,13 +262,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (movieList.get(randomList).getBackdropPath() != null) {
             Glide.with(getApplicationContext())
-                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getBackdropPath()))
+                    .load(RestAPIURL.getUrlImage(movieList.get(randomList).getBackdropPath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(mainMoviePic);
         } else {
             Glide.with(getApplicationContext())
-                    .load(MoviesURL.getUrlImage(movieList.get(randomList).getPosterPath()))
+                    .load(RestAPIURL.getUrlImage(movieList.get(randomList).getPosterPath()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .centerCrop()
                     .into(mainMoviePic);
@@ -290,6 +294,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 mainMovieLayout.setVisibility(View.GONE);
+                mainMovieLoading.setVisibility(View.GONE);
+                mainMovieAbout.setVisibility(View.GONE);
                 mainMovieDrawer.closeDrawer(GravityCompat.START);
             }
         });
@@ -297,7 +303,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                mainMovieLayout.setVisibility(View.VISIBLE);
+                if (isAbout) mainMovieAbout.setVisibility(View.VISIBLE);
+                else mainMovieLayout.setVisibility(View.VISIBLE);
                 return false;
             }
         });
@@ -444,7 +451,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showAbout() {
         isAbout = true;
         this.setTitle("About");
+        mainMovieLayout.setVisibility(View.GONE);
+        mainMovieError.setVisibility(View.GONE);
         mainMovieAbout.setVisibility(View.VISIBLE);
+        String androidKejarURL = "http://rectmedia.com/wp-content/uploads/2016/04/android-indonesia-kejar.jpg";
+        String googleDevURL = "http://dash.coolsmartphone.com/wp-content/uploads/2013/07/Google-Developers-Logo.png";
+        Glide.with(getApplicationContext())
+                .load(androidKejarURL)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .centerCrop()
+                .into(mainMovieAboutAndroidKejar);
+        Glide.with(getApplicationContext())
+                .load(googleDevURL)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .centerCrop()
+                .into(mainMovieAboutGoogleDev);
         sortPosition = -1;
     }
 
