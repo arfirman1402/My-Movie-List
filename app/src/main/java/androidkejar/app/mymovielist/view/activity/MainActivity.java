@@ -331,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (sortPosition != i) {
             isSearching = false;
+            isFavorite = false;
             sortPosition = i;
             launchGetMovies();
         }
