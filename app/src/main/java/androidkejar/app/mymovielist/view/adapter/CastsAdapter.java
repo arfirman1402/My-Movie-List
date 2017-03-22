@@ -24,8 +24,8 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 
 public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> {
 
-    Context context;
-    List<Cast> itemObjects;
+    private Context context;
+    private List<Cast> itemObjects;
 
     public CastsAdapter(Context context, List<Cast> itemObjects) {
         this.context = context;

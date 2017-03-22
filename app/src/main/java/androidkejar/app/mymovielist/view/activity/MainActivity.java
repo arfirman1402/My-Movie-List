@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int randomList = -1;
     private int page = 1;
     private int maxPage = 1;
-    private String urlList;
     private String[] sortByList = new String[]{"Now Playing", "Popular", "Top Rated", "Coming Soon"};
     private String querySearch;
     private int sortPosition = 0;
@@ -78,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mainMovieDrawer;
     private boolean isAbout;
     private boolean isFavorite;
-
-    private RestAPIConnecting apiConnecting;
 
     private enum ErrorType {
         CONNECTION,
@@ -200,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getMovies() {
-        apiConnecting = new RestAPIConnecting();
+        RestAPIConnecting apiConnecting = new RestAPIConnecting();
         if (isSearching) {
             this.setTitle(querySearch);
             apiConnecting.getDataSearch(querySearch, page, new MovieResponseResult());
@@ -315,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 isSearching = true;
                 querySearch = query;
                 launchGetMovies();
-                mainMovieSearch.clearFocus();
+//                mainMovieSearch.clearFocus();
                 return false;
             }
 
