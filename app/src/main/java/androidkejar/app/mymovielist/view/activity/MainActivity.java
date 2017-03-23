@@ -1,5 +1,7 @@
 package androidkejar.app.mymovielist.view.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -39,9 +41,10 @@ import java.util.List;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
+import androidkejar.app.mymovielist.restapi.RestAPI;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
-import androidkejar.app.mymovielist.restapi.RestAPIMovieResponseResult;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
@@ -58,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton mainMovieScrollTop;
     private SearchView mainMovieSearch;
     private ScrollView mainMovieAbout;
-    private ImageView mainMovieAboutAndroidKejar;
-    private ImageView mainMovieAboutGoogleDev;
 
     private List<Movie> movieList;
     private Handler changeHeaderHandler;
@@ -67,20 +68,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int randomList = -1;
     private int page = 1;
     private int maxPage = 1;
-    private String[] sortByList = new String[]{"Now Playing", "Popular", "Top Rated", "Coming Soon"};
     private String querySearch;
     private int sortPosition = 0;
     private boolean isSearching = false;
 
     private MoviesAdapter moviesAdapter;
-    private ErrorType mainErrorType;
+    private AppConstant.ErrorType mainErrorType;
     private DrawerLayout mainMovieDrawer;
     private boolean isAbout;
     private boolean isFavorite;
 
-    private enum ErrorType {
-        CONNECTION,
-        EMPTY
+    public static void goToActivity(Context context) {
+        Intent i = new Intent(context, MainActivity.class);
+        context.startActivity(i);
+        ((Activity) context).finish();
     }
 
     @Override
@@ -88,6 +89,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initView();
+
+        launchGetMovies();
+    }
+
+    private void initView() {
         mainMovieLayout = (RelativeLayout) findViewById(R.id.main_movie_layout);
         mainMovieList = (RecyclerView) findViewById(R.id.main_movie_list);
         mainMoviePic = (ImageView) findViewById(R.id.main_movie_pic);
@@ -99,8 +106,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieError = (RelativeLayout) findViewById(R.id.main_movie_error);
         mainMovieErrorPic = (ImageView) findViewById(R.id.main_movie_error_pic);
         mainMovieErrorContent = (TextView) findViewById(R.id.main_movie_error_content);
-        mainMovieAboutAndroidKejar = (ImageView) findViewById(R.id.main_movie_about_androidkejar);
-        mainMovieAboutGoogleDev = (ImageView) findViewById(R.id.main_movie_about_googledev);
 
         mainMovieScrollTop.setOnClickListener(this);
         mainMovieScrollTop.hide();
@@ -112,15 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (recyclerView.getAdapter().getItemCount() != 0) {
-                    int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-                    if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
-                        if (movieList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
-                            getMoviesfromBottom();
-                        }
-                    }
-                }
-                mainMovieScrollTop.hide();
+                autoLoadMovie(recyclerView);
             }
 
             @Override
@@ -168,8 +165,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_movie_nav);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        launchGetMovies();
+    private void autoLoadMovie(RecyclerView recyclerView) {
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
+                if (movieList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
+                    getMoviesfromBottom();
+                }
+            }
+        }
+        mainMovieScrollTop.hide();
     }
 
     private void getMoviesfromBottom() {
@@ -202,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.setTitle(querySearch);
             apiConnecting.getDataSearch(querySearch, page, new MovieResponseResult());
         } else {
-            this.setTitle(sortByList[sortPosition]);
+            this.setTitle(AppConstant.SORT_BY_LIST[sortPosition]);
             switch (sortPosition) {
                 case 0:
                     apiConnecting.getDataNowPlaying(page, new MovieResponseResult());
@@ -235,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mainMovieLayout.setVisibility(View.VISIBLE);
             setHeaderLayout();
         } else {
-            mainErrorType = ErrorType.EMPTY;
+            mainErrorType = AppConstant.ErrorType.EMPTY;
             setErrorLayout("No Movies Available");
         }
 
@@ -339,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieLoading.setVisibility(View.GONE);
         mainMovieError.setVisibility(View.VISIBLE);
         mainMovieErrorContent.setText(error);
-        if (mainErrorType.equals(ErrorType.CONNECTION))
+        if (mainErrorType.equals(AppConstant.ErrorType.CONNECTION))
             mainMovieErrorPic.setImageResource(R.drawable.ic_signal);
         else mainMovieErrorPic.setImageResource(R.drawable.ic_app);
     }
@@ -439,7 +446,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mainMovieLayout.setVisibility(View.VISIBLE);
             setHeaderLayout();
         } else {
-            mainErrorType = ErrorType.EMPTY;
+            mainErrorType = AppConstant.ErrorType.EMPTY;
             setErrorLayout("No Favorites Movies Available");
         }
 
@@ -454,6 +461,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieAbout.setVisibility(View.VISIBLE);
         String androidKejarURL = "http://rectmedia.com/wp-content/uploads/2016/04/android-indonesia-kejar.jpg";
         String googleDevURL = "http://dash.coolsmartphone.com/wp-content/uploads/2013/07/Google-Developers-Logo.png";
+
+        ImageView mainMovieAboutAndroidKejar = (ImageView) findViewById(R.id.main_movie_about_androidkejar);
+        ImageView mainMovieAboutGoogleDev = (ImageView) findViewById(R.id.main_movie_about_googledev);
+
         Glide.with(getApplicationContext())
                 .load(androidKejarURL)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -464,10 +475,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(mainMovieAboutGoogleDev);
+
         sortPosition = -1;
     }
 
-    private class MovieResponseResult implements RestAPIMovieResponseResult {
+    private class MovieResponseResult implements RestAPI.MovieResponseResult {
         @Override
         public void resultData(String message, MovieResponse body) {
             Log.d("resultData", message);
@@ -477,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void errorResultData(String errorResponse) {
             Log.e("errorResultData", errorResponse);
-            mainErrorType = ErrorType.CONNECTION;
+            mainErrorType = AppConstant.ErrorType.CONNECTION;
             setErrorLayout("Connection Problem. Please try again.");
         }
     }

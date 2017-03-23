@@ -2,10 +2,6 @@ package androidkejar.app.mymovielist.restapi;
 
 import androidkejar.app.mymovielist.BuildConfig;
 
-/**
- * Created by alodokter-it on 12/12/16.
- */
-
 public class RestAPIURL {
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500";
@@ -16,17 +12,17 @@ public class RestAPIURL {
     private static final String BASE_URL_VIDEO_YOUTUBE = "https://youtube.com/watch";
     private static final String MOVIE_APPEND_TO_RESPONSE = "credits,images,keywords,release_dates,videos,translations,recommendations,similar,reviews";
     private static final String PERSON_APPEND_TO_RESPONSE = "movie_credits,images";
-    private static final String MOVIES_REGION = "US";
+    private static final String MOVIES_REGION = "ID";
 
-    public static String getBaseUrl() {
+    static String getBaseUrl() {
         return BASE_URL;
     }
 
-    public static String getApiKey() {
+    static String getApiKey() {
         return API_KEY;
     }
 
-    public static String getLangSource() {
+    static String getLangSource() {
         return LANG_SOURCE;
     }
 
@@ -42,15 +38,15 @@ public class RestAPIURL {
         return BASE_URL_VIDEO_YOUTUBE + "?v=" + key;
     }
 
-    public static String getMovieAppendToResponse() {
+    static String getMovieAppendToResponse() {
         return MOVIE_APPEND_TO_RESPONSE;
     }
 
-    public static String getPersonAppendToResponse() {
+    static String getPersonAppendToResponse() {
         return PERSON_APPEND_TO_RESPONSE;
     }
 
-    public static String getMoviesRegion() {
+    static String getMoviesRegion() {
         return MOVIES_REGION;
     }
 }

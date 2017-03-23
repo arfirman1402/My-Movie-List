@@ -33,25 +33,19 @@ import java.util.List;
 import java.util.Locale;
 
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.model.CreditResponse;
-import androidkejar.app.mymovielist.model.Genre;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
-import androidkejar.app.mymovielist.model.credit.Cast;
-import androidkejar.app.mymovielist.model.credit.Crew;
+import androidkejar.app.mymovielist.restapi.RestAPI;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
-import androidkejar.app.mymovielist.restapi.RestAPIMovieResult;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
 import androidkejar.app.mymovielist.view.adapter.ReviewsAdapter;
 import androidkejar.app.mymovielist.view.adapter.TrailersAdapter;
-
-/**
- * Created by alodokter-it on 20/11/16.
- */
 
 public class DetailActivity extends AppCompatActivity {
     private ImageView detailMoviePic;
@@ -82,7 +76,6 @@ public class DetailActivity extends AppCompatActivity {
     private Movie myMovie;
     private List<Video> allVideos;
     private SwipeRefreshLayout detailMovieRefresh;
-    private RestAPIConnecting apiConnecting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +209,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovies() {
-        apiConnecting = new RestAPIConnecting();
+        RestAPIConnecting apiConnecting = new RestAPIConnecting();
         apiConnecting.getDataMovie(idMovies, new MovieResult());
     }
 
@@ -297,7 +290,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setCreditsMovie(CreditResponse credits) {
-        List<Cast> castList = credits.getCasts();
+        List<Credit.Cast> castList = credits.getCasts();
 
         if (castList.size() > 0) {
             detailMovieCastsEmpty.setVisibility(View.GONE);
@@ -307,7 +300,7 @@ public class DetailActivity extends AppCompatActivity {
             detailMovieCastsEmpty.setVisibility(View.VISIBLE);
         }
 
-        List<Crew> crewList = credits.getCrews();
+        List<Credit.Crew> crewList = credits.getCrews();
 
         if (crewList.size() > 0) {
             detailMovieCrewsEmpty.setVisibility(View.GONE);
@@ -440,7 +433,7 @@ public class DetailActivity extends AppCompatActivity {
         return strRating;
     }
 
-    private String getStringGenre(List<Genre> genres) {
+    private String getStringGenre(List<Movie.Genre> genres) {
         String strGenre = "";
         if (genres.size() > 0) {
             for (int i = 0; i < genres.size(); i++) {
@@ -466,7 +459,7 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieErrorPic.setImageResource(R.drawable.ic_signal);
     }
 
-    private class MovieResult implements RestAPIMovieResult {
+    private class MovieResult implements RestAPI.MovieResult {
         @Override
         public void resultData(String message, Movie body) {
             Log.d("resultData", message);

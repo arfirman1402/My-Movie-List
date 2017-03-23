@@ -25,10 +25,6 @@ import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
 
-/**
- * Created by alodokter-it on 12/11/16.
- */
-
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
 
     private Context context;

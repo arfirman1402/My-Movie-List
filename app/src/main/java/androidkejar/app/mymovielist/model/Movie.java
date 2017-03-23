@@ -4,13 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import androidkejar.app.mymovielist.model.movie.Country;
-import androidkejar.app.mymovielist.model.movie.SpokenLanguages;
-
-/**
- * Created by alodokter-it on 12/12/16.
- */
-
 public class Movie {
     @SerializedName("adult")
     private boolean adult;
@@ -241,5 +234,305 @@ public class Movie {
 
     public ReviewResponse getReviewResponse() {
         return reviewResponse;
+    }
+
+    private class Country {
+        @SerializedName("iso_3666_1")
+        private String isoCountry;
+
+        @SerializedName("name")
+        private String name;
+
+        public String getIsoCountry() {
+            return isoCountry;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public class SpokenLanguages {
+        @SerializedName("iso_639_1")
+        private String isoLanguage;
+
+        @SerializedName("name")
+        private String name;
+
+        public String getIsoLanguage() {
+            return isoLanguage;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private class Company {
+        @SerializedName("description")
+        private String description;
+
+        @SerializedName("headquarters")
+        private String headquarters;
+
+        @SerializedName("homepage")
+        private String homepage;
+
+        @SerializedName("id")
+        private String id;
+
+        @SerializedName("logo_path")
+        private String logoPath;
+
+        @SerializedName("name")
+        private String name;
+
+        @SerializedName("parent_company")
+        private String parentCompany;
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getHeadquarters() {
+            return headquarters;
+        }
+
+        public String getHomepage() {
+            return homepage;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getLogoPath() {
+            return logoPath;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getParentCompany() {
+            return parentCompany;
+        }
+    }
+
+    public class Genre {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("name")
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private class KeywordResponse {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("keywords")
+        private List<Keyword> keywords;
+
+        public int getId() {
+            return id;
+        }
+
+        public List<Keyword> getKeywords() {
+            return keywords;
+        }
+
+        class Keyword {
+            @SerializedName("id")
+            private int id;
+
+            @SerializedName("name")
+            private String name;
+
+            public int getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+        }
+    }
+
+    class ReleaseDatesResponse {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("results")
+        private List<ReleaseDatesCountry> results;
+
+        public int getId() {
+            return id;
+        }
+
+        public List<ReleaseDatesCountry> getResults() {
+            return results;
+        }
+
+        private class ReleaseDatesCountry {
+            @SerializedName("iso_3166_1")
+            private String isoCountry;
+
+            @SerializedName("release_dates")
+            private List<ReleaseDate> releaseDates;
+
+            public String getIsoCountry() {
+                return isoCountry;
+            }
+
+            public List<ReleaseDate> getReleaseDates() {
+                return releaseDates;
+            }
+
+            private class ReleaseDate {
+                @SerializedName("certification")
+                private String certification;
+
+                @SerializedName("iso_639_1")
+                private String isoLanguage;
+
+                @SerializedName("note")
+                private String note;
+
+                @SerializedName("release_date")
+                private String releaseDate;
+
+                @SerializedName("type")
+                private int type;
+
+                public String getCertification() {
+                    return certification;
+                }
+
+                public String getIsoLanguage() {
+                    return isoLanguage;
+                }
+
+                public String getNote() {
+                    return note;
+                }
+
+                public String getReleaseDate() {
+                    return releaseDate;
+                }
+
+                public int getType() {
+                    return type;
+                }
+            }
+
+        }
+    }
+
+    public class ReviewResponse {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("pages")
+        private int pages;
+
+        @SerializedName("results")
+        private List<Review> results;
+
+        @SerializedName("total_pages")
+        private int totalPages;
+
+        @SerializedName("total_results")
+        private int totalResults;
+
+        public int getId() {
+            return id;
+        }
+
+        public int getPages() {
+            return pages;
+        }
+
+        public List<Review> getResults() {
+            return results;
+        }
+
+        public int getTotalPages() {
+            return totalPages;
+        }
+
+        public int getTotalResults() {
+            return totalResults;
+        }
+    }
+
+    class TranslationResponse {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("translations")
+        private List<Translation> translations;
+
+        public int getId() {
+            return id;
+        }
+
+        public List<Translation> getTranslations() {
+            return translations;
+        }
+
+        private class Translation {
+            @SerializedName("iso_639_1")
+            private String isoLanguage;
+
+            @SerializedName("iso_3166_1")
+            private String isoCountry;
+
+            @SerializedName("name")
+            private String name;
+
+            @SerializedName("english_name")
+            private String englishName;
+
+            public String getIsoLanguage() {
+                return isoLanguage;
+            }
+
+            public String getIsoCountry() {
+                return isoCountry;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getEnglishName() {
+                return englishName;
+            }
+        }
+    }
+
+    public class VideoResponse {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("results")
+        private List<Video> results;
+
+        public int getId() {
+            return id;
+        }
+
+        public List<Video> getResults() {
+            return results;
+        }
     }
 }

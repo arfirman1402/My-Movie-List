@@ -15,19 +15,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.model.credit.Cast;
+import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
-
-/**
- * Created by alodokter-it on 12/11/16.
- */
 
 public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> {
 
     private Context context;
-    private List<Cast> itemObjects;
+    private List<Credit.Cast> itemObjects;
 
-    public CastsAdapter(Context context, List<Cast> itemObjects) {
+    public CastsAdapter(Context context, List<Credit.Cast> itemObjects) {
         this.context = context;
         this.itemObjects = itemObjects;
     }

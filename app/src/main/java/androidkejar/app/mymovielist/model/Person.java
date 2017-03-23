@@ -2,10 +2,6 @@ package androidkejar.app.mymovielist.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by alodokter-it on 12/12/16.
- */
-
 public class Person {
     @SerializedName("adult")
     private boolean adult;

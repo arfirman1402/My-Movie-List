@@ -4,12 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import androidkejar.app.mymovielist.model.movieresponse.Dates;
-
-/**
- * Created by alodokter-it on 12/12/16.
- */
-
 public class MovieResponse {
     @SerializedName("page")
     private int page;
@@ -44,5 +38,21 @@ public class MovieResponse {
 
     public int getTotalResults() {
         return totalResults;
+    }
+
+    private class Dates {
+        @SerializedName("maximum")
+        private String maximum;
+
+        @SerializedName("minimum")
+        private String minimum;
+
+        public String getMaximum() {
+            return maximum;
+        }
+
+        public String getMinimum() {
+            return minimum;
+        }
     }
 }

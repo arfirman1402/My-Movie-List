@@ -4,32 +4,25 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import androidkejar.app.mymovielist.model.credit.Cast;
-import androidkejar.app.mymovielist.model.credit.Crew;
-
-/**
- * Created by alodokter-it on 12/12/16.
- */
-
 public class CreditResponse {
     @SerializedName("id")
     private int id;
 
     @SerializedName("cast")
-    private List<Cast> casts;
+    private List<Credit.Cast> casts;
 
     @SerializedName("crew")
-    private List<Crew> crews;
+    private List<Credit.Crew> crews;
 
     public int getId() {
         return id;
     }
 
-    public List<Cast> getCasts() {
+    public List<Credit.Cast> getCasts() {
         return casts;
     }
 
-    public List<Crew> getCrews() {
+    public List<Credit.Crew> getCrews() {
         return crews;
     }
 }

@@ -8,11 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Created by alodokter-it on 12/12/16.
- */
-
-public interface RestAPIInterface {
+interface RestAPIInterface {
     @GET("movie/now_playing")
     Call<MovieResponse> getNowPlayingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page, @Query("region") String region);
 
@@ -33,5 +29,4 @@ public interface RestAPIInterface {
 
     @GET("person/{id}")
     Call<Person> getPersonDetails(@Path("id") int id, @Query("api_key") String apiKey, @Query("language") String language, @Query("append_to_response") String appendToResponse);
-
 }

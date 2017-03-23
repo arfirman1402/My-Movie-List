@@ -15,14 +15,10 @@ import java.util.List;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Review;
 
-/**
- * Created by alodokter-it on 12/11/16.
- */
-
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ListHolder> {
 
-    Context context;
-    List<Review> itemObjects;
+    private Context context;
+    private List<Review> itemObjects;
 
     public ReviewsAdapter(Context context, List<Review> itemObjects) {
         this.context = context;
