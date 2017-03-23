@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -51,7 +52,7 @@ import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mainMovieList;
     private RelativeLayout mainMovieLayout;
-    private RelativeLayout mainMovieError;
+    private LinearLayout mainMovieError;
     private RelativeLayout mainMovieLoading;
     private ImageView mainMoviePic;
     private TextView mainMovieTitle;
@@ -100,12 +101,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMoviePic = (ImageView) findViewById(R.id.main_movie_pic);
         mainMovieAbout = (ScrollView) findViewById(R.id.main_movie_about);
         mainMovieTitle = (TextView) findViewById(R.id.main_movie_title);
-        mainMovieLoading = (RelativeLayout) findViewById(R.id.main_movie_loading);
+        mainMovieLoading = (RelativeLayout) findViewById(R.id.movie_loading);
         mainMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.main_movie_refresh);
         mainMovieScrollTop = (FloatingActionButton) findViewById(R.id.main_movie_scrolltop);
-        mainMovieError = (RelativeLayout) findViewById(R.id.main_movie_error);
-        mainMovieErrorPic = (ImageView) findViewById(R.id.main_movie_error_pic);
-        mainMovieErrorContent = (TextView) findViewById(R.id.main_movie_error_content);
+        mainMovieError = (LinearLayout) findViewById(R.id.movie_error_layout);
+        mainMovieErrorPic = (ImageView) findViewById(R.id.movie_error_pic);
+        mainMovieErrorContent = (TextView) findViewById(R.id.movie_error_content);
 
         mainMovieScrollTop.setOnClickListener(this);
         mainMovieScrollTop.hide();
@@ -147,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         changeHeaderHandler = new Handler();
 
         changeHeaderRunnable = new Runnable() {
-
             @Override
             public void run() {
                 setHeaderLayout();

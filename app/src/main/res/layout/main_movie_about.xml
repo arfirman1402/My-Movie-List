@@ -26,9 +26,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
-                android:text="MY MOVIE LIST"
+                android:text="@string/splash_title"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="AR FIRMAN SYAHPUTRA"
+            android:text="@string/about_creator"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="INDONESIA ANDROID KEJAR 2 (2016)"
+            android:text="@string/about_iak2016"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
@@ -65,9 +65,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
-                android:text="ar.firman.syahputra@gmail.com"
+                android:text="@string/about_creator_email"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Supported By :"
+            android:text="@string/about_supported_title"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 

@@ -4,4 +4,19 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="reviews_title">REVIEWS</string>
+    <string name="reviews_empty">Review isn\'t available</string>
+    <string name="casts_title">CASTS</string>
+    <string name="casts_empty">Cast isn\'t available</string>
+    <string name="crews_title">CREWS</string>
+    <string name="crews_empty">Crew isn\'t available</string>
+    <string name="trailer_title">TRAILER</string>
+    <string name="trailer_empty">Trailer isn\'t available</string>
+    <string name="movies_not_found">No movies are avaiable now.</string>
+    <string name="splash_title">MY MOVIE LIST</string>
+    <string name="about_creator">AR FIRMAN SYAHPUTRA</string>
+    <string name="about_iak2016">INDONESIA ANDROID KEJAR 2 (2016)</string>
+    <string name="about_creator_email">ar.firman.syahputra@gmail.com</string>
+    <string name="about_supported_title">Supported By :</string>
+    <string name="movie_adult">Adult</string>
 </resources>

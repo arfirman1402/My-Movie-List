@@ -21,7 +21,7 @@
             android:id="@+id/txt_mymovie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MY MOVIE LIST"
+            android:text="@string/splash_title"
             android:textColor="@color/colorWhite"
             android:textSize="24sp"
             android:textStyle="bold" />

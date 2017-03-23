@@ -12,7 +12,7 @@ public class RestAPIURL {
     private static final String BASE_URL_VIDEO_YOUTUBE = "https://youtube.com/watch";
     private static final String MOVIE_APPEND_TO_RESPONSE = "credits,images,keywords,release_dates,videos,translations,recommendations,similar,reviews";
     private static final String PERSON_APPEND_TO_RESPONSE = "movie_credits,images";
-    private static final String MOVIES_REGION = "ID";
+    private static final String MOVIES_REGION = "US";
 
     static String getBaseUrl() {
         return BASE_URL;

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,12 +65,12 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView detailMovieCasts;
     private RecyclerView detailMovieCrews;
     private RecyclerView detailMovieTrailers;
-    private RelativeLayout detailMovieLayout;
+    private LinearLayout detailMovieLayout;
     private TextView detailMovieReviewsEmpty;
     private TextView detailMovieCastsEmpty;
     private TextView detailMovieCrewsEmpty;
     private TextView detailMovieTrailersEmpty;
-    private RelativeLayout detailMovieError;
+    private LinearLayout detailMovieError;
     private ImageView detailMovieErrorPic;
     private TextView detailMovieErrorContent;
     private int idMovies;
@@ -82,7 +83,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        detailMovieLayout = (RelativeLayout) findViewById(R.id.detail_movie_layout);
+        detailMovieLayout = (LinearLayout) findViewById(R.id.detail_movie_layout);
         detailMoviePic = (ImageView) findViewById(R.id.detail_movie_pic);
         detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
         detailMovieFavorite = (ImageView) findViewById(R.id.detail_movie_favorite);
@@ -94,7 +95,6 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieRuntime = (TextView) findViewById(R.id.detail_movie_runtime);
         detailMovieRevenue = (TextView) findViewById(R.id.detail_movie_revenue);
         detailMovieBudget = (TextView) findViewById(R.id.detail_movie_budget);
-        detailMovieLoading = (RelativeLayout) findViewById(R.id.detail_movie_loading);
         detailMovieReviews = (RecyclerView) findViewById(R.id.detail_movie_reviews);
         detailMovieCasts = (RecyclerView) findViewById(R.id.detail_movie_casts);
         detailMovieCrews = (RecyclerView) findViewById(R.id.detail_movie_crews);
@@ -103,9 +103,10 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieCastsEmpty = (TextView) findViewById(R.id.detail_movie_casts_empty);
         detailMovieCrewsEmpty = (TextView) findViewById(R.id.detail_movie_crews_empty);
         detailMovieTrailersEmpty = (TextView) findViewById(R.id.detail_movie_trailers_empty);
-        detailMovieError = (RelativeLayout) findViewById(R.id.detail_movie_error);
-        detailMovieErrorPic = (ImageView) findViewById(R.id.detail_movie_error_pic);
-        detailMovieErrorContent = (TextView) findViewById(R.id.detail_movie_error_content);
+        detailMovieLoading = (RelativeLayout) findViewById(R.id.movie_loading);
+        detailMovieError = (LinearLayout) findViewById(R.id.movie_error_layout);
+        detailMovieErrorPic = (ImageView) findViewById(R.id.movie_error_pic);
+        detailMovieErrorContent = (TextView) findViewById(R.id.movie_error_content);
         detailMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.detail_movie_refresh);
 
         LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
