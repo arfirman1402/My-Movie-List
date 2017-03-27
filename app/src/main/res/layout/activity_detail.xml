@@ -46,7 +46,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:layout_margin="10dp"
-                            android:src="@drawable/ic_favorite_off" />
+                            android:src="@drawable/ic_favorite_off"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -327,5 +328,5 @@
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/movie_common"/>
+    <include layout="@layout/movie_common" />
 </RelativeLayout>

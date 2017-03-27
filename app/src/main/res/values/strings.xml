@@ -19,4 +19,5 @@
     <string name="about_creator_email">ar.firman.syahputra@gmail.com</string>
     <string name="about_supported_title">Supported By :</string>
     <string name="movie_adult">Adult</string>
+    <string name="menu_search_hint">Search Here</string>
 </resources>

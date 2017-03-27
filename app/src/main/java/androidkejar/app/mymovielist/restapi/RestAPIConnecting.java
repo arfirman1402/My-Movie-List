@@ -3,6 +3,7 @@ package androidkejar.app.mymovielist.restapi;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
 import androidkejar.app.mymovielist.model.Person;
+import androidkejar.app.mymovielist.utility.AppConstant;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -10,53 +11,8 @@ import retrofit2.Response;
 public class RestAPIConnecting {
     private RestAPIInterface apiService = RestAPIClient.getClient().create(RestAPIInterface.class);
 
-    public void getDataNowPlaying(int pages, final RestAPI.MovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getNowPlayingMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                result.resultData(response.message(), response.body());
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                result.errorResultData(t.getMessage());
-            }
-        });
-    }
-
-    public void getDataUpcoming(int pages, final RestAPI.MovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getUpcomingMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                result.resultData(response.message(), response.body());
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                result.errorResultData(t.getMessage());
-            }
-        });
-    }
-
-    public void getDataPopular(int pages, final RestAPI.MovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getPopularMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                result.resultData(response.message(), response.body());
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                result.errorResultData(t.getMessage());
-            }
-        });
-    }
-
-    public void getDataTopRated(int pages, final RestAPI.MovieResponseResult result) {
-        Call<MovieResponse> call = apiService.getTopRatedMovies(RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
+    public void getMovies(int type, int pages, final RestAPI.MovieResponseResult result) {
+        Call<MovieResponse> call = apiService.getMovies(AppConstant.MOVIE_LIST_TYPE[type], RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), pages, RestAPIURL.getMoviesRegion());
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -114,6 +70,4 @@ public class RestAPIConnecting {
             }
         });
     }
-
-
 }

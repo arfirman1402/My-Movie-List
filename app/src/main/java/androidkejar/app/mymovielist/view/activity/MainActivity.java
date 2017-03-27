@@ -32,11 +32,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
@@ -46,7 +43,6 @@ import androidkejar.app.mymovielist.restapi.RestAPI;
 import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.AppConstant;
-import androidkejar.app.mymovielist.utility.Pref;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -77,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppConstant.ErrorType mainErrorType;
     private DrawerLayout mainMovieDrawer;
     private boolean isAbout;
-    private boolean isFavorite;
+    private MenuItem menuIcon;
+//    private boolean isFavorite;
 
     public static void goToActivity(Context context) {
         Intent i = new Intent(context, MainActivity.class);
@@ -140,8 +137,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (isFavorite) showFavorites();
-                else if (!isAbout) launchGetMovies();
+//                if (isFavorite) {
+//                    showFavorites();
+//                } else {
+//                    launchGetMovies();
+//                }
+                launchGetMovies();
             }
         });
 
@@ -210,20 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             apiConnecting.getDataSearch(querySearch, page, new MovieResponseResult());
         } else {
             this.setTitle(AppConstant.SORT_BY_LIST[sortPosition]);
-            switch (sortPosition) {
-                case 0:
-                    apiConnecting.getDataNowPlaying(page, new MovieResponseResult());
-                    break;
-                case 1:
-                    apiConnecting.getDataPopular(page, new MovieResponseResult());
-                    break;
-                case 2:
-                    apiConnecting.getDataTopRated(page, new MovieResponseResult());
-                    break;
-                case 3:
-                    apiConnecting.getDataUpcoming(page, new MovieResponseResult());
-                    break;
-            }
+            apiConnecting.getMovies(sortPosition, page, new MovieResponseResult());
         }
     }
 
@@ -293,7 +281,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        mainMovieSearch = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        menuIcon = menu.findItem(R.id.action_search);
+        mainMovieSearch = (SearchView) menuIcon.getActionView();
         mainMovieSearch.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -319,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 isSearching = true;
                 querySearch = query;
                 launchGetMovies();
-//                mainMovieSearch.clearFocus();
                 return false;
             }
 
@@ -332,10 +320,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sortListMovieBy(int i) {
-
+        menuIcon.setVisible(true);
         if (sortPosition != i) {
             isSearching = false;
-            isFavorite = false;
+//            isFavorite = false;
             sortPosition = i;
             launchGetMovies();
         }
@@ -394,9 +382,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.nav_about:
                 showAbout();
                 break;
-            case R.id.nav_favorite:
+            /*case R.id.nav_favorite:
                 showFavorites();
-                break;
+                break;*/
             default:
                 break;
 
@@ -409,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void showFavorites() {
+    /*private void showFavorites() {
         isFavorite = true;
         this.setTitle("Favorites");
         sortPosition = -1;
@@ -432,16 +420,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void getListFavoriteMovies(String jsonFavoritesMovies) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-
         Movie[] myMovie = gson.fromJson(jsonFavoritesMovies, Movie[].class);
-
         if (myMovie == null) {
             myMovie = new Movie[]{};
         }
-
         movieList.addAll(Arrays.asList(myMovie));
         moviesAdapter.addAll(Arrays.asList(myMovie));
-
         if (movieList.size() > 0) {
             mainMovieLayout.setVisibility(View.VISIBLE);
             setHeaderLayout();
@@ -449,12 +433,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mainErrorType = AppConstant.ErrorType.EMPTY;
             setErrorLayout("No Favorites Movies Available");
         }
-
         mainMovieLoading.setVisibility(View.GONE);
-    }
+    }*/
 
     private void showAbout() {
         isAbout = true;
+        menuIcon.setVisible(false);
         this.setTitle("About");
         mainMovieLayout.setVisibility(View.GONE);
         mainMovieError.setVisibility(View.GONE);
