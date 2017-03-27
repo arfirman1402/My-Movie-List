@@ -15,19 +15,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.pojo.ItemObject;
-
-/**
- * Created by alodokter-it on 12/11/16.
- */
+import androidkejar.app.mymovielist.model.Credit;
+import androidkejar.app.mymovielist.restapi.RestAPIURL;
 
 public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> {
 
-    Context context;
-    List<ItemObject.Credits.Cast> itemObjects;
+    private Context context;
+    private List<Credit.Cast> itemObjects;
 
-    public CastsAdapter(Context context, List<ItemObject.Credits.Cast> itemObjects) {
+    public CastsAdapter(Context context, List<Credit.Cast> itemObjects) {
         this.context = context;
         this.itemObjects = itemObjects;
     }
@@ -43,7 +39,7 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> 
         holder.detailCastsName.setText(itemObjects.get(position).getName());
         holder.detailCastsCharacter.setText(itemObjects.get(position).getCharacter());
         Glide.with(context)
-                .load(MoviesURL.getUrlImage(itemObjects.get(position).getProfilePath()))
+                .load(RestAPIURL.getUrlImage(itemObjects.get(position).getProfilePath()))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(holder.detailCastsPic);

@@ -20,26 +20,22 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidkejar.app.mymovielist.view.DetailActivity;
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.controller.MoviesURL;
-import androidkejar.app.mymovielist.pojo.ItemObject;
-
-/**
- * Created by alodokter-it on 12/11/16.
- */
+import androidkejar.app.mymovielist.model.Movie;
+import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.view.activity.DetailActivity;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
 
-    Context context;
-    List<ItemObject.ListOfMovie.MovieDetail> itemObjects;
+    private Context context;
+    private List<Movie> itemObjects;
 
     public MoviesAdapter(Context context) {
         this.context = context;
         itemObjects = new ArrayList<>();
     }
 
-    public void addAll(List<ItemObject.ListOfMovie.MovieDetail> itemObjects) {
+    public void addAll(List<Movie> itemObjects) {
         this.itemObjects.addAll(itemObjects);
         notifyDataSetChanged();
     }
@@ -63,7 +59,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
         holder.movieCardviewTitle.setText(itemObjects.get(position).getTitle());
 
         Glide.with(context)
-                .load(MoviesURL.getUrlImage(itemObjects.get(position).getPoster()))
+                .load(RestAPIURL.getUrlImage(itemObjects.get(position).getPosterPath()))
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(holder.movieCardviewPic);
@@ -96,7 +92,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
                 dialog.setContentView(R.layout.main_movie_bigpicture);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
                 Glide.with(context)
-                        .load(MoviesURL.getUrlImage(itemObjects.get(holder.getAdapterPosition()).getPoster()))
+                        .load(RestAPIURL.getUrlImage(itemObjects.get(holder.getAdapterPosition()).getPosterPath()))
                         .centerCrop()
                         .into(imageView);
                 dialog.show();
@@ -106,7 +102,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
 
     }
 
-    private void sendIntent(ItemObject.ListOfMovie.MovieDetail movieDetail) {
+    private void sendIntent(Movie movieDetail) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra("id", movieDetail.getId());
         intent.putExtra("title", movieDetail.getTitle());

@@ -39,7 +39,7 @@
                 android:id="@+id/movie_cardview_adult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Adult"
+                android:text="@string/movie_adult"
                 android:textColor="@color/colorRed"
                 android:textStyle="bold"
                 android:visibility="gone" />
