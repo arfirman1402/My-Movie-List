@@ -14,15 +14,15 @@ public class RestAPIURL {
     private static final String PERSON_APPEND_TO_RESPONSE = "movie_credits,images";
     private static final String MOVIES_REGION = "US";
 
-    static String getBaseUrl() {
+    public static String getBaseUrl() {
         return BASE_URL;
     }
 
-    static String getApiKey() {
+    public static String getApiKey() {
         return API_KEY;
     }
 
-    static String getLangSource() {
+    public static String getLangSource() {
         return LANG_SOURCE;
     }
 
@@ -38,7 +38,7 @@ public class RestAPIURL {
         return BASE_URL_VIDEO_YOUTUBE + "?v=" + key;
     }
 
-    static String getMovieAppendToResponse() {
+    public static String getMovieAppendToResponse() {
         return MOVIE_APPEND_TO_RESPONSE;
     }
 
@@ -46,7 +46,7 @@ public class RestAPIURL {
         return PERSON_APPEND_TO_RESPONSE;
     }
 
-    static String getMoviesRegion() {
+    public static String getMoviesRegion() {
         return MOVIES_REGION;
     }
 }

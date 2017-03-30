@@ -2,8 +2,9 @@
 <project version="4">
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
-    <list size="1">
-      <item class="java.lang.String" index="0" itemvalue="com.google.gson.annotations.SerializedName" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="com.google.gson.annotations.SerializedName" />
+      <item index="1" class="java.lang.String" itemvalue="org.greenrobot.eventbus.Subscribe" />
     </list>
   </component>
   <component name="NullableNotNullManager">
@@ -12,20 +13,20 @@
     <option name="myNullables">
       <value>
         <list size="4">
-          <item class="java.lang.String" index="0" itemvalue="org.jetbrains.annotations.Nullable" />
-          <item class="java.lang.String" index="1" itemvalue="javax.annotation.Nullable" />
-          <item class="java.lang.String" index="2" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
-          <item class="java.lang.String" index="3" itemvalue="android.support.annotation.Nullable" />
+          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
+          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
+          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
+          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
         </list>
       </value>
     </option>
     <option name="myNotNulls">
       <value>
         <list size="4">
-          <item class="java.lang.String" index="0" itemvalue="org.jetbrains.annotations.NotNull" />
-          <item class="java.lang.String" index="1" itemvalue="javax.annotation.Nonnull" />
-          <item class="java.lang.String" index="2" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
-          <item class="java.lang.String" index="3" itemvalue="android.support.annotation.NonNull" />
+          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
+          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
+          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
+          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
         </list>
       </value>
     </option>

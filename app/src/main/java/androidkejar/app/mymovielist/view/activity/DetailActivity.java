@@ -22,21 +22,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import androidkejar.app.mymovielist.App;
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.controller.MovieController;
+import androidkejar.app.mymovielist.event.MovieDetailErrorEvent;
+import androidkejar.app.mymovielist.event.MovieDetailEvent;
 import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.model.CreditResponse;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
-import androidkejar.app.mymovielist.restapi.RestAPI;
-import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
 import androidkejar.app.mymovielist.view.adapter.ReviewsAdapter;
@@ -45,7 +52,6 @@ import androidkejar.app.mymovielist.view.adapter.TrailersAdapter;
 public class DetailActivity extends AppCompatActivity {
     private ImageView detailMoviePic;
     private ImageView detailMoviePoster;
-    //    private ImageView detailMovieFavorite;
     private TextView detailMovieOverview;
     private TextView detailMovieGenre;
     private TextView detailMovieLanguage;
@@ -71,16 +77,27 @@ public class DetailActivity extends AppCompatActivity {
     private Movie myMovie;
     private List<Video> allVideos;
     private SwipeRefreshLayout detailMovieRefresh;
+    private MovieController controller;
+    private EventBus eventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        initView();
+
+        controller = new MovieController();
+        eventBus = App.getInstance().getEventBus();
+        eventBus.register(this);
+
+        getDetailMovies();
+    }
+
+    private void initView() {
         detailMovieLayout = (LinearLayout) findViewById(R.id.detail_movie_layout);
         detailMoviePic = (ImageView) findViewById(R.id.detail_movie_pic);
         detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
-//        detailMovieFavorite = (ImageView) findViewById(R.id.detail_movie_favorite);
         detailMovieOverview = (TextView) findViewById(R.id.detail_movie_overview);
         detailMovieGenre = (TextView) findViewById(R.id.detail_movie_genre);
         detailMovieLanguage = (TextView) findViewById(R.id.detail_movie_language);
@@ -131,66 +148,7 @@ public class DetailActivity extends AppCompatActivity {
                 getDetailMovies();
             }
         });
-
-//        detailMovieFavorite.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                setFavoriteMovie();
-//            }
-//        });
-
-        getDetailMovies();
     }
-
-//    private void checkFavoriteMovies() {
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        Gson gson = gsonBuilder.create();
-//        String jsonFavoriteMovies = Pref.getFavorite(this);
-//        List<Movie> listFavoriteMovies = new ArrayList<>();
-//        if (!jsonFavoriteMovies.equals("")) {
-//            LinkedList<Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, Movie[].class)));
-//            listFavoriteMovies.addAll(tempFavoriteMovies);
-//        }
-//
-//        detailMovieFavorite.setImageResource(R.drawable.ic_favorite_off);
-//
-//        for (int i = 0; i < listFavoriteMovies.size(); i++) {
-//            if (listFavoriteMovies.get(i).getTitle().equals(myMovie.getTitle())) {
-//                detailMovieFavorite.setImageResource(R.drawable.ic_favorite_on);
-//                break;
-//            }
-//        }
-//    }
-
-//    private void setFavoriteMovie() {
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        Gson gson = gsonBuilder.create();
-//        String jsonFavoriteMovies = Pref.getFavorite(this);
-//        List<Movie> listFavoriteMovies = new ArrayList<>();
-//        if (!jsonFavoriteMovies.equals("")) {
-//            LinkedList<Movie> tempFavoriteMovies = new LinkedList<>(Arrays.asList(gson.fromJson(jsonFavoriteMovies, Movie[].class)));
-//            listFavoriteMovies.addAll(tempFavoriteMovies);
-//        }
-//        boolean isSame = false;
-//        for (int i = 0; i < listFavoriteMovies.size(); i++) {
-//            if (listFavoriteMovies.get(i).getTitle().equals(myMovie.getTitle())) {
-//                listFavoriteMovies.remove(i);
-//                isSame = true;
-//                break;
-//            }
-//        }
-//
-//        if (isSame) {
-//            detailMovieFavorite.setImageResource(R.drawable.ic_favorite_off);
-//            Toast.makeText(this,"You unfavorited this movie.",Toast.LENGTH_LONG).show();
-//        } else {
-//            listFavoriteMovies.add(myMovie);
-//            detailMovieFavorite.setImageResource(R.drawable.ic_favorite_on);
-//            Toast.makeText(this,"You favorited this movie.",Toast.LENGTH_LONG).show();
-//        }
-//        jsonFavoriteMovies = gson.toJson(listFavoriteMovies.toArray());
-//        Pref.putFavorite(this, jsonFavoriteMovies);
-//    }
 
     private void getDetailMovies() {
         detailMovieLayout.setVisibility(View.GONE);
@@ -205,8 +163,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovies() {
-        RestAPIConnecting apiConnecting = new RestAPIConnecting();
-        apiConnecting.getDataMovie(idMovies, new MovieResult());
+        controller.getMovieDetail(idMovies);
     }
 
     private void setDataResponse(Movie body) {
@@ -268,7 +225,6 @@ public class DetailActivity extends AppCompatActivity {
 
         setVideosMovie(myMovie.getVideoResponse().getResults());
 
-//        checkFavoriteMovies();
     }
 
     private void setVideosMovie(List<Video> results) {
@@ -356,12 +312,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void shareMovie() {
-        String contentMovies = getMovieToShare();
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, contentMovies);
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        if (myMovie != null) {
+            String contentMovies = getMovieToShare();
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, contentMovies);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        }
     }
 
     private String getMovieToShare() {
@@ -455,17 +413,21 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieErrorPic.setImageResource(R.drawable.ic_signal);
     }
 
-    private class MovieResult implements RestAPI.MovieResult {
-        @Override
-        public void resultData(String message, Movie body) {
-            Log.d("resultData", message);
-            setDataResponse(body);
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMovieEvent(MovieDetailEvent event) {
+        Log.d("resultData", event.getMessage());
+        setDataResponse(event.getBody());
+    }
 
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            setErrorLayout("Connection Problem. Please try again.");
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMovieErrorEvent(MovieDetailErrorEvent event) {
+        Log.e("errorResultData", event.getMessage());
+        setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
+    }
+
+    @Override
+    protected void onDestroy() {
+        eventBus.unregister(this);
+        super.onDestroy();
     }
 }

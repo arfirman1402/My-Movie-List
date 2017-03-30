@@ -33,14 +33,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import androidkejar.app.mymovielist.App;
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.controller.MovieController;
+import androidkejar.app.mymovielist.event.MovieErrorEvent;
+import androidkejar.app.mymovielist.event.MovieEvent;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
-import androidkejar.app.mymovielist.restapi.RestAPI;
-import androidkejar.app.mymovielist.restapi.RestAPIConnecting;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
@@ -74,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mainMovieDrawer;
     private boolean isAbout;
     private MenuItem menuIcon;
-//    private boolean isFavorite;
+    private MovieController controller;
+    private EventBus eventBus;
 
     public static void goToActivity(Context context) {
         Intent i = new Intent(context, MainActivity.class);
@@ -88,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initView();
+
+        controller = new MovieController();
+
+        eventBus = App.getInstance().getEventBus();
+        eventBus.register(this);
 
         launchGetMovies();
     }
@@ -137,11 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                if (isFavorite) {
-//                    showFavorites();
-//                } else {
-//                    launchGetMovies();
-//                }
                 launchGetMovies();
             }
         });
@@ -205,13 +212,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getMovies() {
-        RestAPIConnecting apiConnecting = new RestAPIConnecting();
         if (isSearching) {
             this.setTitle(querySearch);
-            apiConnecting.getDataSearch(querySearch, page, new MovieResponseResult());
+            controller.getDataSearch(querySearch, page);
         } else {
             this.setTitle(AppConstant.SORT_BY_LIST[sortPosition]);
-            apiConnecting.getMovies(sortPosition, page, new MovieResponseResult());
+            controller.getMovies(sortPosition, page);
         }
     }
 
@@ -239,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setHeaderLayout() {
         setRandomHeader();
-        changeHeaderHandler.postDelayed(changeHeaderRunnable, 5000);
+        changeHeaderHandler.postDelayed(changeHeaderRunnable, AppConstant.HEADER_TIME);
     }
 
     private void setRandomHeader() {
@@ -271,8 +277,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
                 Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-                i.putExtra("id", movieList.get(randomList).getId());
-                i.putExtra("title", movieList.get(randomList).getTitle());
+                i.putExtra(AppConstant.MOVIE_ID, movieList.get(randomList).getId());
+                i.putExtra(AppConstant.MOVIE_TITLE, movieList.get(randomList).getTitle());
                 startActivity(i);
             }
         });
@@ -323,7 +329,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menuIcon.setVisible(true);
         if (sortPosition != i) {
             isSearching = false;
-//            isFavorite = false;
             sortPosition = i;
             launchGetMovies();
         }
@@ -382,9 +387,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.nav_about:
                 showAbout();
                 break;
-            /*case R.id.nav_favorite:
-                showFavorites();
-                break;*/
             default:
                 break;
 
@@ -397,65 +399,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    /*private void showFavorites() {
-        isFavorite = true;
-        this.setTitle("Favorites");
-        sortPosition = -1;
-        page = 1;
-        maxPage = 1;
-        isAbout = false;
-        movieList.clear();
-        moviesAdapter.resetData();
-        mainMovieRefresh.setRefreshing(false);
-        mainMovieLayout.setVisibility(View.GONE);
-        mainMovieError.setVisibility(View.GONE);
-        mainMovieAbout.setVisibility(View.GONE);
-        mainMovieLoading.setVisibility(View.VISIBLE);
-        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-        mainMovieList.removeAllViews();
-        String jsonFavoritesMovies = Pref.getFavorite(this);
-        getListFavoriteMovies(jsonFavoritesMovies);
-    }
-
-    private void getListFavoriteMovies(String jsonFavoritesMovies) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        Movie[] myMovie = gson.fromJson(jsonFavoritesMovies, Movie[].class);
-        if (myMovie == null) {
-            myMovie = new Movie[]{};
-        }
-        movieList.addAll(Arrays.asList(myMovie));
-        moviesAdapter.addAll(Arrays.asList(myMovie));
-        if (movieList.size() > 0) {
-            mainMovieLayout.setVisibility(View.VISIBLE);
-            setHeaderLayout();
-        } else {
-            mainErrorType = AppConstant.ErrorType.EMPTY;
-            setErrorLayout("No Favorites Movies Available");
-        }
-        mainMovieLoading.setVisibility(View.GONE);
-    }*/
-
     private void showAbout() {
         isAbout = true;
         menuIcon.setVisible(false);
-        this.setTitle("About");
+        this.setTitle(getString(R.string.about_title));
         mainMovieLayout.setVisibility(View.GONE);
         mainMovieError.setVisibility(View.GONE);
         mainMovieAbout.setVisibility(View.VISIBLE);
-        String androidKejarURL = "http://rectmedia.com/wp-content/uploads/2016/04/android-indonesia-kejar.jpg";
-        String googleDevURL = "http://dash.coolsmartphone.com/wp-content/uploads/2013/07/Google-Developers-Logo.png";
 
         ImageView mainMovieAboutAndroidKejar = (ImageView) findViewById(R.id.main_movie_about_androidkejar);
         ImageView mainMovieAboutGoogleDev = (ImageView) findViewById(R.id.main_movie_about_googledev);
 
         Glide.with(getApplicationContext())
-                .load(androidKejarURL)
+                .load(AppConstant.ANDROID_KEJAR_IMAGE_URL)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(mainMovieAboutAndroidKejar);
         Glide.with(getApplicationContext())
-                .load(googleDevURL)
+                .load(AppConstant.GOOGLE_DEV_IMAGE_URL)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(mainMovieAboutGoogleDev);
@@ -463,18 +424,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sortPosition = -1;
     }
 
-    private class MovieResponseResult implements RestAPI.MovieResponseResult {
-        @Override
-        public void resultData(String message, MovieResponse body) {
-            Log.d("resultData", message);
-            setDataResponse(body);
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMovieEvent(MovieEvent event) {
+        Log.d("resultData", event.getMessage());
+        setDataResponse(event.getBody());
+    }
 
-        @Override
-        public void errorResultData(String errorResponse) {
-            Log.e("errorResultData", errorResponse);
-            mainErrorType = AppConstant.ErrorType.CONNECTION;
-            setErrorLayout("Connection Problem. Please try again.");
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMovieErrorEvent(MovieErrorEvent event) {
+        Log.e("errorResultData", event.getMessage());
+        mainErrorType = AppConstant.ErrorType.CONNECTION;
+        setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        eventBus.unregister(this);
     }
 }
