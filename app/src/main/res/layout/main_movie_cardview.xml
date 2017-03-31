@@ -36,15 +36,6 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/movie_cardview_adult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/movie_adult"
-                android:textColor="@color/colorRed"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
                 android:id="@+id/movie_cardview_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

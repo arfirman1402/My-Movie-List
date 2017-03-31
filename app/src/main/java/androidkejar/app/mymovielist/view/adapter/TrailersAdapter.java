@@ -11,23 +11,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Video;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHolder> {
 
     private Context context;
-    private List<Video> itemObjects;
+    private List<Video> videos;
 
-    public TrailersAdapter(Context context, List<Video> itemObjects) {
+    public TrailersAdapter(Context context, List<Video> videos) {
         this.context = context;
-        this.itemObjects = itemObjects;
+        this.videos = videos;
     }
 
     @Override
@@ -38,17 +36,13 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHo
 
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
-        holder.detailTrailersName.setText(itemObjects.get(position).getName());
-        holder.detailTrailersSource.setText(itemObjects.get(position).getSite());
-        Glide.with(context)
-                .load(RestAPIURL.getUrlYoutubeImage(itemObjects.get(position).getKey()))
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(holder.detailTrailersPic);
+        holder.detailTrailersName.setText(videos.get(position).getName());
+        holder.detailTrailersSource.setText(videos.get(position).getSite());
+        CommonFunction.setImage(context, RestAPIURL.getUrlYoutubeImage(videos.get(position).getKey()), holder.detailTrailersPic);
         holder.detailTrailersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String trailerURL = RestAPIURL.getYoutubeLink(itemObjects.get(holder.getAdapterPosition()).getKey());
+                String trailerURL = RestAPIURL.getYoutubeLink(videos.get(holder.getAdapterPosition()).getKey());
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerURL));
                 context.startActivity(i);
             }
@@ -57,7 +51,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHo
 
     @Override
     public int getItemCount() {
-        return itemObjects.size();
+        return videos.size();
     }
 
     class ListHolder extends RecyclerView.ViewHolder {

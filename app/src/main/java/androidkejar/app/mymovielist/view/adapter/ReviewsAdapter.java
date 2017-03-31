@@ -5,24 +5,28 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Review;
+import androidkejar.app.mymovielist.utility.AppConstant;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ListHolder> {
 
     private Context context;
-    private List<Review> itemObjects;
+    private List<Review> reviews;
 
-    public ReviewsAdapter(Context context, List<Review> itemObjects) {
+    public ReviewsAdapter(Context context, List<Review> reviews) {
         this.context = context;
-        this.itemObjects = itemObjects;
+        this.reviews = reviews;
     }
 
     @Override
@@ -33,25 +37,20 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ListHold
 
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
-        String strContent = itemObjects.get(position).getContent();
-        int countDot = 0;
-        int lastDotPosition = 0;
-        for (int i = 0; i < strContent.length(); i++) {
-            if (strContent.charAt(i) == '.') {
-                countDot += 1;
-            }
-            lastDotPosition = i;
-            if (countDot == 3) {
-                break;
-            }
+        List<String> strContentList = Arrays.asList(reviews.get(position).getContent().split("\\."));
+        List<String> strResumeReview = new ArrayList<>();
+        int max = AppConstant.MAX_REVIEW_LENGTH;
+        if (strContentList.size() < max) max = strContentList.size();
+        for (int i = 0; i < max; i++) {
+            strResumeReview.add(strContentList.get(i));
         }
-        String strModifyContent = "\"" + strContent.substring(0, lastDotPosition + 1) + "\"";
-        holder.detailReviewsContent.setText(strModifyContent);
-        holder.detailReviewsAuthor.setText(itemObjects.get(position).getAuthor());
+        String strReview = "\"" + TextUtils.join(". ", strResumeReview) + "." + "\"";
+        holder.detailReviewsContent.setText(strReview);
+        holder.detailReviewsAuthor.setText(reviews.get(position).getAuthor());
         holder.detailReviewsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String reviewURL = itemObjects.get(holder.getAdapterPosition()).getUrl();
+                String reviewURL = reviews.get(holder.getAdapterPosition()).getUrl();
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewURL));
                 context.startActivity(i);
             }
@@ -60,7 +59,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ListHold
 
     @Override
     public int getItemCount() {
-        return itemObjects.size();
+        return reviews.size();
     }
 
     class ListHolder extends RecyclerView.ViewHolder {

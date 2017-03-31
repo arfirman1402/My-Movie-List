@@ -30,9 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -49,6 +46,7 @@ import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.AppConstant;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -180,14 +178,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
             if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
                 if (movieList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
-                    getMoviesfromBottom();
+                    getMoviesFromBottom();
                 }
             }
         }
         mainMovieScrollTop.hide();
     }
 
-    private void getMoviesfromBottom() {
+    private void getMoviesFromBottom() {
         page += 1;
         if (page != maxPage) {
             changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
@@ -237,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setHeaderLayout();
         } else {
             mainErrorType = AppConstant.ErrorType.EMPTY;
-            setErrorLayout("No Movies Available");
+            setErrorLayout(AppConstant.NO_MOVIES);
         }
 
         mainMovieLoading.setVisibility(View.GONE);
@@ -259,17 +257,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainMovieTitle.setText(movieList.get(randomList).getTitle());
 
         if (movieList.get(randomList).getBackdropPath() != null) {
-            Glide.with(getApplicationContext())
-                    .load(RestAPIURL.getUrlImage(movieList.get(randomList).getBackdropPath()))
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .centerCrop()
-                    .into(mainMoviePic);
+            CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(movieList.get(randomList).getBackdropPath()), mainMoviePic);
         } else {
-            Glide.with(getApplicationContext())
-                    .load(RestAPIURL.getUrlImage(movieList.get(randomList).getPosterPath()))
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .centerCrop()
-                    .into(mainMoviePic);
+            CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(movieList.get(randomList).getPosterPath()), mainMoviePic);
         }
 
         mainMoviePic.setOnClickListener(new View.OnClickListener() {
@@ -389,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             default:
                 break;
-
         }
 
         mainMovieSearch.onActionViewCollapsed();
@@ -410,16 +399,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView mainMovieAboutAndroidKejar = (ImageView) findViewById(R.id.main_movie_about_androidkejar);
         ImageView mainMovieAboutGoogleDev = (ImageView) findViewById(R.id.main_movie_about_googledev);
 
-        Glide.with(getApplicationContext())
-                .load(AppConstant.ANDROID_KEJAR_IMAGE_URL)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(mainMovieAboutAndroidKejar);
-        Glide.with(getApplicationContext())
-                .load(AppConstant.GOOGLE_DEV_IMAGE_URL)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(mainMovieAboutGoogleDev);
+        CommonFunction.setImage(getApplicationContext(), AppConstant.ANDROID_KEJAR_IMAGE_URL, mainMovieAboutAndroidKejar);
+        CommonFunction.setImage(getApplicationContext(), AppConstant.GOOGLE_DEV_IMAGE_URL, mainMovieAboutGoogleDev);
 
         sortPosition = -1;
     }

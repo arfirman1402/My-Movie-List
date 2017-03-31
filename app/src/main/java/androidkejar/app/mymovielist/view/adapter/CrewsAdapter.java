@@ -9,23 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> {
 
     private Context context;
-    private List<Credit.Crew> itemObjects;
+    private List<Credit.Crew> crews;
 
-    public CrewsAdapter(Context context, List<Credit.Crew> itemObjects) {
+    public CrewsAdapter(Context context, List<Credit.Crew> crews) {
         this.context = context;
-        this.itemObjects = itemObjects;
+        this.crews = crews;
     }
 
     @Override
@@ -36,19 +34,14 @@ public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> 
 
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
-        holder.detailCrewsName.setText(itemObjects.get(position).getName());
-        holder.detailCrewsJob.setText(itemObjects.get(position).getJob());
-        Glide.with(context)
-                .load(RestAPIURL.getUrlImage(itemObjects.get(position).getProfilePath()))
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(holder.detailCrewsPic);
-
+        holder.detailCrewsName.setText(crews.get(position).getName());
+        holder.detailCrewsJob.setText(crews.get(position).getJob());
+        CommonFunction.setImage(context, RestAPIURL.getUrlImage(crews.get(position).getProfilePath()), holder.detailCrewsPic);
     }
 
     @Override
     public int getItemCount() {
-        return itemObjects.size();
+        return crews.size();
     }
 
     class ListHolder extends RecyclerView.ViewHolder {

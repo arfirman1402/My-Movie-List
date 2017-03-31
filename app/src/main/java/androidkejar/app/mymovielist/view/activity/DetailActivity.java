@@ -2,13 +2,13 @@ package androidkejar.app.mymovielist.view.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,15 +19,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +44,7 @@ import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.AppConstant;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
 import androidkejar.app.mymovielist.view.adapter.ReviewsAdapter;
@@ -136,8 +137,8 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieTrailers.setLayoutManager(linearLayoutManagerTrailers);
         detailMovieTrailers.setHasFixedSize(true);
 
-        idMovies = getIntent().getExtras().getInt("id");
-        String titleMovies = getIntent().getExtras().getString("title");
+        idMovies = getIntent().getExtras().getInt(AppConstant.MOVIE_ID);
+        String titleMovies = getIntent().getExtras().getString(AppConstant.MOVIE_TITLE);
 
         this.setTitle(titleMovies);
 
@@ -154,12 +155,8 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieLayout.setVisibility(View.GONE);
         detailMovieLoading.setVisibility(View.VISIBLE);
         detailMovieRefresh.setRefreshing(false);
-        getMovies();
-    }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+        getMovies();
     }
 
     private void getMovies() {
@@ -169,23 +166,12 @@ public class DetailActivity extends AppCompatActivity {
     private void setDataResponse(Movie body) {
         myMovie = body;
         if (myMovie.getBackdropPath() != null) {
-            Glide.with(getApplicationContext())
-                    .load(RestAPIURL.getUrlImage(myMovie.getBackdropPath()))
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .centerCrop()
-                    .into(detailMoviePic);
+            CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getBackdropPath()), detailMoviePic);
         } else {
-            Glide.with(getApplicationContext())
-                    .load(RestAPIURL.getUrlImage(myMovie.getPosterPath()))
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .centerCrop()
-                    .into(detailMoviePic);
+            CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getPosterPath()), detailMoviePic);
         }
 
-        Glide.with(getApplicationContext())
-                .load(RestAPIURL.getUrlImage(myMovie.getPosterPath()))
-                .centerCrop()
-                .into(detailMoviePoster);
+        CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getPosterPath()), detailMoviePoster);
 
         detailMoviePoster.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -194,10 +180,7 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.main_movie_bigpicture);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
-                Glide.with(getApplicationContext())
-                        .load(RestAPIURL.getUrlImage(myMovie.getPosterPath()))
-                        .centerCrop()
-                        .into(imageView);
+                CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(myMovie.getPosterPath()), imageView);
                 dialog.show();
                 return false;
             }
@@ -209,7 +192,7 @@ public class DetailActivity extends AppCompatActivity {
 
         detailMovieLanguage.setText(getStringLanguage(myMovie));
 
-        detailMovieRating.setText(getStringRating(myMovie.getVoteAverage()));
+        detailMovieRating.setText(getStringRating(myMovie.getVoteAverage(), myMovie.getVoteCount()));
 
         detailMovieRuntime.setText(getStringRuntime(myMovie.getRuntime()));
 
@@ -266,7 +249,7 @@ public class DetailActivity extends AppCompatActivity {
     private void setReviewsMovie(List<Review> reviews) {
         if (reviews.size() > 0) {
             detailMovieReviewsEmpty.setVisibility(View.GONE);
-            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, myMovie.getReviewResponse().getResults());
+            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, reviews);
             detailMovieReviews.setAdapter(reviewsAdapter);
         } else {
             detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
@@ -274,22 +257,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private String getStringLanguage(Movie myMovie) {
-        String strLanguage = "";
-        strLanguage += myMovie.getOriginalLanguage();
-        if (myMovie.getSpokenLanguages().size() > 0) {
-            strLanguage += " - ";
-            for (int i = 0; i < myMovie.getSpokenLanguages().size(); i++) {
-                strLanguage += myMovie.getSpokenLanguages().get(i).getIsoLanguage() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")";
-                if (myMovie.getSpokenLanguages().size() > 1) {
-                    if (i != myMovie.getSpokenLanguages().size() - 1) {
-                        strLanguage += ", ";
-                    } else {
-                        strLanguage += ".";
-                    }
-                }
-            }
+        String originalLanguage = myMovie.getOriginalLanguage();
+        ArrayList<String> spokenLanguageNames = new ArrayList<>();
+        for (int i = 0; i < myMovie.getSpokenLanguages().size(); i++) {
+            spokenLanguageNames.add(myMovie.getSpokenLanguages().get(i).getIsoLanguage() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")");
         }
-        return strLanguage;
+        if (spokenLanguageNames.size() > 0)
+            return originalLanguage + " - " + TextUtils.join(", ", spokenLanguageNames);
+        else return originalLanguage;
     }
 
     @Override
@@ -313,34 +288,32 @@ public class DetailActivity extends AppCompatActivity {
 
     private void shareMovie() {
         if (myMovie != null) {
-            String contentMovies = getMovieToShare();
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, contentMovies);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getMovieToShare());
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         }
     }
 
     private String getMovieToShare() {
-        String content = "[My Movie List - Info]\n";
+        String content = AppConstant.SHARE_TITLE + "\n";
         content += myMovie.getTitle() + " ";
         if (isPlaying(myMovie.getReleaseDate()))
             content += "Release on " + getStringReleaseDate(myMovie.getReleaseDate()) + " ";
         content += RestAPIURL.getYoutubeLink(allVideos.get(0).getKey()) + "\n";
-        content += "Download My Movie List App to get more info about movies.";
+        content += "Download My Movie List App to get more info about movies.\n\n";
+        content += AppConstant.PLAY_STORE_URL;
         return content;
     }
 
     private boolean isPlaying(String releaseDate) {
-        String[] arrReleaseDate = releaseDate.split("-");
-        Calendar calToday = GregorianCalendar.getInstance();
-        calToday.add(GregorianCalendar.MONTH, -1);
-        Calendar calReleaseDate = GregorianCalendar.getInstance();
-        calReleaseDate.set(GregorianCalendar.DAY_OF_MONTH, Integer.parseInt(arrReleaseDate[2]));
-        calReleaseDate.set(GregorianCalendar.MONTH, Integer.parseInt(arrReleaseDate[1]) - 1);
-        calReleaseDate.set(GregorianCalendar.YEAR, Integer.parseInt(arrReleaseDate[0]));
-        return calToday.before(calReleaseDate);
+        try {
+            return GregorianCalendar.getInstance().getTime().before(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(releaseDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private String getStringBugdet(int budget) {
@@ -348,23 +321,22 @@ public class DetailActivity extends AppCompatActivity {
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
         String moneyString = formatter.format(budget);
         if (budget > 0) strBudget = "USD " + moneyString;
-        else strBudget = "Budget Not Recorded";
+        else strBudget = AppConstant.NO_BUDGET;
         return strBudget;
     }
 
     private String getStringReleaseDate(String releaseDate) {
-        String[] arrReleaseDate = releaseDate.split("-");
-        String[] arrMonth = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-        return arrMonth[Integer.parseInt(arrReleaseDate[1]) - 1] + " " + arrReleaseDate[2] + ", " + arrReleaseDate[0];
+        try {
+            return new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(releaseDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return AppConstant.NO_RELEASE_DATE;
+        }
     }
 
     private String getStringRevenue(int revenue) {
-        String strRevenue;
-        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
-        String moneyString = formatter.format(revenue);
-        if (revenue > 0) strRevenue = "USD " + moneyString;
-        else strRevenue = "Revenue Not Recorded";
-        return strRevenue;
+        if (revenue > 0) return "USD " + NumberFormat.getNumberInstance(Locale.US).format(revenue);
+        else return AppConstant.NO_REVENUE;
     }
 
     private String getStringRuntime(int runtime) {
@@ -378,31 +350,23 @@ public class DetailActivity extends AppCompatActivity {
         return strRuntime;
     }
 
-    private String getStringRating(double voteAverage) {
-        String strRating;
-        if (voteAverage > 3) {
-            if (((int) (voteAverage * 10)) % 10 != 0) strRating = voteAverage + " of 10";
-            else strRating = (int) voteAverage + " of 10";
-        } else strRating = "Not Rated";
-        return strRating;
+    private String getStringRating(double voteAverage, int voteCount) {
+        if (voteCount > AppConstant.RATING_MAX_COUNT) {
+            return new DecimalFormat("#.#").format(voteAverage) + " of " + AppConstant.RATING_MAX;
+        } else return AppConstant.NO_RATING;
     }
 
     private String getStringGenre(List<Movie.Genre> genres) {
-        String strGenre = "";
-        if (genres.size() > 0) {
-            for (int i = 0; i < genres.size(); i++) {
-                strGenre += genres.get(i).getName();
-                if (genres.size() != 1) {
-                    if (i == genres.size() - 1) strGenre += ".";
-                    else if (genres.size() != 2) strGenre += ", ";
-                    else strGenre += " ";
-                    if (i + 1 == genres.size() - 1) strGenre += "and ";
-                }
-            }
-        } else {
-            strGenre = "No Genre Available";
+        ArrayList<String> genresName = new ArrayList<>();
+        for (int i = 0; i < genres.size(); i++) {
+            genresName.add(genres.get(i).getName());
         }
-        return strGenre;
+        if (genresName.size() > 0) {
+            String lastGenre = genresName.remove(genresName.size() - 1);
+            if (genresName.size() > 0)
+                return TextUtils.join(", ", genresName) + " and " + lastGenre + ".";
+            else return lastGenre;
+        } else return AppConstant.NO_GENRES;
     }
 
     private void setErrorLayout(String error) {

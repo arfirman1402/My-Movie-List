@@ -9,23 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import java.util.List;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> {
 
     private Context context;
-    private List<Credit.Cast> itemObjects;
+    private List<Credit.Cast> casts;
 
-    public CastsAdapter(Context context, List<Credit.Cast> itemObjects) {
+    public CastsAdapter(Context context, List<Credit.Cast> casts) {
         this.context = context;
-        this.itemObjects = itemObjects;
+        this.casts = casts;
     }
 
     @Override
@@ -36,18 +34,14 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> 
 
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
-        holder.detailCastsName.setText(itemObjects.get(position).getName());
-        holder.detailCastsCharacter.setText(itemObjects.get(position).getCharacter());
-        Glide.with(context)
-                .load(RestAPIURL.getUrlImage(itemObjects.get(position).getProfilePath()))
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .centerCrop()
-                .into(holder.detailCastsPic);
+        holder.detailCastsName.setText(casts.get(position).getName());
+        holder.detailCastsCharacter.setText(casts.get(position).getCharacter());
+        CommonFunction.setImage(context, RestAPIURL.getUrlImage(casts.get(position).getProfilePath()), holder.detailCastsPic);
     }
 
     @Override
     public int getItemCount() {
-        return itemObjects.size();
+        return casts.size();
     }
 
     class ListHolder extends RecyclerView.ViewHolder {
