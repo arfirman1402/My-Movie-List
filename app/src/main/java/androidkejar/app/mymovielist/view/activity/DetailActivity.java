@@ -85,14 +85,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
         initView();
-
-        controller = new MovieController();
-        eventBus = App.getInstance().getEventBus();
-        eventBus.register(this);
-
-        getDetailMovies();
     }
 
     private void initView() {
@@ -151,6 +144,23 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        controller = new MovieController();
+        eventBus = App.getInstance().getEventBus();
+        eventBus.register(this);
+
+        getDetailMovies();
+    }
+
+    @Override
+    protected void onPause() {
+        eventBus.unregister(this);
+        super.onPause();
+    }
+
     private void getDetailMovies() {
         detailMovieLayout.setVisibility(View.GONE);
         detailMovieLoading.setVisibility(View.VISIBLE);
@@ -187,25 +197,16 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         detailMovieOverview.setText(myMovie.getOverview());
-
         detailMovieGenre.setText(getStringGenre(myMovie.getGenres()));
-
         detailMovieLanguage.setText(getStringLanguage(myMovie));
-
         detailMovieRating.setText(getStringRating(myMovie.getVoteAverage(), myMovie.getVoteCount()));
-
         detailMovieRuntime.setText(getStringRuntime(myMovie.getRuntime()));
-
         detailMovieRevenue.setText(getStringRevenue(myMovie.getRevenue()));
-
         detailMovieBudget.setText(getStringBugdet(myMovie.getBudget()));
-
         detailMovieReleaseDate.setText(getStringReleaseDate(myMovie.getReleaseDate()));
 
         setReviewsMovie(myMovie.getReviewResponse().getResults());
-
         setCreditsMovie(myMovie.getCredits());
-
         setVideosMovie(myMovie.getVideoResponse().getResults());
 
     }
@@ -378,20 +379,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMovieEvent(MovieDetailEvent event) {
+    public void getMovieDetail(MovieDetailEvent event) {
         Log.d("resultData", event.getMessage());
         setDataResponse(event.getBody());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMovieErrorEvent(MovieDetailErrorEvent event) {
+    public void getMovieDetailError(MovieDetailErrorEvent event) {
         Log.e("errorResultData", event.getMessage());
         setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
-    }
-
-    @Override
-    protected void onDestroy() {
-        eventBus.unregister(this);
-        super.onDestroy();
     }
 }

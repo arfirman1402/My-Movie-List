@@ -3,7 +3,6 @@ package androidkejar.app.mymovielist.view.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
 
         controller = new MovieController();
@@ -100,6 +98,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         eventBus.register(this);
 
         launchGetMovies();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (movieList.size() > 0) setHeaderLayout();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+        eventBus.unregister(this);
     }
 
     private void initView() {
@@ -219,16 +230,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
     private void setDataResponse(MovieResponse body) {
         maxPage = body.getTotalPages();
 
-        movieList.addAll(body.getResults());
-        moviesAdapter.addAll(body.getResults());
+        List<Movie> data = new ArrayList<>();
+        for (Movie movie : body.getResults()) {
+            if (!movieList.contains(movie)) {
+                data.add(movie);
+            }
+        }
+
+        movieList.addAll(data);
+        moviesAdapter.addAll(data);
 
         if (movieList.size() > 0) {
             mainMovieLayout.setVisibility(View.VISIBLE);
@@ -406,21 +419,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMovieEvent(MovieEvent event) {
-        Log.d("resultData", event.getMessage());
+    public void getMovieList(MovieEvent event) {
         setDataResponse(event.getBody());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMovieErrorEvent(MovieErrorEvent event) {
+    public void getMovieListError(MovieErrorEvent event) {
         Log.e("errorResultData", event.getMessage());
         mainErrorType = AppConstant.ErrorType.CONNECTION;
         setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        eventBus.unregister(this);
     }
 }
