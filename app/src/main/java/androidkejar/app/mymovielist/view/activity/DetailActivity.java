@@ -85,7 +85,15 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         initView();
+
+        controller = new MovieController();
+
+        eventBus = App.getInstance().getEventBus();
+        eventBus.register(this);
+
+        getDetailMovies();
     }
 
     private void initView() {
@@ -145,20 +153,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        controller = new MovieController();
-        eventBus = App.getInstance().getEventBus();
-        eventBus.register(this);
-
-        getDetailMovies();
-    }
-
-    @Override
-    protected void onPause() {
+    protected void onDestroy() {
         eventBus.unregister(this);
-        super.onPause();
+        super.onDestroy();
     }
 
     private void getDetailMovies() {

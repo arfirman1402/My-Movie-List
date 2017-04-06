@@ -94,15 +94,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         controller = new MovieController();
 
-        eventBus = App.getInstance().getEventBus();
-        eventBus.register(this);
-
         launchGetMovies();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        eventBus = App.getInstance().getEventBus();
+        eventBus.register(this);
         if (movieList.size() > 0) setHeaderLayout();
     }
 
@@ -198,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getMoviesFromBottom() {
         page += 1;
-        if (page != maxPage) {
+        if (page < maxPage) {
             changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
             getMovies();
         }
