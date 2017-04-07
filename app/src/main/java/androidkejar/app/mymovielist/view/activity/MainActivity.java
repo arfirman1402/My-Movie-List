@@ -315,8 +315,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onQueryTextSubmit(String query) {
                 isSearching = true;
                 querySearch = query;
+                mainMovieSearch.setQuery("", false);
+                mainMovieSearch.clearFocus();
+                mainMovieSearch.onActionViewCollapsed();
                 launchGetMovies();
-                return false;
+                return true;
             }
 
             @Override
