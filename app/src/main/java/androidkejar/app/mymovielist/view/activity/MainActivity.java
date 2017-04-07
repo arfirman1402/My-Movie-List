@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -66,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler changeHeaderHandler;
     private Runnable changeHeaderRunnable;
     private int randomList = -1;
-    private int page = 1;
-    private int maxPage = 1;
+    private int page;
+    private int maxPage;
     private String querySearch;
     private int sortPosition = 0;
     private boolean isSearching = false;
@@ -196,10 +197,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getMoviesFromBottom() {
-        page += 1;
+        page+= 1;
         if (page < maxPage) {
             changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
             getMovies();
+        }
+        else {
+            page--;
         }
     }
 
@@ -230,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setDataResponse(MovieResponse body) {
+        page = body.getPage();
         maxPage = body.getTotalPages();
 
         List<Movie> data = new ArrayList<>();
@@ -315,7 +320,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onQueryTextSubmit(String query) {
                 isSearching = true;
                 querySearch = query;
-                mainMovieSearch.setQuery("", false);
                 mainMovieSearch.clearFocus();
                 mainMovieSearch.onActionViewCollapsed();
                 launchGetMovies();
@@ -340,13 +344,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setErrorLayout(String error) {
-        mainMovieLayout.setVisibility(View.GONE);
-        mainMovieLoading.setVisibility(View.GONE);
-        mainMovieError.setVisibility(View.VISIBLE);
-        mainMovieErrorContent.setText(error);
-        if (mainErrorType.equals(AppConstant.ErrorType.CONNECTION))
-            mainMovieErrorPic.setImageResource(R.drawable.ic_signal);
-        else mainMovieErrorPic.setImageResource(R.drawable.ic_app);
+        if (page > 1) {
+            Snackbar.make(mainMovieLayout, AppConstant.ERROR_CONNECTION_TEXT, Snackbar.LENGTH_SHORT)
+                    .setAction("Okay", null)
+                    .show();
+            page--;
+        } else {
+            mainMovieLayout.setVisibility(View.GONE);
+            mainMovieLoading.setVisibility(View.GONE);
+            mainMovieError.setVisibility(View.VISIBLE);
+            mainMovieErrorContent.setText(error);
+            if (mainErrorType.equals(AppConstant.ErrorType.CONNECTION))
+                mainMovieErrorPic.setImageResource(R.drawable.ic_signal);
+            else mainMovieErrorPic.setImageResource(R.drawable.ic_app);
+        }
     }
 
     @Override

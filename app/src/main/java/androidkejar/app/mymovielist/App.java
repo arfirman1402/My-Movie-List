@@ -44,7 +44,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
     private void createEventBus() {
-        eventBus = EventBus.builder().logNoSubscriberMessages(false).sendNoSubscriberEvent(false).build();
+        eventBus = EventBus.builder()
+                .logNoSubscriberMessages(false)
+                .sendNoSubscriberEvent(false)
+                .build();
     }
 
     public static App getInstance() {
