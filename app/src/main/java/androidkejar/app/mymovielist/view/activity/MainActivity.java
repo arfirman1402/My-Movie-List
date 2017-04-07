@@ -197,12 +197,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getMoviesFromBottom() {
-        page+= 1;
+        page += 1;
         if (page < maxPage) {
             changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
             getMovies();
-        }
-        else {
+        } else {
             page--;
         }
     }

@@ -9,6 +9,11 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        javaCompileOptions{
+            annotationProcessorOptions{
+                arguments = [eventBusIndex : 'androidkejar.app.mymovielist.MyEventBusIndex']
+            }
+        }
     }
     buildTypes {
         debug{
@@ -33,4 +38,5 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.0.1';
 }

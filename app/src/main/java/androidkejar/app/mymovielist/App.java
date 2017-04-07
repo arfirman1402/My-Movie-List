@@ -47,6 +47,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         eventBus = EventBus.builder()
                 .logNoSubscriberMessages(false)
                 .sendNoSubscriberEvent(false)
+                .addIndex(new MyEventBusIndex())
                 .build();
     }
 
