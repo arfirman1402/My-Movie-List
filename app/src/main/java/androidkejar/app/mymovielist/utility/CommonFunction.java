@@ -10,7 +10,8 @@ public class CommonFunction {
     public static void setImage(Context context, String url, ImageView imageView) {
         Glide.with(context)
                 .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .dontAnimate()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .centerCrop()
                 .into(imageView);
     }
