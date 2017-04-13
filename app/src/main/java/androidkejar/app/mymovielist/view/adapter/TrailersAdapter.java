@@ -19,7 +19,6 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ListHolder> {
-
     private Context context;
     private List<Video> videos;
 

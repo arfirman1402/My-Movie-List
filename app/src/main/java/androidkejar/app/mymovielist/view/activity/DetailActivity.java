@@ -205,7 +205,6 @@ public class DetailActivity extends AppCompatActivity {
         setReviewsMovie(myMovie.getReviewResponse().getResults());
         setCreditsMovie(myMovie.getCredits());
         setVideosMovie(myMovie.getVideoResponse().getResults());
-
     }
 
     private void setVideosMovie(List<Video> results) {

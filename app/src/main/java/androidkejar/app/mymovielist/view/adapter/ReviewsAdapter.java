@@ -20,7 +20,6 @@ import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.utility.AppConstant;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ListHolder> {
-
     private Context context;
     private List<Review> reviews;
 

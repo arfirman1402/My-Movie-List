@@ -8,7 +8,6 @@ import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.utility.AppConstant;
 
 public class SplashActivity extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

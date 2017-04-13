@@ -19,8 +19,8 @@ public class MovieController {
     private EventBus eventBus = App.getInstance().getEventBus();
 
     public void getDataSearch(String query, int page) {
-        Call<MovieResponse> call = App.getInstance().getApiService().getSearchMovies(RestAPIURL.getApiKey(), query, RestAPIURL.getLangSource(), page);
-        call.enqueue(new Callback<MovieResponse>() {
+        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getSearchMovies(RestAPIURL.getApiKey(), query, RestAPIURL.getLangSource(), page);
+        movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 eventBus.post(new MovieEvent(response.message(), response.body()));
@@ -34,8 +34,8 @@ public class MovieController {
     }
 
     public void getMovies(int type, int page) {
-        Call<MovieResponse> call = App.getInstance().getApiService().getMovies(AppConstant.MOVIE_LIST_TYPE[type], RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), page, RestAPIURL.getMoviesRegion());
-        call.enqueue(new Callback<MovieResponse>() {
+        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getMovies(AppConstant.MOVIE_LIST_TYPE[type], RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), page, RestAPIURL.getMoviesRegion());
+        movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 eventBus.post(new MovieEvent(response.message(), response.body()));
@@ -49,8 +49,8 @@ public class MovieController {
     }
 
     public void getMovieDetail(int idMovies) {
-        Call<Movie> call = App.getInstance().getApiService().getMovieDetails(idMovies, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), RestAPIURL.getMovieAppendToResponse());
-        call.enqueue(new Callback<Movie>() {
+        Call<Movie> movieCall = App.getInstance().getApiService().getMovieDetails(idMovies, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), RestAPIURL.getMovieAppendToResponse());
+        movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 eventBus.post(new MovieDetailEvent(response.message(), response.body()));

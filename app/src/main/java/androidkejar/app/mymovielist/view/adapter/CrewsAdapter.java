@@ -17,7 +17,6 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class CrewsAdapter extends RecyclerView.Adapter<CrewsAdapter.ListHolder> {
-
     private Context context;
     private List<Credit.Crew> crews;
 

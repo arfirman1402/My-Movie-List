@@ -17,7 +17,6 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.ListHolder> {
-
     private Context context;
     private List<Credit.Cast> casts;
 

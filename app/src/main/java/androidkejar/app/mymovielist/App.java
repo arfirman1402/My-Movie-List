@@ -57,5 +57,4 @@ public class App extends Application {
     public RestAPIInterface getApiService() {
         return getRetrofitClient().create(RestAPIInterface.class);
     }
-
 }

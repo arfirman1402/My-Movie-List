@@ -1,13 +1,7 @@
 package androidkejar.app.mymovielist.event;
 
-public class MovieErrorEvent {
-    private String message;
-
+public class MovieErrorEvent extends BaseEvent {
     public MovieErrorEvent(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
+        super(message);
     }
 }

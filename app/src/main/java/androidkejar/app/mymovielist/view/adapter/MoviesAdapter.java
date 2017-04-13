@@ -23,7 +23,6 @@ import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
-
     private Context context;
     private List<Movie> movies;
 

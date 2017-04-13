@@ -11,7 +11,7 @@ public class CommonFunction {
         Glide.with(context)
                 .load(url)
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .centerCrop()
                 .into(imageView);
     }

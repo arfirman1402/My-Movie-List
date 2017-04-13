@@ -2,17 +2,12 @@ package androidkejar.app.mymovielist.event;
 
 import androidkejar.app.mymovielist.model.Movie;
 
-public class MovieDetailEvent {
-    private String message;
+public class MovieDetailEvent extends BaseEvent {
     private Movie body;
 
     public MovieDetailEvent(String message, Movie body) {
-        this.message = message;
+        super(message);
         this.body = body;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public Movie getBody() {
