@@ -1,8 +1,5 @@
 package androidkejar.app.mymovielist.view.activity;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -23,14 +20,14 @@ import androidkejar.app.mymovielist.view.fragment.NowPlayingFragment;
 import androidkejar.app.mymovielist.view.fragment.PopularFragment;
 import androidkejar.app.mymovielist.view.fragment.TopRatedFragment;
 
-public class NewMainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     private DrawerLayout navDrawerLayout;
     private Fragment lastFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_new);
+        setContentView(R.layout.activity_main);
 
         initView();
     }
