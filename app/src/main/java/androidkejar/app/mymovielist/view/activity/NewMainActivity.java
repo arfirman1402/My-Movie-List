@@ -67,12 +67,6 @@ public class NewMainActivity extends AppCompatActivity {
         return new MainNavigationItemListener();
     }
 
-    public static void goToActivity(Context context) {
-        Intent i = new Intent(context, NewMainActivity.class);
-        context.startActivity(i);
-        ((Activity) context).finish();
-    }
-
     private class MainNavigationItemListener implements NavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {

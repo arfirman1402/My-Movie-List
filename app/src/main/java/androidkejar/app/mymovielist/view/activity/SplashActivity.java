@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.utility.AppConstant;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 
 public class SplashActivity extends Activity {
     @Override
@@ -17,8 +18,7 @@ public class SplashActivity extends Activity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-//                MainActivity.goToActivity(SplashActivity.this);
-                NewMainActivity.goToActivity(SplashActivity.this);
+                CommonFunction.moveActivity(SplashActivity.this, NewMainActivity.class, true);
             }
         };
 

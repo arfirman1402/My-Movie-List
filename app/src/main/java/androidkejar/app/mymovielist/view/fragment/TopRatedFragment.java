@@ -1,6 +1,5 @@
 package androidkejar.app.mymovielist.view.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -238,10 +237,10 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-                Intent i = new Intent(getContext(), DetailActivity.class);
-                i.putExtra(AppConstant.MOVIE_ID, movieArrayList.get(randomList).getId());
-                i.putExtra(AppConstant.MOVIE_TITLE, movieArrayList.get(randomList).getTitle());
-                startActivity(i);
+                Bundle bundle = new Bundle();
+                bundle.putInt(AppConstant.MOVIE_ID, movieArrayList.get(randomList).getId());
+                bundle.putString(AppConstant.MOVIE_TITLE, movieArrayList.get(randomList).getTitle());
+                CommonFunction.moveActivity(getContext(), DetailActivity.class, bundle, false);
             }
         });
     }
