@@ -17,7 +17,8 @@ public class SplashActivity extends Activity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                MainActivity.goToActivity(SplashActivity.this);
+//                MainActivity.goToActivity(SplashActivity.this);
+                NewMainActivity.goToActivity(SplashActivity.this);
             }
         };
 
