@@ -43,7 +43,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
 
     @Override
     public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_movie_cardview, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cardview_layout, null);
         return new ListHolder(view);
     }
 
@@ -64,7 +64,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
             public boolean onLongClick(View view) {
                 Dialog dialog = new Dialog(context);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.main_movie_bigpicture);
+                dialog.setContentView(R.layout.movie_bigpicture_layout);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
                 CommonFunction.setImage(context, RestAPIURL.getUrlImage(movies.get(holder.getAdapterPosition()).getPosterPath()), imageView);
                 dialog.show();

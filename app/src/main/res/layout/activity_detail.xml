@@ -328,5 +328,11 @@
         </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/movie_common" />
+    <include
+        android:id="@+id/movie_error"
+        layout="@layout/movie_error_layout" />
+
+    <include
+        android:id="@+id/movie_loading"
+        layout="@layout/movie_loading_layout" />
 </RelativeLayout>

@@ -18,17 +18,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.activity.MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".view.activity.NewMainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".view.activity.DetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".view.activity.MainActivity" />
+            android:parentActivityName=".view.activity.NewMainActivity" />
     </application>
 
 </manifest>
