@@ -25,6 +25,7 @@ import androidkejar.app.mymovielist.view.fragment.TopRatedFragment;
 
 public class NewMainActivity extends AppCompatActivity {
     private DrawerLayout navDrawerLayout;
+    private Fragment lastFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +52,15 @@ public class NewMainActivity extends AppCompatActivity {
     }
 
     private void setFragment(Fragment fragment, String title) {
-        setTitle(title);
+        if (lastFragment == null || !lastFragment.getClass().equals(fragment.getClass())) {
+            lastFragment = fragment;
 
-        FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-        fragmentManager.replace(R.id.main_fragment, fragment);
-        fragmentManager.commit();
+            setTitle(title);
+
+            FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+            fragmentManager.replace(R.id.main_fragment, fragment);
+            fragmentManager.commit();
+        }
     }
 
     private NavigationView.OnNavigationItemSelectedListener getNavigationItemListener() {
@@ -101,6 +106,8 @@ public class NewMainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (navDrawerLayout.isDrawerOpen(Gravity.START)) navDrawerLayout.closeDrawer(Gravity.START);
-        else super.onBackPressed();
+        else if (!lastFragment.getClass().equals(HomeFragment.class)) {
+            setFragment(new HomeFragment(), "Home");
+        } else super.onBackPressed();
     }
 }

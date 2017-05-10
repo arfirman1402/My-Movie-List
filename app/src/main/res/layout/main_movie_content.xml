@@ -78,7 +78,7 @@
                     app:backgroundTint="@color/colorPrimaryDark" />
             </RelativeLayout>
 
-            <include layout="@layout/movie_common"/>
+            <include layout="@layout/movie_common" />
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 

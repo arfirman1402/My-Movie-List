@@ -48,6 +48,22 @@ public class MovieController {
         });
     }
 
+    public void getNowPlayingMovies(int page) {
+        getMovies(0, page);
+    }
+
+    public void getPopularMovies(int page) {
+        getMovies(1, page);
+    }
+
+    public void getTopRatedMovies(int page) {
+        getMovies(2, page);
+    }
+
+    public void getComingSoonMovies(int page) {
+        getMovies(3, page);
+    }
+
     public void getMovieDetail(int idMovies) {
         Call<Movie> movieCall = App.getInstance().getApiService().getMovieDetails(idMovies, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), RestAPIURL.getMovieAppendToResponse());
         movieCall.enqueue(new Callback<Movie>() {
