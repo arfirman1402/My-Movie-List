@@ -273,6 +273,9 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
             case R.id.action_share:
                 shareMovie();
                 break;
@@ -280,7 +283,7 @@ public class DetailActivity extends AppCompatActivity {
                 break;
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void shareMovie() {
