@@ -81,7 +81,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/main_movie_about_androidkejar"
+            android:id="@+id/about_androidkejar"
             android:layout_width="200dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
@@ -89,9 +89,11 @@
             android:padding="10dp" />
 
         <ImageView
-            android:id="@+id/main_movie_about_googledev"
+            android:id="@+id/about_googledev"
             android:layout_width="200dp"
             android:layout_height="100dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite"
+            android:padding="10dp" />
     </LinearLayout>
 </ScrollView>

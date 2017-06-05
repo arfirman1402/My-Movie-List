@@ -185,7 +185,7 @@ public class DetailActivity extends AppCompatActivity {
             public boolean onLongClick(View view) {
                 Dialog dialog = new Dialog(DetailActivity.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.main_movie_bigpicture);
+                dialog.setContentView(R.layout.movie_bigpicture_layout);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
                 CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(myMovie.getPosterPath()), imageView);
                 dialog.show();

@@ -5,40 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/main_movie_toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/main_movie_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
+    <include
+        android:id="@+id/main_header"
+        layout="@layout/header_layout" />
 
     <android.support.v4.widget.DrawerLayout
-        android:id="@+id/main_movie_drawer_layout"
+        android:id="@+id/navigation_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/main_movie_toolbar_layout"
+        android:layout_below="@id/main_header"
         tools:openDrawer="start">
 
-        <include
-            layout="@layout/main_movie_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <include layout="@layout/main_layout" />
 
         <android.support.design.widget.NavigationView
-            android:id="@+id/main_movie_nav"
+            android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:headerLayout="@layout/main_movie_nav_header"
-            app:menu="@menu/activity_main_drawer" />
+            app:headerLayout="@layout/navigation_view_header"
+            app:menu="@menu/navigation_view_menu" />
 
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

@@ -2,7 +2,7 @@ package androidkejar.app.mymovielist.view.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,7 +43,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
 
     @Override
     public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_movie_cardview, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cardview_layout, null);
         return new ListHolder(view);
     }
 
@@ -64,7 +64,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
             public boolean onLongClick(View view) {
                 Dialog dialog = new Dialog(context);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.main_movie_bigpicture);
+                dialog.setContentView(R.layout.movie_bigpicture_layout);
                 ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
                 CommonFunction.setImage(context, RestAPIURL.getUrlImage(movies.get(holder.getAdapterPosition()).getPosterPath()), imageView);
                 dialog.show();
@@ -75,10 +75,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
     }
 
     private void sendIntent(Movie movieDetail) {
-        Intent intent = new Intent(context, DetailActivity.class);
-        intent.putExtra(AppConstant.MOVIE_ID, movieDetail.getId());
-        intent.putExtra(AppConstant.MOVIE_TITLE, movieDetail.getTitle());
-        context.startActivity(intent);
+        Bundle bundle = new Bundle();
+        bundle.putInt(AppConstant.MOVIE_ID, movieDetail.getId());
+        bundle.putString(AppConstant.MOVIE_TITLE, movieDetail.getTitle());
+        CommonFunction.moveActivity(context, DetailActivity.class, bundle, false);
     }
 
     @Override

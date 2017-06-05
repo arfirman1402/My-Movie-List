@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_now_playing"
+        android:icon="@drawable/ic_movies"
+        android:title="Now Playing" />
+    <item
+        android:id="@+id/nav_popular"
+        android:icon="@drawable/ic_genre"
+        android:title="Popular" />
+    <item
+        android:id="@+id/nav_top_rated"
+        android:icon="@drawable/ic_rating"
+        android:title="Top Rated" />
+    <item
+        android:id="@+id/nav_coming_soon"
+        android:icon="@drawable/ic_releasedate"
+        android:title="Coming Soon" />
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_about"
+        android:title="About" />
+</menu>
