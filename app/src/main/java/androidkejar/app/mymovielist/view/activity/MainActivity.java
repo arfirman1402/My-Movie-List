@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setFragment(Fragment fragment, String title, Bundle bundle) {
-        if (lastFragment == null || !lastFragment.getClass().equals(fragment.getClass())) {
+        if (lastFragment == null || !lastFragment.getClass().equals(fragment.getClass()) || isSearching) {
             lastFragment = fragment;
 
             fragment.setArguments(bundle);
@@ -99,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
         mainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mainSearch.onActionViewCollapsed();
-                isSearching = false;
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
                 setFragment(new SearchResultFragment(), query, bundle);
@@ -152,11 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (isSearching) {
-            mainSearch.onActionViewCollapsed();
-            isSearching = false;
-            setFragment(new NowPlayingFragment(), "Now Playing");
-        } else if (navDrawerLayout.isDrawerOpen(Gravity.START))
+        if (navDrawerLayout.isDrawerOpen(Gravity.START))
             navDrawerLayout.closeDrawer(Gravity.START);
         else if (!lastFragment.getClass().equals(NowPlayingFragment.class)) {
             setFragment(new NowPlayingFragment(), "Now Playing");

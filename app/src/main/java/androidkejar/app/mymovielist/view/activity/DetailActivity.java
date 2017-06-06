@@ -150,6 +150,8 @@ public class DetailActivity extends AppCompatActivity {
                 getDetailMovies();
             }
         });
+
+
     }
 
     @Override
@@ -388,4 +390,6 @@ public class DetailActivity extends AppCompatActivity {
         Log.e("errorResultData", event.getMessage());
         setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
     }
+
+
 }
