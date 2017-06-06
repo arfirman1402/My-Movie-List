@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +21,14 @@ import androidkejar.app.mymovielist.view.fragment.ComingSoonFragment;
 import androidkejar.app.mymovielist.view.fragment.HomeFragment;
 import androidkejar.app.mymovielist.view.fragment.NowPlayingFragment;
 import androidkejar.app.mymovielist.view.fragment.PopularFragment;
+import androidkejar.app.mymovielist.view.fragment.SearchResultFragment;
 import androidkejar.app.mymovielist.view.fragment.TopRatedFragment;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout navDrawerLayout;
     private Fragment lastFragment;
     private SearchView mainSearch;
+    private boolean isSearching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +51,21 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navView = (NavigationView) findViewById(R.id.navigation_view);
         navView.setNavigationItemSelectedListener(getNavigationItemListener());
 
-//        setFragment(new HomeFragment(), "Home");
         setFragment(new NowPlayingFragment(), "Now Playing");
     }
 
     private void setFragment(Fragment fragment, String title) {
+        setFragment(fragment, title, new Bundle());
+    }
+
+    private void setFragment(Fragment fragment, String title, Bundle bundle) {
         if (lastFragment == null || !lastFragment.getClass().equals(fragment.getClass())) {
             lastFragment = fragment;
 
+            fragment.setArguments(bundle);
+
+            if (mainSearch != null) mainSearch.onActionViewCollapsed();
+            isSearching = false;
             setTitle(title);
 
             FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
@@ -70,11 +78,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem menuIcon = menu.findItem(R.id.action_search);
+
         mainSearch = (SearchView) menuIcon.getActionView();
         mainSearch.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(MainActivity.class.getSimpleName(), "onClick: has Reached");
+                isSearching = true;
                 navDrawerLayout.closeDrawer(Gravity.START);
             }
         });
@@ -82,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         mainSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                Log.d(MainActivity.class.getSimpleName(), "onClose: has Reached");
+                isSearching = false;
                 return false;
             }
         });
@@ -90,10 +99,11 @@ public class MainActivity extends AppCompatActivity {
         mainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                mainSearch.clearFocus();
                 mainSearch.onActionViewCollapsed();
-                Log.d(MainActivity.class.getSimpleName(), "onQueryTextSubmit: has Reached");
+                isSearching = false;
+                Bundle bundle = new Bundle();
+                bundle.putString("query", query);
+                setFragment(new SearchResultFragment(), query, bundle);
                 return true;
             }
 
@@ -102,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         return true;
     }
 
@@ -141,10 +152,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mainSearch != null) mainSearch.onActionViewCollapsed();
-        if (navDrawerLayout.isDrawerOpen(Gravity.START)) navDrawerLayout.closeDrawer(Gravity.START);
-        else if (!lastFragment.getClass().equals(HomeFragment.class)) {
-//            setFragment(new HomeFragment(), "Home");
+        if (isSearching) {
+            mainSearch.onActionViewCollapsed();
+            isSearching = false;
+            setFragment(new NowPlayingFragment(), "Now Playing");
+        } else if (navDrawerLayout.isDrawerOpen(Gravity.START))
+            navDrawerLayout.closeDrawer(Gravity.START);
+        else if (!lastFragment.getClass().equals(NowPlayingFragment.class)) {
             setFragment(new NowPlayingFragment(), "Now Playing");
         } else super.onBackPressed();
     }
