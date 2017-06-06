@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navView = (NavigationView) findViewById(R.id.navigation_view);
         navView.setNavigationItemSelectedListener(getNavigationItemListener());
 
-        setFragment(new HomeFragment(), "Home");
+//        setFragment(new HomeFragment(), "Home");
+        setFragment(new NowPlayingFragment(), "Now Playing");
     }
 
     private void setFragment(Fragment fragment, String title) {
@@ -98,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (navDrawerLayout.isDrawerOpen(Gravity.START)) navDrawerLayout.closeDrawer(Gravity.START);
         else if (!lastFragment.getClass().equals(HomeFragment.class)) {
-            setFragment(new HomeFragment(), "Home");
+//            setFragment(new HomeFragment(), "Home");
+            setFragment(new NowPlayingFragment(), "Now Playing");
         } else super.onBackPressed();
     }
 }
