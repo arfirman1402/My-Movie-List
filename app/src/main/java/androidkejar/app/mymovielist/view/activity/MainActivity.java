@@ -8,9 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.view.fragment.AboutFragment;
@@ -23,6 +27,7 @@ import androidkejar.app.mymovielist.view.fragment.TopRatedFragment;
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout navDrawerLayout;
     private Fragment lastFragment;
+    private SearchView mainSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem menuIcon = menu.findItem(R.id.action_search);
+        mainSearch = (SearchView) menuIcon.getActionView();
+        mainSearch.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(MainActivity.class.getSimpleName(), "onClick: has Reached");
+                navDrawerLayout.closeDrawer(Gravity.START);
+            }
+        });
+
+        mainSearch.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Log.d(MainActivity.class.getSimpleName(), "onClose: has Reached");
+                return false;
+            }
+        });
+
+        mainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                mainSearch.clearFocus();
+                mainSearch.onActionViewCollapsed();
+                Log.d(MainActivity.class.getSimpleName(), "onQueryTextSubmit: has Reached");
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return true;
+    }
+
     private NavigationView.OnNavigationItemSelectedListener getNavigationItemListener() {
         return new MainNavigationItemListener();
     }
@@ -97,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (mainSearch != null) mainSearch.onActionViewCollapsed();
         if (navDrawerLayout.isDrawerOpen(Gravity.START)) navDrawerLayout.closeDrawer(Gravity.START);
         else if (!lastFragment.getClass().equals(HomeFragment.class)) {
 //            setFragment(new HomeFragment(), "Home");
