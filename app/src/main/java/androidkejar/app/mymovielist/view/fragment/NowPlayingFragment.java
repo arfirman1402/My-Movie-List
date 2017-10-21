@@ -1,6 +1,5 @@
 package androidkejar.app.mymovielist.view.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,22 +38,35 @@ import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
 import androidkejar.app.mymovielist.view.adapter.MoviesAdapter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by alodokter-it on 10/05/17 -- NowPlayingFragment.
  */
 
 public class NowPlayingFragment extends Fragment implements View.OnClickListener {
-    private RelativeLayout movieLayout;
-    private RecyclerView movieRecyclerView;
-    private ImageView movieHeaderPic;
-    private TextView movieHeaderTitle;
-    private RelativeLayout movieLoading;
-    private SwipeRefreshLayout movieRefresh;
-    private FloatingActionButton movieScrollTop;
-    private LinearLayout movieError;
-    private ImageView movieErrorPic;
-    private TextView movieErrorContent;
+    @BindView(R.id.movie_layout)
+    RelativeLayout movieLayout;
+    @BindView(R.id.movie_recycler_view)
+    RecyclerView movieRecyclerView;
+    @BindView(R.id.movie_header_pic)
+    ImageView movieHeaderPic;
+    @BindView(R.id.movie_header_title)
+    TextView movieHeaderTitle;
+    @BindView(R.id.movie_loading)
+    RelativeLayout movieLoading;
+    @BindView(R.id.movie_refresh)
+    SwipeRefreshLayout movieRefresh;
+    @BindView(R.id.movie_scroll_top)
+    FloatingActionButton movieScrollTop;
+    @BindView(R.id.movie_error_layout)
+    LinearLayout movieError;
+    @BindView(R.id.movie_error_pic)
+    ImageView movieErrorPic;
+    @BindView(R.id.movie_error_content)
+    TextView movieErrorContent;
+
     private MoviesAdapter moviesAdapter;
     private ArrayList<Movie> movieArrayList;
     private Handler changeHeaderHandler;
@@ -75,16 +87,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
     private void initView(View view) {
         controller = new MovieController();
 
-        movieLayout = (RelativeLayout) view.findViewById(R.id.movie_layout);
-        movieRecyclerView = (RecyclerView) view.findViewById(R.id.movie_recycler_view);
-        movieHeaderPic = (ImageView) view.findViewById(R.id.movie_header_pic);
-        movieHeaderTitle = (TextView) view.findViewById(R.id.movie_header_title);
-        movieLoading = (RelativeLayout) view.findViewById(R.id.movie_loading);
-        movieRefresh = (SwipeRefreshLayout) view.findViewById(R.id.movie_refresh);
-        movieScrollTop = (FloatingActionButton) view.findViewById(R.id.movie_scroll_top);
-        movieError = (LinearLayout) view.findViewById(R.id.movie_error_layout);
-        movieErrorPic = (ImageView) view.findViewById(R.id.movie_error_pic);
-        movieErrorContent = (TextView) view.findViewById(R.id.movie_error_content);
+        ButterKnife.bind(this, view);
 
         movieScrollTop.setOnClickListener(this);
         movieScrollTop.hide();
@@ -109,7 +112,7 @@ public class NowPlayingFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        moviesAdapter = new MoviesAdapter(this.getContext());
+        moviesAdapter = new MoviesAdapter();
         movieRecyclerView.setAdapter(moviesAdapter);
 
         movieArrayList = new ArrayList<>();

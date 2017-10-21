@@ -1,7 +1,6 @@
 package androidkejar.app.mymovielist.view.adapter;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -21,13 +20,15 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
-    private Context context;
     private List<Movie> movies;
 
-    public MoviesAdapter(Context context) {
-        this.context = context;
+    public MoviesAdapter() {
         movies = new ArrayList<>();
     }
 
@@ -50,35 +51,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
         holder.movieCardViewTitle.setText(movies.get(position).getTitle());
-
-        CommonFunction.setImage(context, RestAPIURL.getUrlImage(movies.get(position).getPosterPath()), holder.movieCardViewPic);
-
-        holder.movieCardViewLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendIntent(movies.get(holder.getAdapterPosition()));
-            }
-        });
-        holder.movieCardViewLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.movie_bigpicture_layout);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
-                CommonFunction.setImage(context, RestAPIURL.getUrlImage(movies.get(holder.getAdapterPosition()).getPosterPath()), imageView);
-                dialog.show();
-                return false;
-            }
-        });
-
-    }
-
-    private void sendIntent(Movie movieDetail) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(AppConstant.MOVIE_ID, movieDetail.getId());
-        bundle.putString(AppConstant.MOVIE_TITLE, movieDetail.getTitle());
-        CommonFunction.moveActivity(context, DetailActivity.class, bundle, false);
+        CommonFunction.setImage(holder.itemView.getContext(), RestAPIURL.getUrlImage(movies.get(position).getPosterPath()), holder.movieCardViewPic);
     }
 
     @Override
@@ -87,15 +60,36 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
     }
 
     class ListHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.movie_cardview_title)
         TextView movieCardViewTitle;
+        @BindView(R.id.movie_cardview_pic)
         ImageView movieCardViewPic;
+        @BindView(R.id.movie_cardview_layout)
         CardView movieCardViewLayout;
 
         ListHolder(View itemView) {
             super(itemView);
-            movieCardViewTitle = (TextView) itemView.findViewById(R.id.movie_cardview_title);
-            movieCardViewPic = (ImageView) itemView.findViewById(R.id.movie_cardview_pic);
-            movieCardViewLayout = (CardView) itemView.findViewById(R.id.movie_cardview_layout);
+            ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.movie_cardview_layout)
+        void sendIntent() {
+            Movie movieDetail = movies.get(getAdapterPosition());
+            Bundle bundle = new Bundle();
+            bundle.putInt(AppConstant.MOVIE_ID, movieDetail.getId());
+            bundle.putString(AppConstant.MOVIE_TITLE, movieDetail.getTitle());
+            CommonFunction.moveActivity(itemView.getContext(), DetailActivity.class, bundle, false);
+        }
+
+        @OnLongClick(R.id.movie_cardview_layout)
+        boolean showBigPictures() {
+            Dialog dialog = new Dialog(itemView.getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.movie_bigpicture_layout);
+            ImageView imageView = dialog.findViewById(R.id.bigpicture_pic);
+            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(movies.get(getAdapterPosition()).getPosterPath()), imageView);
+            dialog.show();
+            return false;
         }
     }
 }

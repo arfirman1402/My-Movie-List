@@ -49,35 +49,63 @@ import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
 import androidkejar.app.mymovielist.view.adapter.CrewsAdapter;
 import androidkejar.app.mymovielist.view.adapter.ReviewsAdapter;
 import androidkejar.app.mymovielist.view.adapter.TrailersAdapter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 public class DetailActivity extends AppCompatActivity {
-    private ImageView detailMoviePic;
-    private ImageView detailMoviePoster;
-    private TextView detailMovieOverview;
-    private TextView detailMovieGenre;
-    private TextView detailMovieLanguage;
-    private TextView detailMovieRating;
-    private TextView detailMovieReleaseDate;
-    private TextView detailMovieRuntime;
-    private TextView detailMovieRevenue;
-    private TextView detailMovieBudget;
-    private RelativeLayout detailMovieLoading;
-    private RecyclerView detailMovieReviews;
-    private RecyclerView detailMovieCasts;
-    private RecyclerView detailMovieCrews;
-    private RecyclerView detailMovieTrailers;
-    private LinearLayout detailMovieLayout;
-    private TextView detailMovieReviewsEmpty;
-    private TextView detailMovieCastsEmpty;
-    private TextView detailMovieCrewsEmpty;
-    private TextView detailMovieTrailersEmpty;
-    private LinearLayout detailMovieError;
-    private ImageView detailMovieErrorPic;
-    private TextView detailMovieErrorContent;
+    @BindView(R.id.detail_movie_pic)
+    ImageView detailMoviePic;
+    @BindView(R.id.detail_movie_poster)
+    ImageView detailMoviePoster;
+    @BindView(R.id.detail_movie_overview)
+    TextView detailMovieOverview;
+    @BindView(R.id.detail_movie_genre)
+    TextView detailMovieGenre;
+    @BindView(R.id.detail_movie_language)
+    TextView detailMovieLanguage;
+    @BindView(R.id.detail_movie_rating)
+    TextView detailMovieRating;
+    @BindView(R.id.detail_movie_releasedate)
+    TextView detailMovieReleaseDate;
+    @BindView(R.id.detail_movie_runtime)
+    TextView detailMovieRuntime;
+    @BindView(R.id.detail_movie_revenue)
+    TextView detailMovieRevenue;
+    @BindView(R.id.detail_movie_budget)
+    TextView detailMovieBudget;
+    @BindView(R.id.movie_loading)
+    RelativeLayout detailMovieLoading;
+    @BindView(R.id.detail_movie_reviews)
+    RecyclerView detailMovieReviews;
+    @BindView(R.id.detail_movie_casts)
+    RecyclerView detailMovieCasts;
+    @BindView(R.id.detail_movie_crews)
+    RecyclerView detailMovieCrews;
+    @BindView(R.id.detail_movie_trailers)
+    RecyclerView detailMovieTrailers;
+    @BindView(R.id.detail_movie_layout)
+    LinearLayout detailMovieLayout;
+    @BindView(R.id.detail_movie_reviews_empty)
+    TextView detailMovieReviewsEmpty;
+    @BindView(R.id.detail_movie_casts_empty)
+    TextView detailMovieCastsEmpty;
+    @BindView(R.id.detail_movie_crews_empty)
+    TextView detailMovieCrewsEmpty;
+    @BindView(R.id.detail_movie_trailers_empty)
+    TextView detailMovieTrailersEmpty;
+    @BindView(R.id.movie_error_layout)
+    LinearLayout detailMovieError;
+    @BindView(R.id.movie_error_pic)
+    ImageView detailMovieErrorPic;
+    @BindView(R.id.movie_error_content)
+    TextView detailMovieErrorContent;
+    @BindView(R.id.detail_movie_refresh)
+    SwipeRefreshLayout detailMovieRefresh;
+
     private int idMovies;
     private Movie myMovie;
     private List<Video> allVideos;
-    private SwipeRefreshLayout detailMovieRefresh;
     private MovieController controller;
     private EventBus eventBus;
 
@@ -97,30 +125,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        detailMovieLayout = (LinearLayout) findViewById(R.id.detail_movie_layout);
-        detailMoviePic = (ImageView) findViewById(R.id.detail_movie_pic);
-        detailMoviePoster = (ImageView) findViewById(R.id.detail_movie_poster);
-        detailMovieOverview = (TextView) findViewById(R.id.detail_movie_overview);
-        detailMovieGenre = (TextView) findViewById(R.id.detail_movie_genre);
-        detailMovieLanguage = (TextView) findViewById(R.id.detail_movie_language);
-        detailMovieRating = (TextView) findViewById(R.id.detail_movie_rating);
-        detailMovieReleaseDate = (TextView) findViewById(R.id.detail_movie_releasedate);
-        detailMovieRuntime = (TextView) findViewById(R.id.detail_movie_runtime);
-        detailMovieRevenue = (TextView) findViewById(R.id.detail_movie_revenue);
-        detailMovieBudget = (TextView) findViewById(R.id.detail_movie_budget);
-        detailMovieReviews = (RecyclerView) findViewById(R.id.detail_movie_reviews);
-        detailMovieCasts = (RecyclerView) findViewById(R.id.detail_movie_casts);
-        detailMovieCrews = (RecyclerView) findViewById(R.id.detail_movie_crews);
-        detailMovieTrailers = (RecyclerView) findViewById(R.id.detail_movie_trailers);
-        detailMovieReviewsEmpty = (TextView) findViewById(R.id.detail_movie_reviews_empty);
-        detailMovieCastsEmpty = (TextView) findViewById(R.id.detail_movie_casts_empty);
-        detailMovieCrewsEmpty = (TextView) findViewById(R.id.detail_movie_crews_empty);
-        detailMovieTrailersEmpty = (TextView) findViewById(R.id.detail_movie_trailers_empty);
-        detailMovieLoading = (RelativeLayout) findViewById(R.id.movie_loading);
-        detailMovieError = (LinearLayout) findViewById(R.id.movie_error_layout);
-        detailMovieErrorPic = (ImageView) findViewById(R.id.movie_error_pic);
-        detailMovieErrorContent = (TextView) findViewById(R.id.movie_error_content);
-        detailMovieRefresh = (SwipeRefreshLayout) findViewById(R.id.detail_movie_refresh);
+        ButterKnife.bind(this);
 
         LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
         detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
@@ -150,8 +155,6 @@ public class DetailActivity extends AppCompatActivity {
                 getDetailMovies();
             }
         });
-
-
     }
 
     @Override
@@ -182,19 +185,6 @@ public class DetailActivity extends AppCompatActivity {
 
         CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getPosterPath()), detailMoviePoster);
 
-        detailMoviePoster.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Dialog dialog = new Dialog(DetailActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.movie_bigpicture_layout);
-                ImageView imageView = (ImageView) dialog.findViewById(R.id.bigpicture_pic);
-                CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(myMovie.getPosterPath()), imageView);
-                dialog.show();
-                return false;
-            }
-        });
-
         detailMovieOverview.setText(myMovie.getOverview());
         detailMovieGenre.setText(getStringGenre(myMovie.getGenres()));
         detailMovieLanguage.setText(getStringLanguage(myMovie));
@@ -209,11 +199,22 @@ public class DetailActivity extends AppCompatActivity {
         setVideosMovie(myMovie.getVideoResponse().getResults());
     }
 
+    @OnLongClick(R.id.detail_movie_poster)
+    boolean showBigPictures() {
+        Dialog dialog = new Dialog(DetailActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.movie_bigpicture_layout);
+        ImageView imageView = dialog.findViewById(R.id.bigpicture_pic);
+        CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(myMovie.getPosterPath()), imageView);
+        dialog.show();
+        return false;
+    }
+
     private void setVideosMovie(List<Video> results) {
         allVideos = results;
         if (results.size() > 0) {
             detailMovieTrailersEmpty.setVisibility(View.GONE);
-            TrailersAdapter trailersAdapter = new TrailersAdapter(this, results);
+            TrailersAdapter trailersAdapter = new TrailersAdapter(results);
             detailMovieTrailers.setAdapter(trailersAdapter);
         } else {
             detailMovieTrailersEmpty.setVisibility(View.VISIBLE);
@@ -228,7 +229,7 @@ public class DetailActivity extends AppCompatActivity {
 
         if (castList.size() > 0) {
             detailMovieCastsEmpty.setVisibility(View.GONE);
-            CastsAdapter castsAdapter = new CastsAdapter(this, castList);
+            CastsAdapter castsAdapter = new CastsAdapter(castList);
             detailMovieCasts.setAdapter(castsAdapter);
         } else {
             detailMovieCastsEmpty.setVisibility(View.VISIBLE);
@@ -238,7 +239,7 @@ public class DetailActivity extends AppCompatActivity {
 
         if (crewList.size() > 0) {
             detailMovieCrewsEmpty.setVisibility(View.GONE);
-            CrewsAdapter crewsAdapter = new CrewsAdapter(this, crewList);
+            CrewsAdapter crewsAdapter = new CrewsAdapter(crewList);
             detailMovieCrews.setAdapter(crewsAdapter);
         } else {
             detailMovieCrewsEmpty.setVisibility(View.VISIBLE);
@@ -248,7 +249,7 @@ public class DetailActivity extends AppCompatActivity {
     private void setReviewsMovie(List<Review> reviews) {
         if (reviews.size() > 0) {
             detailMovieReviewsEmpty.setVisibility(View.GONE);
-            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, reviews);
+            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(reviews);
             detailMovieReviews.setAdapter(reviewsAdapter);
         } else {
             detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
@@ -390,6 +391,4 @@ public class DetailActivity extends AppCompatActivity {
         Log.e("errorResultData", event.getMessage());
         setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
     }
-
-
 }

@@ -23,9 +23,19 @@ import androidkejar.app.mymovielist.view.fragment.NowPlayingFragment;
 import androidkejar.app.mymovielist.view.fragment.PopularFragment;
 import androidkejar.app.mymovielist.view.fragment.SearchResultFragment;
 import androidkejar.app.mymovielist.view.fragment.TopRatedFragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    private DrawerLayout navDrawerLayout;
+    @BindView(R.id.navigation_drawer_layout)
+    DrawerLayout navDrawerLayout;
+
+    @BindView(R.id.header_toolbar)
+    Toolbar headerToolbar;
+
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
+
     private Fragment lastFragment;
     private SearchView mainSearch;
     private boolean isSearching;
@@ -39,17 +49,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        Toolbar headerToolbar = (Toolbar) findViewById(R.id.header_toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(headerToolbar);
 
-        navDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, navDrawerLayout, headerToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         navDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navView = (NavigationView) findViewById(R.id.navigation_view);
-        navView.setNavigationItemSelectedListener(getNavigationItemListener());
+        navigationView.setNavigationItemSelectedListener(getNavigationItemListener());
 
         setFragment(new NowPlayingFragment(), "Now Playing");
     }
