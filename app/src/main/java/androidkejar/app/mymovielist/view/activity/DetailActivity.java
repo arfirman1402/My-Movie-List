@@ -1,6 +1,5 @@
 package androidkejar.app.mymovielist.view.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -201,12 +199,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @OnLongClick(R.id.detail_movie_poster)
     boolean showBigPictures() {
-        Dialog dialog = new Dialog(DetailActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.movie_bigpicture_layout);
-        ImageView imageView = dialog.findViewById(R.id.bigpicture_pic);
-        CommonFunction.setImage(getApplicationContext(), RestAPIURL.getUrlImage(myMovie.getPosterPath()), imageView);
-        dialog.show();
+        CommonFunction.showPoster(this, myMovie.getPosterPath());
         return false;
     }
 

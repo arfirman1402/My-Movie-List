@@ -1,13 +1,11 @@
 package androidkejar.app.mymovielist.view.adapter;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,12 +81,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
 
         @OnLongClick(R.id.movie_cardview_layout)
         boolean showBigPictures() {
-            Dialog dialog = new Dialog(itemView.getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.movie_bigpicture_layout);
-            ImageView imageView = dialog.findViewById(R.id.bigpicture_pic);
-            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(movies.get(getAdapterPosition()).getPosterPath()), imageView);
-            dialog.show();
+            CommonFunction.showPoster(itemView.getContext(), movies.get(getAdapterPosition()).getPosterPath());
             return false;
         }
     }
