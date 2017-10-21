@@ -130,21 +130,30 @@ public class MainActivity extends AppCompatActivity {
     private class MainNavigationItemListener implements NavigationView.OnNavigationItemSelectedListener {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            /*Bundle bundle = new Bundle();*/
             switch (item.getItemId()) {
                 case R.id.nav_home:
                     setFragment(new HomeFragment(), "Home");
                     break;
                 case R.id.nav_now_playing:
                     setFragment(new NowPlayingFragment(), "Now Playing");
+                    /*bundle.putInt("movie_type", 0);
+                    setFragment(new MovieFragment(), "Now Playing", bundle);*/
                     break;
                 case R.id.nav_popular:
                     setFragment(new PopularFragment(), "Popular");
+                    /*bundle.putInt("movie_type", 1);
+                    setFragment(new MovieFragment(), "Popular", bundle);*/
                     break;
                 case R.id.nav_top_rated:
                     setFragment(new TopRatedFragment(), "Top Rated");
+                    /*bundle.putInt("movie_type", 2);
+                    setFragment(new MovieFragment(), "Top Rated", bundle);*/
                     break;
                 case R.id.nav_coming_soon:
                     setFragment(new ComingSoonFragment(), "Coming Soon");
+                    /*bundle.putInt("movie_type", 3);
+                    setFragment(new MovieFragment(), "Coming Soon", bundle);*/
                     break;
                 case R.id.nav_about:
                     setFragment(new AboutFragment(), "About");

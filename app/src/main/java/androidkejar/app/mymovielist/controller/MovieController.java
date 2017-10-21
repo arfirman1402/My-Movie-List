@@ -33,7 +33,7 @@ public class MovieController {
         });
     }
 
-    private void getMovies(int type, int page) {
+    public void getMovies(int type, int page) {
         Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getMovies(AppConstant.MOVIE_LIST_TYPE[type], RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), page, RestAPIURL.getMoviesRegion());
         movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
