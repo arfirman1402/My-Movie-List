@@ -205,7 +205,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setVideosMovie(List<Video> results) {
         allVideos = results;
-        if (results.size() > 0) {
+        if (!results.isEmpty()) {
             detailMovieTrailersEmpty.setVisibility(View.GONE);
             TrailersAdapter trailersAdapter = new TrailersAdapter(results);
             detailMovieTrailers.setAdapter(trailersAdapter);
@@ -220,7 +220,7 @@ public class DetailActivity extends AppCompatActivity {
     private void setCreditsMovie(CreditResponse credits) {
         List<Credit.Cast> castList = credits.getCasts();
 
-        if (castList.size() > 0) {
+        if (!castList.isEmpty()) {
             detailMovieCastsEmpty.setVisibility(View.GONE);
             CastsAdapter castsAdapter = new CastsAdapter(castList);
             detailMovieCasts.setAdapter(castsAdapter);
@@ -230,7 +230,7 @@ public class DetailActivity extends AppCompatActivity {
 
         List<Credit.Crew> crewList = credits.getCrews();
 
-        if (crewList.size() > 0) {
+        if (!crewList.isEmpty()) {
             detailMovieCrewsEmpty.setVisibility(View.GONE);
             CrewsAdapter crewsAdapter = new CrewsAdapter(crewList);
             detailMovieCrews.setAdapter(crewsAdapter);
@@ -240,7 +240,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setReviewsMovie(List<Review> reviews) {
-        if (reviews.size() > 0) {
+        if (!reviews.isEmpty()) {
             detailMovieReviewsEmpty.setVisibility(View.GONE);
             ReviewsAdapter reviewsAdapter = new ReviewsAdapter(reviews);
             detailMovieReviews.setAdapter(reviewsAdapter);
@@ -255,7 +255,7 @@ public class DetailActivity extends AppCompatActivity {
         for (int i = 0; i < myMovie.getSpokenLanguages().size(); i++) {
             spokenLanguageNames.add(myMovie.getSpokenLanguages().get(i).getIsoLanguage() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")");
         }
-        if (spokenLanguageNames.size() > 0)
+        if (!spokenLanguageNames.isEmpty())
             return originalLanguage + " - " + TextUtils.join(", ", spokenLanguageNames);
         else return originalLanguage;
     }
@@ -357,7 +357,7 @@ public class DetailActivity extends AppCompatActivity {
         for (int i = 0; i < genres.size(); i++) {
             genresName.add(genres.get(i).getName());
         }
-        if (genresName.size() > 0) {
+        if (!genresName.isEmpty()) {
             String lastGenre = genresName.remove(genresName.size() - 1);
             if (genresName.size() > 0)
                 return TextUtils.join(", ", genresName) + " and " + lastGenre + ".";

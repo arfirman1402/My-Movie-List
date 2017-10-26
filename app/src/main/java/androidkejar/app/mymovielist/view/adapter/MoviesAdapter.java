@@ -26,23 +26,13 @@ import butterknife.OnLongClick;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
     private List<Movie> movies;
 
-    public MoviesAdapter() {
-        movies = new ArrayList<>();
-    }
-
-    public void addAll(List<Movie> movies) {
-        this.movies.addAll(movies);
-        notifyDataSetChanged();
-    }
-
-    public void resetData() {
-        this.movies.clear();
-        notifyDataSetChanged();
+    public MoviesAdapter(ArrayList<Movie> movies) {
+        this.movies = movies;
     }
 
     @Override
     public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cardview_layout, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cardview_layout, parent, false);
         return new ListHolder(view);
     }
 

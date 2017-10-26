@@ -111,10 +111,10 @@ public class SearchResultFragment extends Fragment implements View.OnClickListen
             }
         });
 
-        moviesAdapter = new MoviesAdapter();
-        movieRecyclerView.setAdapter(moviesAdapter);
-
         movieArrayList = new ArrayList<>();
+
+        moviesAdapter = new MoviesAdapter(movieArrayList);
+        movieRecyclerView.setAdapter(moviesAdapter);
 
         movieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
         movieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -177,7 +177,7 @@ public class SearchResultFragment extends Fragment implements View.OnClickListen
         page = 1;
         maxPage = 1;
         movieArrayList.clear();
-        moviesAdapter.resetData();
+        moviesAdapter.notifyDataSetChanged();
         movieRefresh.setRefreshing(false);
         movieLayout.setVisibility(View.GONE);
         movieError.setVisibility(View.GONE);
@@ -203,7 +203,7 @@ public class SearchResultFragment extends Fragment implements View.OnClickListen
         }
 
         movieArrayList.addAll(data);
-        moviesAdapter.addAll(data);
+        moviesAdapter.notifyDataSetChanged();
 
         if (movieArrayList.size() > 0) {
             movieLayout.setVisibility(View.VISIBLE);
