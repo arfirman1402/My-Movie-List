@@ -1,13 +1,10 @@
 package androidkejar.app.mymovielist.view.adapter;
 
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +15,10 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
+import androidkejar.app.mymovielist.view.adapter.callback.MovieCallback;
+import androidkejar.app.mymovielist.view.adapter.holder.MovieHolder;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter implements MovieCallback {
     private List<Movie> movies;
 
     public MoviesAdapter(ArrayList<Movie> movies) {
@@ -31,15 +26,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
     }
 
     @Override
-    public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cardview_layout, parent, false);
-        return new ListHolder(view);
+        return new MovieHolder(view, this);
     }
 
     @Override
-    public void onBindViewHolder(final ListHolder holder, int position) {
-        holder.movieCardViewTitle.setText(movies.get(position).getTitle());
-        CommonFunction.setImage(holder.itemView.getContext(), RestAPIURL.getUrlImage(movies.get(position).getPosterPath()), holder.movieCardViewPic);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        setMovieItem((MovieHolder) holder);
+    }
+
+    private void setMovieItem(MovieHolder holder) {
+        holder.getMovieTitle().setText(movies.get(holder.getAdapterPosition()).getTitle());
+        CommonFunction.setImage(holder.itemView.getContext(), RestAPIURL.getUrlImage(movies.get(holder.getAdapterPosition()).getPosterPath()), holder.getMoviePic());
     }
 
     @Override
@@ -47,32 +46,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ListHolder
         return movies.size();
     }
 
-    class ListHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.movie_cardview_title)
-        TextView movieCardViewTitle;
-        @BindView(R.id.movie_cardview_pic)
-        ImageView movieCardViewPic;
-        @BindView(R.id.movie_cardview_layout)
-        CardView movieCardViewLayout;
+    @Override
+    public void onMovieItemClick(MovieHolder holder) {
+        Movie movieDetail = movies.get(holder.getAdapterPosition());
+        Bundle bundle = new Bundle();
+        bundle.putInt(AppConstant.MOVIE_ID, movieDetail.getId());
+        bundle.putString(AppConstant.MOVIE_TITLE, movieDetail.getTitle());
+        CommonFunction.moveActivity(holder.itemView.getContext(), DetailActivity.class, bundle, false);
+    }
 
-        ListHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        @OnClick(R.id.movie_cardview_layout)
-        void sendIntent() {
-            Movie movieDetail = movies.get(getAdapterPosition());
-            Bundle bundle = new Bundle();
-            bundle.putInt(AppConstant.MOVIE_ID, movieDetail.getId());
-            bundle.putString(AppConstant.MOVIE_TITLE, movieDetail.getTitle());
-            CommonFunction.moveActivity(itemView.getContext(), DetailActivity.class, bundle, false);
-        }
-
-        @OnLongClick(R.id.movie_cardview_layout)
-        boolean showBigPictures() {
-            CommonFunction.showPoster(itemView.getContext(), movies.get(getAdapterPosition()).getPosterPath());
-            return false;
-        }
+    @Override
+    public void onMovieItemLongClick(MovieHolder holder) {
+        CommonFunction.showPoster(holder.itemView.getContext(), movies.get(holder.getAdapterPosition()).getPosterPath());
     }
 }
