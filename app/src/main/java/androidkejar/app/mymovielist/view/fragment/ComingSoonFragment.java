@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,6 +75,7 @@ public class ComingSoonFragment extends Fragment implements View.OnClickListener
     private MovieController controller;
     private int randomList = -1;
     private EventBus eventBus;
+    private boolean showLoadMore = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,7 +98,6 @@ public class ComingSoonFragment extends Fragment implements View.OnClickListener
         movieRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
                 autoLoadMovie(recyclerView);
             }
 
@@ -153,7 +152,7 @@ public class ComingSoonFragment extends Fragment implements View.OnClickListener
 
     private void autoLoadMovie(RecyclerView recyclerView) {
         if (recyclerView.getAdapter().getItemCount() != 0) {
-            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+            int lastVisibleItemPosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
             if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
                 if (movieArrayList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
                     getMoviesFromBottom();
@@ -164,12 +163,15 @@ public class ComingSoonFragment extends Fragment implements View.OnClickListener
     }
 
     private void getMoviesFromBottom() {
-        page += 1;
-        if (page < maxPage) {
-            changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-            getMovies();
-        } else {
-            page--;
+        if (!showLoadMore) {
+            showLoadMore = true;
+            page += 1;
+            if (page <= maxPage) {
+                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+                getMovies();
+            } else {
+                page--;
+            }
         }
     }
 
@@ -204,6 +206,8 @@ public class ComingSoonFragment extends Fragment implements View.OnClickListener
 
         movieArrayList.addAll(data);
         moviesAdapter.notifyDataSetChanged();
+
+        if (showLoadMore) showLoadMore = false;
 
         if (movieArrayList.size() > 0) {
             movieLayout.setVisibility(View.VISIBLE);
