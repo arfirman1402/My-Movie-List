@@ -21,6 +21,8 @@ public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClic
 
     private ReviewCallback reviewCallback;
 
+    private static int holderLayout = R.layout.detail_movie_reviews_cardview;
+
     public ReviewHolder(View itemView, ReviewCallback callback) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -28,6 +30,10 @@ public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClic
         this.reviewCallback = callback;
 
         itemView.setOnClickListener(this);
+    }
+
+    public static int getHolderLayout() {
+        return holderLayout;
     }
 
     public TextView getReviewContent() {

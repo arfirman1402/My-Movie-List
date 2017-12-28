@@ -21,10 +21,16 @@ public class CrewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.detail_crews_pic)
     ImageView detailCrewsPic;
 
+    private static int holderLayout = R.layout.detail_movie_crews_cardview;
+
     public CrewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         setIsRecyclable(false);
+    }
+
+    public static int getHolderLayout() {
+        return holderLayout;
     }
 
     public TextView getCrewName() {

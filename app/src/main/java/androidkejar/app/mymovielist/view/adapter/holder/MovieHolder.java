@@ -22,6 +22,8 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
 
     private MovieCallback movieCallback;
 
+    private static int holderLayout = R.layout.movie_cardview_layout;
+
     public MovieHolder(View itemView, MovieCallback movieCallback) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -29,6 +31,10 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
 
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
+    }
+
+    public static int getHolderLayout() {
+        return holderLayout;
     }
 
     public TextView getMovieTitle() {

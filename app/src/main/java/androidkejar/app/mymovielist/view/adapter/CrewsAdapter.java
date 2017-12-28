@@ -22,7 +22,7 @@ public class CrewsAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_movie_crews_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(CrewHolder.getHolderLayout(), parent, false);
         return new CrewHolder(view);
     }
 

@@ -22,7 +22,7 @@ public class CastsAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_movie_casts_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(CastHolder.getHolderLayout(), parent, false);
         return new CastHolder(view);
     }
 

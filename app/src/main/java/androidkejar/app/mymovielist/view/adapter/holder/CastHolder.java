@@ -20,12 +20,17 @@ public class CastHolder extends RecyclerView.ViewHolder {
     TextView detailCastsCharacter;
     @BindView(R.id.detail_casts_pic)
     ImageView detailCastsPic;
+    private static int holderLayout = R.layout.detail_movie_casts_cardview;
 
     public CastHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
         setIsRecyclable(false);
+    }
+
+    public static int getHolderLayout() {
+        return holderLayout;
     }
 
     public TextView getCastName() {

@@ -27,7 +27,7 @@ public class MoviesAdapter extends RecyclerView.Adapter implements MovieCallback
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_cardview_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(MovieHolder.getHolderLayout(), parent, false);
         return new MovieHolder(view, this);
     }
 

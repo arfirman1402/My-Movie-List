@@ -27,7 +27,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter implements ReviewCallba
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_movie_reviews_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(ReviewHolder.getHolderLayout(), parent, false);
         return new ReviewHolder(view, this);
     }
 

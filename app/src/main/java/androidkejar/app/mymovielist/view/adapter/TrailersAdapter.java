@@ -25,7 +25,7 @@ public class TrailersAdapter extends RecyclerView.Adapter implements TrailerCall
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_movie_trailers_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(TrailerHolder.getHolderLayout(), parent, false);
         return new TrailerHolder(view, this);
     }
 

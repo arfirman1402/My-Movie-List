@@ -24,6 +24,8 @@ public class TrailerHolder extends RecyclerView.ViewHolder implements View.OnCli
 
     private TrailerCallback trailerCallback;
 
+    private static int holderLayout = R.layout.detail_movie_trailers_cardview;
+
     public TrailerHolder(View itemView, TrailerCallback callback) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -31,6 +33,10 @@ public class TrailerHolder extends RecyclerView.ViewHolder implements View.OnCli
         this.trailerCallback = callback;
 
         itemView.setOnClickListener(this);
+    }
+
+    public static int getHolderLayout() {
+        return holderLayout;
     }
 
     @Override
