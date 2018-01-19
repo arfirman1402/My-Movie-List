@@ -1,11 +1,16 @@
 package androidkejar.app.mymovielist.view.adapter.holder;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.model.Credit;
+import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -14,34 +19,33 @@ import butterknife.ButterKnife;
  */
 
 public class CrewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.detail_crews_name)
-    TextView detailCrewsName;
-    @BindView(R.id.detail_crews_job)
-    TextView detailCrewsJob;
-    @BindView(R.id.detail_crews_pic)
-    ImageView detailCrewsPic;
+    @BindView(R.id.crew_item_name)
+    TextView crewName;
+    @BindView(R.id.crew_item_job)
+    TextView crewJob;
+    @BindView(R.id.crew_item_pic)
+    ImageView crewPic;
 
-    private static int holderLayout = R.layout.detail_movie_crews_cardview;
+    private static final int HOLDER_LAYOUT = R.layout.view_holder_crew;
 
-    public CrewHolder(View itemView) {
+    private CrewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         setIsRecyclable(false);
     }
 
-    public static int getHolderLayout() {
-        return holderLayout;
+    public static RecyclerView.ViewHolder createViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(HOLDER_LAYOUT, parent, false);
+        return new CrewHolder(view);
     }
 
-    public TextView getCrewName() {
-        return detailCrewsName;
+    public static CrewHolder castParent(RecyclerView.ViewHolder holder) {
+        return (CrewHolder) holder;
     }
 
-    public TextView getCrewJob() {
-        return detailCrewsJob;
-    }
-
-    public ImageView getCrewPic() {
-        return detailCrewsPic;
+    public void bindViewHolder(Credit.Crew crew) {
+        crewName.setText(crew.getName());
+        crewJob.setText(crew.getJob());
+        CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(crew.getProfilePath()), crewPic);
     }
 }

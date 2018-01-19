@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/detail_crews_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardUseCompatPadding="true">
@@ -24,7 +23,7 @@
                 android:src="@drawable/ic_person" />
 
             <ImageView
-                android:id="@+id/detail_crews_pic"
+                android:id="@+id/crew_item_pic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
@@ -36,7 +35,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/detail_crews_name"
+                android:id="@+id/crew_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Huwala"
@@ -44,7 +43,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/detail_crews_job"
+                android:id="@+id/crew_item_job"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Huwala"
