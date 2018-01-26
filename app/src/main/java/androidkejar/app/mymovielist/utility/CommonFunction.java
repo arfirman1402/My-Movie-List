@@ -39,7 +39,7 @@ public class CommonFunction {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.movie_bigpicture_layout);
-        ImageView imageView = dialog.findViewById(R.id.bigpicture_pic);
+        ImageView imageView = dialog.findViewById(R.id.big_picture_pic);
         CommonFunction.setImage(context, RestAPIURL.getUrlImage(imagePath), imageView);
         dialog.show();
     }

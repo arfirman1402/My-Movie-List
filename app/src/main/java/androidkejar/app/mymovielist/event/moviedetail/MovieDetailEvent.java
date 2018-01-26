@@ -1,5 +1,6 @@
-package androidkejar.app.mymovielist.event;
+package androidkejar.app.mymovielist.event.moviedetail;
 
+import androidkejar.app.mymovielist.event.BaseEvent;
 import androidkejar.app.mymovielist.model.Movie;
 
 public class MovieDetailEvent extends BaseEvent {

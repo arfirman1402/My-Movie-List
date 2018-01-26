@@ -36,19 +36,18 @@
 
             <TextView
                 android:id="@+id/cast_item_name"
+                style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Huwala"
-                android:textSize="10sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cast_item_character"
+                style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huwala"
-                android:textSize="10sp"
-                android:textStyle="italic" />
+                android:text="Huwala" />
         </LinearLayout>
     </LinearLayout>
 

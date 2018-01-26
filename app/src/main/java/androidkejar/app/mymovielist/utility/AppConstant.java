@@ -24,10 +24,9 @@ public class AppConstant {
     public static final String SHARE_TITLE              = "[My Movie List - Info]";
     public static final int MAX_REVIEW_LENGTH           = 3;
     public static final int RATING_MAX_COUNT            = 80;
+    public static final String MOVIE_SEARCH_QUERY       = "query";
 
     public enum ErrorType {CONNECTION, EMPTY}
-
-    public static final String[] SORT_BY_LIST           = new String[]{"Now Playing", "Popular", "Top Rated", "Coming Soon"};
 
     public static final String[] MOVIE_LIST_TYPE        = new String[]{"now_playing", "popular", "top_rated", "upcoming"};
 }

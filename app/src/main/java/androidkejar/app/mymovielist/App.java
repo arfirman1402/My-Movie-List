@@ -10,12 +10,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
-    private static App instance;
-    private static Retrofit retrofit;
-    private EventBus eventBus;
+    private static App sInstance;
+    private Retrofit mRetrofit;
+    private EventBus mEventBus;
 
     public App() {
-        instance = this;
+        sInstance = this;
     }
 
     @Override
@@ -28,18 +28,18 @@ public class App extends Application {
     }
 
     private void createRetrofitClient() {
-        retrofit = new Retrofit.Builder()
+        mRetrofit = new Retrofit.Builder()
                 .baseUrl(RestAPIURL.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
     public Retrofit getRetrofitClient() {
-        return retrofit;
+        return mRetrofit;
     }
 
     private void createEventBus() {
-        eventBus = EventBus.builder()
+        mEventBus = EventBus.builder()
                 .logNoSubscriberMessages(false)
                 .sendNoSubscriberEvent(false)
                 .addIndex(new MyEventBusIndex())
@@ -47,11 +47,11 @@ public class App extends Application {
     }
 
     public static App getInstance() {
-        return instance;
+        return sInstance;
     }
 
     public EventBus getEventBus() {
-        return eventBus;
+        return mEventBus;
     }
 
     public RestAPIInterface getApiService() {

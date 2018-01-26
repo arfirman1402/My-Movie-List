@@ -28,8 +28,8 @@ import java.util.List;
 import androidkejar.app.mymovielist.App;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MovieController;
-import androidkejar.app.mymovielist.event.MovieErrorEvent;
-import androidkejar.app.mymovielist.event.MovieEvent;
+import androidkejar.app.mymovielist.event.movie.MovieErrorEvent;
+import androidkejar.app.mymovielist.event.movie.MovieEvent;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
@@ -66,16 +66,16 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.movie_error_content)
     TextView movieErrorContent;
 
-    private MoviesAdapter moviesAdapter;
-    private ArrayList<Movie> movieArrayList;
-    private Handler changeHeaderHandler;
-    private Runnable changeHeaderRunnable;
-    private int page;
-    private int maxPage;
-    private MovieController controller;
-    private int randomList = -1;
-    private EventBus eventBus;
-    private boolean showLoadMore = false;
+    private MoviesAdapter mMoviesAdapter;
+    private ArrayList<Movie> mMovieArrayList;
+    private Handler mChangeHeaderHandler;
+    private Runnable mChangeHeaderRunnable;
+    private int mPage;
+    private int mMaxPage;
+    private MovieController mController;
+    private int mRandomList = -1;
+    private EventBus mEventBus;
+    private boolean mShowLoadMore = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View view) {
-        controller = new MovieController();
+        mController = new MovieController();
 
         ButterKnife.bind(this, view);
 
@@ -111,10 +111,10 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        movieArrayList = new ArrayList<>();
+        mMovieArrayList = new ArrayList<>();
 
-        moviesAdapter = new MoviesAdapter(movieArrayList);
-        movieRecyclerView.setAdapter(moviesAdapter);
+        mMoviesAdapter = new MoviesAdapter(mMovieArrayList);
+        movieRecyclerView.setAdapter(mMoviesAdapter);
 
         movieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
         movieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -124,9 +124,9 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        changeHeaderHandler = new Handler();
+        mChangeHeaderHandler = new Handler();
 
-        changeHeaderRunnable = new Runnable() {
+        mChangeHeaderRunnable = new Runnable() {
             @Override
             public void run() {
                 setHeaderLayout();
@@ -139,15 +139,15 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        eventBus = App.getInstance().getEventBus();
-        eventBus.register(this);
-        if (movieArrayList.size() > 0) setHeaderLayout();
+        mEventBus = App.getInstance().getEventBus();
+        mEventBus.register(this);
+        if (mMovieArrayList.size() > 0) setHeaderLayout();
     }
 
     @Override
     public void onPause() {
-        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
-        eventBus.unregister(this);
+        mChangeHeaderHandler.removeCallbacks(mChangeHeaderRunnable);
+        mEventBus.unregister(this);
         super.onPause();
     }
 
@@ -155,7 +155,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
         if (recyclerView.getAdapter().getItemCount() != 0) {
             int lastVisibleItemPosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
             if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1) {
-                if (movieArrayList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
+                if (mMovieArrayList.size() % 20 == 0 && lastVisibleItemPosition != 0) {
                     getMoviesFromBottom();
                 }
             }
@@ -164,53 +164,53 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getMoviesFromBottom() {
-        if (!showLoadMore) {
-            showLoadMore = true;
-            page += 1;
-            if (page <= maxPage) {
-                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+        if (!mShowLoadMore) {
+            mShowLoadMore = true;
+            mPage += 1;
+            if (mPage <= mMaxPage) {
+                mChangeHeaderHandler.removeCallbacks(mChangeHeaderRunnable);
                 getMovies();
             } else {
-                page--;
+                mPage--;
             }
         }
     }
 
     private void launchGetMovies() {
-        page = 1;
-        maxPage = 1;
-        movieArrayList.clear();
-        moviesAdapter.notifyDataSetChanged();
+        mPage = 1;
+        mMaxPage = 1;
+        mMovieArrayList.clear();
+        mMoviesAdapter.notifyDataSetChanged();
         movieRefresh.setRefreshing(false);
         movieLayout.setVisibility(View.GONE);
         movieError.setVisibility(View.GONE);
         movieLoading.setVisibility(View.VISIBLE);
-        changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+        mChangeHeaderHandler.removeCallbacks(mChangeHeaderRunnable);
         movieRecyclerView.removeAllViews();
         getMovies();
     }
 
     private void getMovies() {
-        controller.getTopRatedMovies(page);
+        mController.getTopRatedMovies(mPage);
     }
 
     private void setDataResponse(MovieResponse body) {
-        page = body.getPage();
-        maxPage = body.getTotalPages();
+        mPage = body.getPage();
+        mMaxPage = body.getTotalPages();
 
         List<Movie> data = new ArrayList<>();
         for (Movie movie : body.getResults()) {
-            if (!movieArrayList.contains(movie)) {
+            if (!mMovieArrayList.contains(movie)) {
                 data.add(movie);
             }
         }
 
-        movieArrayList.addAll(data);
-        moviesAdapter.notifyDataSetChanged();
+        mMovieArrayList.addAll(data);
+        mMoviesAdapter.notifyDataSetChanged();
 
-        if (showLoadMore) showLoadMore = false;
+        if (mShowLoadMore) mShowLoadMore = false;
 
-        if (movieArrayList.size() > 0) {
+        if (mMovieArrayList.size() > 0) {
             movieLayout.setVisibility(View.VISIBLE);
             setHeaderLayout();
         } else {
@@ -222,43 +222,43 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener {
 
     private void setHeaderLayout() {
         setRandomHeader();
-        changeHeaderHandler.postDelayed(changeHeaderRunnable, AppConstant.HEADER_TIME);
+        mChangeHeaderHandler.postDelayed(mChangeHeaderRunnable, AppConstant.HEADER_TIME);
     }
 
     private void setRandomHeader() {
         int tempRandomList;
         do {
-            tempRandomList = (int) (Math.random() * movieArrayList.size());
-        } while (tempRandomList == randomList);
+            tempRandomList = (int) (Math.random() * mMovieArrayList.size());
+        } while (tempRandomList == mRandomList);
 
-        randomList = tempRandomList;
+        mRandomList = tempRandomList;
 
-        movieHeaderTitle.setText(movieArrayList.get(randomList).getTitle());
+        movieHeaderTitle.setText(mMovieArrayList.get(mRandomList).getTitle());
 
-        if (movieArrayList.get(randomList).getBackdropPath() != null) {
-            CommonFunction.setImage(getContext(), RestAPIURL.getUrlImage(movieArrayList.get(randomList).getBackdropPath()), movieHeaderPic);
+        if (mMovieArrayList.get(mRandomList).getBackdropPath() != null) {
+            CommonFunction.setImage(getContext(), RestAPIURL.getUrlImage(mMovieArrayList.get(mRandomList).getBackdropPath()), movieHeaderPic);
         } else {
-            CommonFunction.setImage(getContext(), RestAPIURL.getUrlImage(movieArrayList.get(randomList).getPosterPath()), movieHeaderPic);
+            CommonFunction.setImage(getContext(), RestAPIURL.getUrlImage(mMovieArrayList.get(mRandomList).getPosterPath()), movieHeaderPic);
         }
 
         movieHeaderPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeHeaderHandler.removeCallbacks(changeHeaderRunnable);
+                mChangeHeaderHandler.removeCallbacks(mChangeHeaderRunnable);
                 Bundle bundle = new Bundle();
-                bundle.putInt(AppConstant.MOVIE_ID, movieArrayList.get(randomList).getId());
-                bundle.putString(AppConstant.MOVIE_TITLE, movieArrayList.get(randomList).getTitle());
+                bundle.putInt(AppConstant.MOVIE_ID, mMovieArrayList.get(mRandomList).getId());
+                bundle.putString(AppConstant.MOVIE_TITLE, mMovieArrayList.get(mRandomList).getTitle());
                 CommonFunction.moveActivity(getContext(), DetailActivity.class, bundle, false);
             }
         });
     }
 
     private void setErrorLayout(AppConstant.ErrorType errorType, String error) {
-        if (page > 1) {
+        if (mPage > 1) {
             Snackbar.make(movieLayout, AppConstant.ERROR_CONNECTION_TEXT, Snackbar.LENGTH_SHORT)
                     .setAction("Okay", null)
                     .show();
-            page--;
+            mPage--;
         } else {
             movieLayout.setVisibility(View.GONE);
             movieLoading.setVisibility(View.GONE);

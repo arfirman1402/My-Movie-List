@@ -33,8 +33,8 @@ import java.util.Locale;
 import androidkejar.app.mymovielist.App;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MovieController;
-import androidkejar.app.mymovielist.event.MovieDetailErrorEvent;
-import androidkejar.app.mymovielist.event.MovieDetailEvent;
+import androidkejar.app.mymovielist.event.moviedetail.MovieDetailErrorEvent;
+import androidkejar.app.mymovielist.event.moviedetail.MovieDetailEvent;
 import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.model.CreditResponse;
 import androidkejar.app.mymovielist.model.Movie;
@@ -64,7 +64,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView detailMovieLanguage;
     @BindView(R.id.detail_movie_rating)
     TextView detailMovieRating;
-    @BindView(R.id.detail_movie_releasedate)
+    @BindView(R.id.detail_movie_release_date)
     TextView detailMovieReleaseDate;
     @BindView(R.id.detail_movie_runtime)
     TextView detailMovieRuntime;
@@ -101,11 +101,11 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.detail_movie_refresh)
     SwipeRefreshLayout detailMovieRefresh;
 
-    private int idMovies;
-    private Movie myMovie;
-    private List<Video> allVideos;
-    private MovieController controller;
-    private EventBus eventBus;
+    private int mIdMovie;
+    private Movie mMovie;
+
+    private MovieController mController;
+    private EventBus mEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +114,10 @@ public class DetailActivity extends AppCompatActivity {
 
         initView();
 
-        controller = new MovieController();
+        mController = new MovieController();
 
-        eventBus = App.getInstance().getEventBus();
-        eventBus.register(this);
+        mEventBus = App.getInstance().getEventBus();
+        mEventBus.register(this);
 
         getDetailMovies();
     }
@@ -141,7 +141,7 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieTrailers.setLayoutManager(linearLayoutManagerTrailers);
         detailMovieTrailers.setHasFixedSize(true);
 
-        idMovies = getIntent().getExtras().getInt(AppConstant.MOVIE_ID);
+        mIdMovie = getIntent().getExtras().getInt(AppConstant.MOVIE_ID);
         String titleMovies = getIntent().getExtras().getString(AppConstant.MOVIE_TITLE);
 
         this.setTitle(titleMovies);
@@ -157,7 +157,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        eventBus.unregister(this);
+        mEventBus.unregister(this);
         super.onDestroy();
     }
 
@@ -170,41 +170,40 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getMovies() {
-        controller.getMovieDetail(idMovies);
+        mController.getMovieDetail(mIdMovie);
     }
 
     private void setDataResponse(Movie body) {
-        myMovie = body;
-        if (myMovie.getBackdropPath() != null) {
-            CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getBackdropPath()), detailMoviePic);
+        mMovie = body;
+        if (mMovie.getBackdropPath() != null) {
+            CommonFunction.setImage(this, RestAPIURL.getUrlImage(mMovie.getBackdropPath()), detailMoviePic);
         } else {
-            CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getPosterPath()), detailMoviePic);
+            CommonFunction.setImage(this, RestAPIURL.getUrlImage(mMovie.getPosterPath()), detailMoviePic);
         }
 
-        CommonFunction.setImage(this, RestAPIURL.getUrlImage(myMovie.getPosterPath()), detailMoviePoster);
+        CommonFunction.setImage(this, RestAPIURL.getUrlImage(mMovie.getPosterPath()), detailMoviePoster);
 
-        detailMovieOverview.setText(myMovie.getOverview());
-        detailMovieGenre.setText(getStringGenre(myMovie.getGenres()));
-        detailMovieLanguage.setText(getStringLanguage(myMovie));
-        detailMovieRating.setText(getStringRating(myMovie.getVoteAverage(), myMovie.getVoteCount()));
-        detailMovieRuntime.setText(getStringRuntime(myMovie.getRuntime()));
-        detailMovieRevenue.setText(getStringRevenue(myMovie.getRevenue()));
-        detailMovieBudget.setText(getStringBugdet(myMovie.getBudget()));
-        detailMovieReleaseDate.setText(getStringReleaseDate(myMovie.getReleaseDate()));
+        detailMovieOverview.setText(mMovie.getOverview());
+        detailMovieGenre.setText(getStringGenre(mMovie.getGenres()));
+        detailMovieLanguage.setText(getStringLanguage(mMovie));
+        detailMovieRating.setText(getStringRating(mMovie.getVoteAverage(), mMovie.getVoteCount()));
+        detailMovieRuntime.setText(getStringRuntime(mMovie.getRuntime()));
+        detailMovieRevenue.setText(getStringRevenue(mMovie.getRevenue()));
+        detailMovieBudget.setText(getStringBugdet(mMovie.getBudget()));
+        detailMovieReleaseDate.setText(getStringReleaseDate(mMovie.getReleaseDate()));
 
-        setReviewsMovie(myMovie.getReviewResponse().getResults());
-        setCreditsMovie(myMovie.getCredits());
-        setVideosMovie(myMovie.getVideoResponse().getResults());
+        setReviewsMovie(mMovie.getReviewResponse().getResults());
+        setCreditsMovie(mMovie.getCredits());
+        setVideosMovie(mMovie.getVideoResponse().getResults());
     }
 
     @OnLongClick(R.id.detail_movie_poster)
     boolean showBigPictures() {
-        CommonFunction.showPoster(this, myMovie.getPosterPath());
+        CommonFunction.showPoster(this, mMovie.getPosterPath());
         return false;
     }
 
     private void setVideosMovie(List<Video> results) {
-        allVideos = results;
         if (!results.isEmpty()) {
             detailMovieTrailersEmpty.setVisibility(View.GONE);
             TrailersAdapter trailersAdapter = new TrailersAdapter(results);
@@ -283,7 +282,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void shareMovie() {
-        if (myMovie != null) {
+        if (mMovie != null) {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT, getMovieToShare());
@@ -294,10 +293,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private String getMovieToShare() {
         String content = AppConstant.SHARE_TITLE + "\n";
-        content += myMovie.getTitle() + " ";
-        if (isPlaying(myMovie.getReleaseDate()))
-            content += "Release on " + getStringReleaseDate(myMovie.getReleaseDate()) + " ";
-        content += RestAPIURL.getYoutubeLink(allVideos.get(0).getKey()) + "\n";
+        content += mMovie.getTitle() + " ";
+        if (isPlaying(mMovie.getReleaseDate()))
+            content += "Release on " + getStringReleaseDate(mMovie.getReleaseDate()) + " ";
+        content += RestAPIURL.getYoutubeLink(mMovie.getVideoResponse().getResults().get(0).getKey()) + "\n";
         content += "Download My Movie List App to get more info about movies.\n\n";
         content += AppConstant.PLAY_STORE_URL;
         return content;

@@ -1,13 +1,14 @@
 package androidkejar.app.mymovielist.restapi;
 
-import androidkejar.app.mymovielist.BuildConfig;
+import androidkejar.app.mymovielist.App;
+import androidkejar.app.mymovielist.R;
 
 public class RestAPIURL {
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500";
     private static final String BASE_URL_IMAGE_YOUTUBE = "http://img.youtube.com/vi/";
     private static final String PRIMARY_THUMBNAIL = "/0.jpg";
-    private static final String API_KEY = "" + BuildConfig.API_KEY;
+    private static final String API_KEY = App.getInstance().getApplicationContext().getString(R.string.movie_api_key);
     private static final String LANG_SOURCE = "en-US";
     private static final String BASE_URL_VIDEO_YOUTUBE = "https://youtube.com/watch";
     private static final String MOVIE_APPEND_TO_RESPONSE = "credits,images,keywords,release_dates,videos,translations,recommendations,similar,reviews";

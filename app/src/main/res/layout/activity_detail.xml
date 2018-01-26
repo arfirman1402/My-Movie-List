@@ -80,6 +80,7 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_overview"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp" />
@@ -98,11 +99,11 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_genre"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginStart="10dp"
-                                android:textStyle="italic" />
+                                android:layout_marginStart="10dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -117,6 +118,7 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_language"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -135,6 +137,7 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_rating"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -149,10 +152,11 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:src="@drawable/ic_releasedate" />
+                                android:src="@drawable/ic_release_date" />
 
                             <TextView
-                                android:id="@+id/detail_movie_releasedate"
+                                android:id="@+id/detail_movie_release_date"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -171,6 +175,7 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_runtime"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -189,6 +194,7 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_revenue"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -203,10 +209,11 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:src="@drawable/ic_bugdet" />
+                                android:src="@drawable/ic_budget" />
 
                             <TextView
                                 android:id="@+id/detail_movie_budget"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -214,6 +221,7 @@
                         </LinearLayout>
 
                         <TextView
+                            style="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -233,15 +241,16 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_reviews_empty"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
                                 android:text="@string/reviews_empty"
-                                android:textStyle="italic"
                                 android:visibility="gone" />
                         </RelativeLayout>
 
                         <TextView
+                            style="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -261,15 +270,16 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_casts_empty"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
                                 android:text="@string/casts_empty"
-                                android:textStyle="italic"
                                 android:visibility="gone" />
                         </RelativeLayout>
 
                         <TextView
+                            style="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -288,15 +298,16 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_crews_empty"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
                                 android:text="@string/crews_empty"
-                                android:textStyle="italic"
                                 android:visibility="gone" />
                         </RelativeLayout>
 
                         <TextView
+                            style="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -315,11 +326,11 @@
 
                             <TextView
                                 android:id="@+id/detail_movie_trailers_empty"
+                                style="@style/TextAppearance.AppCompat.Small"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
                                 android:text="@string/trailer_empty"
-                                android:textStyle="italic"
                                 android:visibility="gone" />
                         </RelativeLayout>
                     </LinearLayout>

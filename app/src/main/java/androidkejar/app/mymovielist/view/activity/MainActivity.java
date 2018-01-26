@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidkejar.app.mymovielist.R;
+import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.fragment.AboutFragment;
 import androidkejar.app.mymovielist.view.fragment.ComingSoonFragment;
 import androidkejar.app.mymovielist.view.fragment.HomeFragment;
@@ -36,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
-    private Fragment lastFragment;
-    private SearchView mainSearch;
-    private boolean isSearching;
+    private Fragment mLastFragment;
+    private SearchView mMainSearch;
+    private boolean mIsSearching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
 
-        setFragment(new NowPlayingFragment(), "Now Playing");
+        setFragment(new NowPlayingFragment(), getString(R.string.title_now_playing));
     }
 
     private void initView() {
@@ -68,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setFragment(Fragment fragment, String title, Bundle bundle) {
-        if (lastFragment == null || !lastFragment.getClass().equals(fragment.getClass()) || isSearching) {
-            lastFragment = fragment;
+        if (mLastFragment == null || !mLastFragment.getClass().equals(fragment.getClass()) || mIsSearching) {
+            mLastFragment = fragment;
 
             fragment.setArguments(bundle);
 
-            if (mainSearch != null) mainSearch.onActionViewCollapsed();
-            isSearching = false;
+            if (mMainSearch != null) mMainSearch.onActionViewCollapsed();
+            mIsSearching = false;
             setTitle(title);
 
             FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
@@ -88,28 +89,28 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem menuIcon = menu.findItem(R.id.action_search);
 
-        mainSearch = (SearchView) menuIcon.getActionView();
-        mainSearch.setOnSearchClickListener(new View.OnClickListener() {
+        mMainSearch = (SearchView) menuIcon.getActionView();
+        mMainSearch.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isSearching = true;
+                mIsSearching = true;
                 navDrawerLayout.closeDrawer(Gravity.START);
             }
         });
 
-        mainSearch.setOnCloseListener(new SearchView.OnCloseListener() {
+        mMainSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                isSearching = false;
+                mIsSearching = false;
                 return false;
             }
         });
 
-        mainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mMainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Bundle bundle = new Bundle();
-                bundle.putString("query", query);
+                bundle.putString(AppConstant.MOVIE_SEARCH_QUERY, query);
                 setFragment(new SearchResultFragment(), query, bundle);
                 return true;
             }
@@ -132,22 +133,22 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.nav_home:
-                    setFragment(new HomeFragment(), "Home");
+                    setFragment(new HomeFragment(), getString(R.string.title_home));
                     break;
                 case R.id.nav_now_playing:
-                    setFragment(new NowPlayingFragment(), "Now Playing");
+                    setFragment(new NowPlayingFragment(), getString(R.string.title_now_playing));
                     break;
                 case R.id.nav_popular:
-                    setFragment(new PopularFragment(), "Popular");
+                    setFragment(new PopularFragment(), getString(R.string.title_popular));
                     break;
                 case R.id.nav_top_rated:
-                    setFragment(new TopRatedFragment(), "Top Rated");
+                    setFragment(new TopRatedFragment(), getString(R.string.title_top_rated));
                     break;
                 case R.id.nav_coming_soon:
-                    setFragment(new ComingSoonFragment(), "Coming Soon");
+                    setFragment(new ComingSoonFragment(), getString(R.string.title_coming_soon));
                     break;
                 case R.id.nav_about:
-                    setFragment(new AboutFragment(), "About");
+                    setFragment(new AboutFragment(), getString(R.string.title_about));
                     break;
                 default:
                     break;
@@ -161,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (navDrawerLayout.isDrawerOpen(Gravity.START))
             navDrawerLayout.closeDrawer(Gravity.START);
-        else if (!lastFragment.getClass().equals(NowPlayingFragment.class)) {
-            setFragment(new NowPlayingFragment(), "Now Playing");
+        else if (!mLastFragment.getClass().equals(NowPlayingFragment.class)) {
+            setFragment(new NowPlayingFragment(), getString(R.string.title_now_playing));
         } else super.onBackPressed();
     }
 }

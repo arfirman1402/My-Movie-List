@@ -31,7 +31,6 @@ public class CastHolder extends RecyclerView.ViewHolder {
     private CastHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-
         setIsRecyclable(false);
     }
 

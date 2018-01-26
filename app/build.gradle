@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "26.0.3"
     defaultConfig {
         applicationId "androidkejar.app.mymovielist"
         minSdkVersion 19
@@ -16,11 +16,7 @@ android {
         }
     }
     buildTypes {
-        debug {
-            buildConfigField "String", "API_KEY", "\"" + API_KEY_TMDB + "\"";
-        }
         release {
-            buildConfigField "String", "API_KEY", "\"" + API_KEY_TMDB + "\"";
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

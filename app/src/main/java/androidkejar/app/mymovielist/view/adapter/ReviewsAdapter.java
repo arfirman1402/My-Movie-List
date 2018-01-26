@@ -10,10 +10,10 @@ import androidkejar.app.mymovielist.view.adapter.callback.ReviewCallback;
 import androidkejar.app.mymovielist.view.adapter.holder.ReviewHolder;
 
 public class ReviewsAdapter extends RecyclerView.Adapter implements ReviewCallback {
-    private List<Review> reviews;
+    private List<Review> mReviews;
 
     public ReviewsAdapter(List<Review> reviews) {
-        this.reviews = reviews;
+        this.mReviews = reviews;
     }
 
     @Override
@@ -23,16 +23,16 @@ public class ReviewsAdapter extends RecyclerView.Adapter implements ReviewCallba
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ReviewHolder.castParent(holder).bindViewHolder(reviews.get(position));
+        ReviewHolder.castParent(holder).bindViewHolder(mReviews.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return reviews.size();
+        return mReviews.size();
     }
 
     @Override
     public void onReviewItemClick(ReviewHolder holder) {
-        ReviewHolder.castParent(holder).showReview(reviews.get(holder.getAdapterPosition()));
+        ReviewHolder.castParent(holder).showReview(mReviews.get(holder.getAdapterPosition()));
     }
 }

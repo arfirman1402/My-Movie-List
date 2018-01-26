@@ -41,6 +41,7 @@
 
                     <TextView
                         android:id="@+id/movie_header_title"
+                        style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
@@ -49,7 +50,6 @@
                         android:padding="5dp"
                         android:text="Movie Title"
                         android:textColor="@color/colorWhite"
-                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 

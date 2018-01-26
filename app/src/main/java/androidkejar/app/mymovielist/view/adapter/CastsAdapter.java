@@ -9,10 +9,10 @@ import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.view.adapter.holder.CastHolder;
 
 public class CastsAdapter extends RecyclerView.Adapter {
-    private List<Credit.Cast> casts;
+    private List<Credit.Cast> mCasts;
 
     public CastsAdapter(List<Credit.Cast> casts) {
-        this.casts = casts;
+        this.mCasts = casts;
     }
 
     @Override
@@ -22,11 +22,11 @@ public class CastsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CastHolder.castParent(holder).bindViewHolder(casts.get(position));
+        CastHolder.castParent(holder).bindViewHolder(mCasts.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return casts.size();
+        return mCasts.size();
     }
 }
