@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import androidkejar.app.mymovielist.R;
@@ -16,10 +15,10 @@ import androidkejar.app.mymovielist.restapi.RestAPIURL;
 
 public class CommonFunction {
     public static void setImage(Context context, String url, ImageView imageView) {
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
                 .into(imageView);
     }

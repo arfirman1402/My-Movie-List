@@ -1,17 +1,33 @@
 apply plugin: 'com.android.application'
 
+ext {
+    minSdkVer = 19
+    tarSdkVer = 27
+
+    verCode = 4
+    verName = "1.0.3"
+
+    appId = "androidkejar.app.mymovielist"
+
+    supportLibVersion = "27.0.2"
+    gsonVersion = "2.8.2"
+    glideVersion = "4.6.1"
+    retrofitVersion = "2.3.0"
+    eventBusVersion = "3.1.1"
+    butterKnifeVersion = "8.8.1"
+}
+
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.3"
+    compileSdkVersion tarSdkVer
     defaultConfig {
-        applicationId "androidkejar.app.mymovielist"
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 4
-        versionName "1.0.3"
+        applicationId appId
+        minSdkVersion minSdkVer
+        targetSdkVersion tarSdkVer
+        versionCode verCode
+        versionName verName
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [eventBusIndex: 'androidkejar.app.mymovielist.MyEventBusIndex']
+                arguments = [eventBusIndex: appId+'.MyEventBusIndex']
             }
         }
     }
@@ -24,17 +40,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'org.greenrobot:eventbus:3.1.1'
-    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1';
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:${supportLibVersion}"
+    implementation "com.android.support:design:${supportLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
+    implementation "com.android.support:cardview-v7:${supportLibVersion}"
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+    implementation "com.github.bumptech.glide:glide:${glideVersion}"
+    implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+    implementation "org.greenrobot:eventbus:${eventBusVersion}"
+    implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
+    annotationProcessor "org.greenrobot:eventbus-annotation-processor:${eventBusVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
 }
