@@ -22,11 +22,19 @@
     <string name="movie_adult">Adult</string>
     <string name="menu_search_hint">Search Here</string>
     <string name="about_title">About</string>
-    <string name="title_now_playing">Now Playing</string>
     <string name="title_home">Home</string>
-    <string name="title_popular">Popular</string>
-    <string name="title_top_rated">Top Rated</string>
-    <string name="title_coming_soon">Coming Soon</string>
     <string name="title_about">About</string>
     <string name="title_share_movie">Share Movie</string>
+    <string name="title_movies_now_playing">Now Playing</string>
+    <string name="title_movies_popular">Popular</string>
+    <string name="title_movies_top_rated">Top Rated</string>
+    <string name="title_movies_coming_soon">Coming Soon</string>
+    <string name="title_movie">Movie</string>
+    <string name="title_tv_show">TV Show</string>
+    <string name="title_tv_shows_airing_today">Airing Today</string>
+    <string name="title_tv_shows_popular">Popular</string>
+    <string name="title_tv_shows_top_rated">Top Rated</string>
+    <string name="title_tv_shows_on_the_air">On The Air</string>
+    <string name="title_people">People</string>
+    <string name="title_peoples_popular">Popular</string>
 </resources>

@@ -19,7 +19,6 @@ import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.fragment.AboutFragment;
 import androidkejar.app.mymovielist.view.fragment.ComingSoonFragment;
-import androidkejar.app.mymovielist.view.fragment.HomeFragment;
 import androidkejar.app.mymovielist.view.fragment.NowPlayingFragment;
 import androidkejar.app.mymovielist.view.fragment.PopularFragment;
 import androidkejar.app.mymovielist.view.fragment.SearchResultFragment;
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
 
-        setFragment(new NowPlayingFragment(), getString(R.string.title_now_playing));
+        setFragment(new NowPlayingFragment(), getString(R.string.title_movies_now_playing));
     }
 
     private void initView() {
@@ -132,20 +131,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.nav_home:
-                    setFragment(new HomeFragment(), getString(R.string.title_home));
+                case R.id.nav_movies_now_playing:
+                    setFragment(new NowPlayingFragment(), getString(R.string.title_movies_now_playing));
                     break;
-                case R.id.nav_now_playing:
-                    setFragment(new NowPlayingFragment(), getString(R.string.title_now_playing));
+                case R.id.nav_movies_popular:
+                    setFragment(new PopularFragment(), getString(R.string.title_movies_popular));
                     break;
-                case R.id.nav_popular:
-                    setFragment(new PopularFragment(), getString(R.string.title_popular));
+                case R.id.nav_movies_top_rated:
+                    setFragment(new TopRatedFragment(), getString(R.string.title_movies_top_rated));
                     break;
-                case R.id.nav_top_rated:
-                    setFragment(new TopRatedFragment(), getString(R.string.title_top_rated));
-                    break;
-                case R.id.nav_coming_soon:
-                    setFragment(new ComingSoonFragment(), getString(R.string.title_coming_soon));
+                case R.id.nav_movies_coming_soon:
+                    setFragment(new ComingSoonFragment(), getString(R.string.title_movies_coming_soon));
                     break;
                 case R.id.nav_about:
                     setFragment(new AboutFragment(), getString(R.string.title_about));
@@ -163,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         if (navDrawerLayout.isDrawerOpen(Gravity.START))
             navDrawerLayout.closeDrawer(Gravity.START);
         else if (!mLastFragment.getClass().equals(NowPlayingFragment.class)) {
-            setFragment(new NowPlayingFragment(), getString(R.string.title_now_playing));
+            setFragment(new NowPlayingFragment(), getString(R.string.title_movies_now_playing));
         } else super.onBackPressed();
     }
 }
