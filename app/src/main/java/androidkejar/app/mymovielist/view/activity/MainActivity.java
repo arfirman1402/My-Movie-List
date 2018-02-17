@@ -18,11 +18,7 @@ import android.view.View;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.fragment.AboutFragment;
-import androidkejar.app.mymovielist.view.fragment.ComingSoonFragment;
-import androidkejar.app.mymovielist.view.fragment.NowPlayingFragment;
-import androidkejar.app.mymovielist.view.fragment.PopularFragment;
-import androidkejar.app.mymovielist.view.fragment.SearchResultFragment;
-import androidkejar.app.mymovielist.view.fragment.TopRatedFragment;
+import androidkejar.app.mymovielist.view.fragment.MovieFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,9 +32,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
-    private Fragment mLastFragment;
     private SearchView mMainSearch;
-    private boolean mIsSearching;
+    private String mMovieShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
 
-        setFragment(new NowPlayingFragment(), getString(R.string.title_movies_now_playing));
+        setFragment(AppConstant.MOVIE_TYPE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
     }
 
     private void initView() {
@@ -63,26 +58,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(getNavigationItemListener());
     }
 
-    private void setFragment(Fragment fragment, String title) {
-        setFragment(fragment, title, new Bundle());
-    }
-
-    private void setFragment(Fragment fragment, String title, Bundle bundle) {
-        if (mLastFragment == null || !mLastFragment.getClass().equals(fragment.getClass()) || mIsSearching) {
-            mLastFragment = fragment;
-
-            fragment.setArguments(bundle);
-
-            if (mMainSearch != null) mMainSearch.onActionViewCollapsed();
-            mIsSearching = false;
-            setTitle(title);
-
-            FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-            fragmentManager.replace(R.id.main_fragment, fragment);
-            fragmentManager.commit();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -92,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         mMainSearch.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mIsSearching = true;
                 navDrawerLayout.closeDrawer(Gravity.START);
             }
         });
@@ -100,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         mMainSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                mIsSearching = false;
                 return false;
             }
         });
@@ -108,9 +81,7 @@ public class MainActivity extends AppCompatActivity {
         mMainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Bundle bundle = new Bundle();
-                bundle.putString(AppConstant.MOVIE_SEARCH_QUERY, query);
-                setFragment(new SearchResultFragment(), query, bundle);
+                setFragment(AppConstant.MOVIE_TYPE_SEARCH, query);
                 return true;
             }
 
@@ -132,19 +103,19 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.nav_movies_now_playing:
-                    setFragment(new NowPlayingFragment(), getString(R.string.title_movies_now_playing));
+                    setFragment(AppConstant.MOVIE_TYPE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
                     break;
                 case R.id.nav_movies_popular:
-                    setFragment(new PopularFragment(), getString(R.string.title_movies_popular));
+                    setFragment(AppConstant.MOVIE_TYPE_POPULAR, getString(R.string.title_movies_popular));
                     break;
                 case R.id.nav_movies_top_rated:
-                    setFragment(new TopRatedFragment(), getString(R.string.title_movies_top_rated));
+                    setFragment(AppConstant.MOVIE_TYPE_TOP_RATED, getString(R.string.title_movies_top_rated));
                     break;
                 case R.id.nav_movies_coming_soon:
-                    setFragment(new ComingSoonFragment(), getString(R.string.title_movies_coming_soon));
+                    setFragment(AppConstant.MOVIE_TYPE_UPCOMING, getString(R.string.title_movies_coming_soon));
                     break;
                 case R.id.nav_about:
-                    setFragment(new AboutFragment(), getString(R.string.title_about));
+                    setFragment(AppConstant.MOVIE_TYPE_ABOUT, getString(R.string.title_about));
                     break;
                 default:
                     break;
@@ -154,12 +125,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setFragment(String movieType, String title) {
+        if (movieType.equals(AppConstant.MOVIE_TYPE_SEARCH) || mMovieShow == null || !mMovieShow.equals(movieType)) {
+
+            mMovieShow = movieType;
+
+            setTitle(title);
+
+            Fragment fragment;
+            switch (movieType) {
+                case AppConstant.MOVIE_TYPE_ABOUT:
+                    fragment = new AboutFragment();
+                    break;
+                case AppConstant.MOVIE_TYPE_SEARCH:
+                    fragment = MovieFragment.newInstance(movieType, title);
+                    break;
+                default:
+                    fragment = MovieFragment.newInstance(movieType);
+                    break;
+            }
+
+            if (mMainSearch != null) mMainSearch.onActionViewCollapsed();
+
+            FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+            fragmentManager.replace(R.id.main_fragment, fragment);
+            fragmentManager.commit();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (navDrawerLayout.isDrawerOpen(Gravity.START))
             navDrawerLayout.closeDrawer(Gravity.START);
-        else if (!mLastFragment.getClass().equals(NowPlayingFragment.class)) {
-            setFragment(new NowPlayingFragment(), getString(R.string.title_movies_now_playing));
+        else if (!mMovieShow.equals(AppConstant.MOVIE_TYPE_NOW_PLAYING)) {
+            setFragment(AppConstant.MOVIE_TYPE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
         } else super.onBackPressed();
     }
 }

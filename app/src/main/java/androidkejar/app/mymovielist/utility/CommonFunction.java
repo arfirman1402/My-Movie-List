@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Window;
 import android.widget.ImageView;
 
@@ -39,7 +40,9 @@ public class CommonFunction {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.movie_bigpicture_layout);
         ImageView imageView = dialog.findViewById(R.id.big_picture_pic);
-        CommonFunction.setImage(context, RestAPIURL.getUrlImage(imagePath), imageView);
+        if (!TextUtils.isEmpty(imagePath)) {
+            CommonFunction.setImage(context, RestAPIURL.getUrlImage(imagePath), imageView);
+        }
         dialog.show();
     }
 }

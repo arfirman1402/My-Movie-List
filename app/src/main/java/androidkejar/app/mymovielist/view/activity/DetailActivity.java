@@ -72,7 +72,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView detailMovieRevenue;
     @BindView(R.id.detail_movie_budget)
     TextView detailMovieBudget;
-    @BindView(R.id.movie_loading)
+    @BindView(R.id.rl_movie_loading)
     RelativeLayout detailMovieLoading;
     @BindView(R.id.detail_movie_reviews)
     RecyclerView detailMovieReviews;
@@ -92,11 +92,11 @@ public class DetailActivity extends AppCompatActivity {
     TextView detailMovieCrewsEmpty;
     @BindView(R.id.detail_movie_trailers_empty)
     TextView detailMovieTrailersEmpty;
-    @BindView(R.id.movie_error_layout)
-    LinearLayout detailMovieError;
-    @BindView(R.id.movie_error_pic)
+    @BindView(R.id.rl_movie_error)
+    RelativeLayout detailMovieError;
+    @BindView(R.id.iv_movie_error_icon)
     ImageView detailMovieErrorPic;
-    @BindView(R.id.movie_error_content)
+    @BindView(R.id.tv_movie_error_desc)
     TextView detailMovieErrorContent;
     @BindView(R.id.detail_movie_refresh)
     SwipeRefreshLayout detailMovieRefresh;
@@ -106,6 +106,18 @@ public class DetailActivity extends AppCompatActivity {
 
     private MovieController mController;
     private EventBus mEventBus;
+
+    private ArrayList<Review> reviews;
+    private ReviewsAdapter reviewsAdapter;
+
+    private ArrayList<Credit.Cast> casts;
+    private CastsAdapter castsAdapter;
+
+    private ArrayList<Credit.Crew> crews;
+    private CrewsAdapter crewsAdapter;
+
+    private ArrayList<Video> trailers;
+    private TrailersAdapter trailersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,17 +141,33 @@ public class DetailActivity extends AppCompatActivity {
         detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
         detailMovieReviews.setHasFixedSize(true);
 
+        reviews = new ArrayList<>();
+        reviewsAdapter = new ReviewsAdapter(reviews);
+        detailMovieReviews.setAdapter(reviewsAdapter);
+
         LinearLayoutManager linearLayoutManagerCasts = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         detailMovieCasts.setLayoutManager(linearLayoutManagerCasts);
         detailMovieCasts.setHasFixedSize(true);
+
+        casts = new ArrayList<>();
+        castsAdapter = new CastsAdapter(casts);
+        detailMovieCasts.setAdapter(castsAdapter);
 
         LinearLayoutManager linearLayoutManagerCrews = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         detailMovieCrews.setLayoutManager(linearLayoutManagerCrews);
         detailMovieCrews.setHasFixedSize(true);
 
+        crews = new ArrayList<>();
+        crewsAdapter = new CrewsAdapter(crews);
+        detailMovieCrews.setAdapter(crewsAdapter);
+
         LinearLayoutManager linearLayoutManagerTrailers = new LinearLayoutManager(getApplicationContext());
         detailMovieTrailers.setLayoutManager(linearLayoutManagerTrailers);
         detailMovieTrailers.setHasFixedSize(true);
+
+        trailers = new ArrayList<>();
+        trailersAdapter = new TrailersAdapter(trailers);
+        detailMovieTrailers.setAdapter(trailersAdapter);
 
         mIdMovie = getIntent().getExtras().getInt(AppConstant.MOVIE_ID);
         String titleMovies = getIntent().getExtras().getString(AppConstant.MOVIE_TITLE);
@@ -206,8 +234,8 @@ public class DetailActivity extends AppCompatActivity {
     private void setVideosMovie(List<Video> results) {
         if (!results.isEmpty()) {
             detailMovieTrailersEmpty.setVisibility(View.GONE);
-            TrailersAdapter trailersAdapter = new TrailersAdapter(results);
-            detailMovieTrailers.setAdapter(trailersAdapter);
+            trailers.addAll(results);
+            trailersAdapter.notifyDataSetChanged();
         } else {
             detailMovieTrailersEmpty.setVisibility(View.VISIBLE);
         }
@@ -221,8 +249,9 @@ public class DetailActivity extends AppCompatActivity {
 
         if (!castList.isEmpty()) {
             detailMovieCastsEmpty.setVisibility(View.GONE);
-            CastsAdapter castsAdapter = new CastsAdapter(castList);
-            detailMovieCasts.setAdapter(castsAdapter);
+            casts.addAll(castList);
+            castsAdapter.notifyDataSetChanged();
+
         } else {
             detailMovieCastsEmpty.setVisibility(View.VISIBLE);
         }
@@ -231,18 +260,18 @@ public class DetailActivity extends AppCompatActivity {
 
         if (!crewList.isEmpty()) {
             detailMovieCrewsEmpty.setVisibility(View.GONE);
-            CrewsAdapter crewsAdapter = new CrewsAdapter(crewList);
-            detailMovieCrews.setAdapter(crewsAdapter);
+            crews.addAll(crewList);
+            crewsAdapter.notifyDataSetChanged();
         } else {
             detailMovieCrewsEmpty.setVisibility(View.VISIBLE);
         }
     }
 
-    private void setReviewsMovie(List<Review> reviews) {
-        if (!reviews.isEmpty()) {
+    private void setReviewsMovie(List<Review> reviewList) {
+        if (!reviewList.isEmpty()) {
             detailMovieReviewsEmpty.setVisibility(View.GONE);
-            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(reviews);
-            detailMovieReviews.setAdapter(reviewsAdapter);
+            reviews.addAll(reviewList);
+            reviewsAdapter.notifyDataSetChanged();
         } else {
             detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
         }

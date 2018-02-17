@@ -10,7 +10,6 @@ import androidkejar.app.mymovielist.event.moviedetail.MovieDetailEvent;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
 import androidkejar.app.mymovielist.restapi.RestAPIURL;
-import androidkejar.app.mymovielist.utility.AppConstant;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,8 +32,8 @@ public class MovieController {
         });
     }
 
-    private void getMovies(int type, int page) {
-        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getMovies(AppConstant.MOVIE_LIST_TYPE[type], RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), page, RestAPIURL.getMoviesRegion());
+    public void getMovies(String movieType, int page) {
+        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getMovies(movieType, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), page, RestAPIURL.getMoviesRegion());
         movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -48,24 +47,8 @@ public class MovieController {
         });
     }
 
-    public void getNowPlayingMovies(int page) {
-        getMovies(0, page);
-    }
-
-    public void getPopularMovies(int page) {
-        getMovies(1, page);
-    }
-
-    public void getTopRatedMovies(int page) {
-        getMovies(2, page);
-    }
-
-    public void getComingSoonMovies(int page) {
-        getMovies(3, page);
-    }
-
-    public void getMovieDetail(int idMovies) {
-        Call<Movie> movieCall = App.getInstance().getApiService().getMovieDetails(idMovies, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), RestAPIURL.getMovieAppendToResponse());
+    public void getMovieDetail(int movieId) {
+        Call<Movie> movieCall = App.getInstance().getApiService().getMovieDetails(movieId, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), RestAPIURL.getMovieAppendToResponse());
         movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {

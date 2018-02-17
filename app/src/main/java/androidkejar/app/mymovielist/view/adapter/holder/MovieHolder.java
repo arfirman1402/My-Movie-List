@@ -2,6 +2,7 @@ package androidkejar.app.mymovielist.view.adapter.holder;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,9 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
 
     public void bindViewHolder(Movie movie) {
         movieTitle.setText(movie.getTitle());
-        CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(movie.getPosterPath()), moviePic);
+        if (!TextUtils.isEmpty(movie.getPosterPath())) {
+            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(movie.getPosterPath()), moviePic);
+        }
     }
 
     public void showDetail(Movie movie) {

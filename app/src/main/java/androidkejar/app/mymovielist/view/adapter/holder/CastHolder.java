@@ -1,6 +1,7 @@
 package androidkejar.app.mymovielist.view.adapter.holder;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,8 @@ public class CastHolder extends RecyclerView.ViewHolder {
     public void bindViewHolder(Credit.Cast cast) {
         castName.setText(cast.getName());
         castCharacter.setText(cast.getCharacter());
-        CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(cast.getProfilePath()), castPic);
+        if (!TextUtils.isEmpty(cast.getProfilePath())) {
+            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(cast.getProfilePath()), castPic);
+        }
     }
 }

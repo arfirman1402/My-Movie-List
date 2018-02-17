@@ -72,12 +72,8 @@
                 app:backgroundTint="@color/colorPrimaryDark" />
         </RelativeLayout>
 
-        <include
-            android:id="@+id/movie_error"
-            layout="@layout/movie_error_layout" />
+        <include layout="@layout/layout_movie_error" />
 
-        <include
-            android:id="@+id/movie_loading"
-            layout="@layout/movie_loading_layout" />
+        <include layout="@layout/layout_movie_loading" />
     </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

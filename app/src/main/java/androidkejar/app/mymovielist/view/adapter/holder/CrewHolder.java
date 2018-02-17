@@ -1,6 +1,7 @@
 package androidkejar.app.mymovielist.view.adapter.holder;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,8 @@ public class CrewHolder extends RecyclerView.ViewHolder {
     public void bindViewHolder(Credit.Crew crew) {
         crewName.setText(crew.getName());
         crewJob.setText(crew.getJob());
-        CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(crew.getProfilePath()), crewPic);
+        if (!TextUtils.isEmpty(crew.getProfilePath())) {
+            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(crew.getProfilePath()), crewPic);
+        }
     }
 }

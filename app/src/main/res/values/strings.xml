@@ -37,4 +37,5 @@
     <string name="title_tv_shows_on_the_air">On The Air</string>
     <string name="title_people">People</string>
     <string name="title_peoples_popular">Popular</string>
+    <string name="movie_header_title_sample">Movie Title</string>
 </resources>
