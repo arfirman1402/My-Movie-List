@@ -23,14 +23,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.navigation_drawer_layout)
-    DrawerLayout navDrawerLayout;
+    @BindView(R.id.dl_main_nav)
+    DrawerLayout dlMainNav;
 
-    @BindView(R.id.header_toolbar)
-    Toolbar headerToolbar;
+    @BindView(R.id.tb_header)
+    Toolbar tbHeader;
 
-    @BindView(R.id.navigation_view)
-    NavigationView navigationView;
+    @BindView(R.id.nv_main_nav)
+    NavigationView nvMainNav;
 
     private SearchView mMainSearch;
     private String mMovieShow;
@@ -48,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         ButterKnife.bind(this);
 
-        setSupportActionBar(headerToolbar);
+        setSupportActionBar(tbHeader);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, navDrawerLayout, headerToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        navDrawerLayout.addDrawerListener(toggle);
+                this, dlMainNav, tbHeader, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        dlMainNav.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(getNavigationItemListener());
+        nvMainNav.setNavigationItemSelectedListener(getNavigationItemListener());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mMainSearch.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navDrawerLayout.closeDrawer(Gravity.START);
+                dlMainNav.closeDrawer(Gravity.START);
             }
         });
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     break;
             }
-            navDrawerLayout.closeDrawer(Gravity.START);
+            dlMainNav.closeDrawer(Gravity.START);
             return false;
         }
     }
@@ -148,15 +148,15 @@ public class MainActivity extends AppCompatActivity {
             if (mMainSearch != null) mMainSearch.onActionViewCollapsed();
 
             FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-            fragmentManager.replace(R.id.main_fragment, fragment);
+            fragmentManager.replace(R.id.fl_main_fragment, fragment);
             fragmentManager.commit();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (navDrawerLayout.isDrawerOpen(Gravity.START))
-            navDrawerLayout.closeDrawer(Gravity.START);
+        if (dlMainNav.isDrawerOpen(Gravity.START))
+            dlMainNav.closeDrawer(Gravity.START);
         else if (!mMovieShow.equals(AppConstant.MOVIE_TYPE_NOW_PLAYING)) {
             setFragment(AppConstant.MOVIE_TYPE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
         } else super.onBackPressed();

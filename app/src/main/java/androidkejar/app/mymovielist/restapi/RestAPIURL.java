@@ -1,53 +1,52 @@
 package androidkejar.app.mymovielist.restapi;
 
-import androidkejar.app.mymovielist.App;
-import androidkejar.app.mymovielist.R;
+import java.util.HashMap;
 
 public class RestAPIURL {
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
-    private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500";
-    private static final String BASE_URL_IMAGE_YOUTUBE = "http://img.youtube.com/vi/";
-    private static final String PRIMARY_THUMBNAIL = "/0.jpg";
-    private static final String API_KEY = App.getInstance().getApplicationContext().getString(R.string.movie_api_key);
+    private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500%s";
+    private static final String BASE_URL_IMAGE_YOUTUBE = "http://img.youtube.com/vi/%s/0.jpg";
+    private static final String BASE_URL_VIDEO_YOUTUBE = "https://youtube.com/watch?v=%s";
+
     private static final String LANG_SOURCE = "en-US";
-    private static final String BASE_URL_VIDEO_YOUTUBE = "https://youtube.com/watch";
-    private static final String MOVIE_APPEND_TO_RESPONSE = "credits,images,keywords,release_dates,videos,translations,recommendations,similar,reviews";
-    private static final String PERSON_APPEND_TO_RESPONSE = "movie_credits,images";
     private static final String MOVIES_REGION = "US";
+    private static final String MOVIE_APPEND_TO_RESPONSE = "credits,images,keywords,release_dates,videos,translations,recommendations,similar,reviews";
+    private static final String MOVIE_APPEND_TO_RESPONSE_SHORT = "credits,videos,reviews";
+    private static final String PERSON_APPEND_TO_RESPONSE = "movie_credits,images";
 
     public static String getBaseUrl() {
         return BASE_URL;
     }
 
-    public static String getApiKey() {
-        return API_KEY;
-    }
-
-    public static String getLangSource() {
-        return LANG_SOURCE;
-    }
-
     public static String getUrlImage(String icon) {
-        return BASE_URL_IMAGE + icon;
+        return String.format(BASE_URL_IMAGE, icon);
     }
 
     public static String getUrlYoutubeImage(String key) {
-        return BASE_URL_IMAGE_YOUTUBE + key + PRIMARY_THUMBNAIL;
+        return String.format(BASE_URL_IMAGE_YOUTUBE, key);
     }
 
     public static String getYoutubeLink(String key) {
-        return BASE_URL_VIDEO_YOUTUBE + "?v=" + key;
+        return String.format(BASE_URL_VIDEO_YOUTUBE, key);
     }
 
-    public static String getMovieAppendToResponse() {
-        return MOVIE_APPEND_TO_RESPONSE;
+    public static HashMap<String, String> getMoviesOptional() {
+        HashMap<String, String> moviesOptional = new HashMap<>();
+        moviesOptional.put("language", LANG_SOURCE);
+        moviesOptional.put("region", MOVIES_REGION);
+        return moviesOptional;
     }
 
-    static String getPersonAppendToResponse() {
-        return PERSON_APPEND_TO_RESPONSE;
+    public static HashMap<String, String> getMoviesSearchOptional() {
+        HashMap<String, String> moviesOptional = new HashMap<>();
+        moviesOptional.put("language", LANG_SOURCE);
+        return moviesOptional;
     }
 
-    public static String getMoviesRegion() {
-        return MOVIES_REGION;
+    public static HashMap<String, String> getMovieDetailOptional() {
+        HashMap<String, String> moviesOptional = new HashMap<>();
+        moviesOptional.put("language", LANG_SOURCE);
+        moviesOptional.put("append_to_response", MOVIE_APPEND_TO_RESPONSE_SHORT);
+        return moviesOptional;
     }
 }

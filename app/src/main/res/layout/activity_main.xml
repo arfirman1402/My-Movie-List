@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/main_header"
-        layout="@layout/header_layout" />
+    <include layout="@layout/layout_header" />
 
     <android.support.v4.widget.DrawerLayout
-        android:id="@+id/navigation_drawer_layout"
+        android:id="@+id/dl_main_nav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/main_header"
         tools:openDrawer="start">
 
-        <include layout="@layout/main_layout" />
+        <FrameLayout
+            android:id="@+id/fl_main_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_view"
+            android:id="@+id/nv_main_nav"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:headerLayout="@layout/navigation_view_header"
-            app:menu="@menu/navigation_view_menu" />
+            app:headerLayout="@layout/layout_nav_header"
+            app:menu="@menu/menu_main_nav" />
 
     </android.support.v4.widget.DrawerLayout>
-</RelativeLayout>
+</LinearLayout>

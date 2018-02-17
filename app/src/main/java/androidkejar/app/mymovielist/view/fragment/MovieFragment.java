@@ -268,7 +268,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.movie_scroll_top:
+            case R.id.fab_movie_scroll_top:
                 rvMovies.smoothScrollToPosition(0);
                 break;
             default:

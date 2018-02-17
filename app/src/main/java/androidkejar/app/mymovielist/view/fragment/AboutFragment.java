@@ -19,9 +19,9 @@ import butterknife.ButterKnife;
  */
 
 public class AboutFragment extends Fragment {
-    @BindView(R.id.about_androidkejar)
+    @BindView(R.id.iv_about_android_kejar)
     ImageView aboutAndroidKejar;
-    @BindView(R.id.about_googledev)
+    @BindView(R.id.iv_about_google_dev)
     ImageView aboutGoogleDev;
 
     @Override

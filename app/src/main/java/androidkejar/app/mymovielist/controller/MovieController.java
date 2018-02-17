@@ -18,11 +18,13 @@ public class MovieController {
     private EventBus mEventBus = App.getInstance().getEventBus();
 
     public void getDataSearch(String query, int page) {
-        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getSearchMovies(RestAPIURL.getApiKey(), query, RestAPIURL.getLangSource(), page);
+        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getSearchMovies(query, page, RestAPIURL.getMoviesSearchOptional());
         movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                mEventBus.post(new MovieEvent(response.message(), response.body()));
+                if (response.code() == 200)
+                    mEventBus.post(new MovieEvent(response.message(), response.body()));
+                else mEventBus.post(new MovieErrorEvent(response.message()));
             }
 
             @Override
@@ -33,11 +35,13 @@ public class MovieController {
     }
 
     public void getMovies(String movieType, int page) {
-        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getMovies(movieType, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), page, RestAPIURL.getMoviesRegion());
+        Call<MovieResponse> movieResponseCall = App.getInstance().getApiService().getMovies(movieType, page, RestAPIURL.getMoviesOptional());
         movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                mEventBus.post(new MovieEvent(response.message(), response.body()));
+                if (response.code() == 200)
+                    mEventBus.post(new MovieEvent(response.message(), response.body()));
+                else mEventBus.post(new MovieErrorEvent(response.message()));
             }
 
             @Override
@@ -48,11 +52,13 @@ public class MovieController {
     }
 
     public void getMovieDetail(int movieId) {
-        Call<Movie> movieCall = App.getInstance().getApiService().getMovieDetails(movieId, RestAPIURL.getApiKey(), RestAPIURL.getLangSource(), RestAPIURL.getMovieAppendToResponse());
+        Call<Movie> movieCall = App.getInstance().getApiService().getMovieDetails(movieId, RestAPIURL.getMovieDetailOptional());
         movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                mEventBus.post(new MovieDetailEvent(response.message(), response.body()));
+                if (response.code() == 200)
+                    mEventBus.post(new MovieDetailEvent(response.message(), response.body()));
+                else mEventBus.post(new MovieDetailErrorEvent(response.message()));
             }
 
             @Override
