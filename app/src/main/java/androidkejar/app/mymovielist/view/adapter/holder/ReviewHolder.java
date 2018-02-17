@@ -60,8 +60,7 @@ public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClic
     public void bindViewHolder(Review review) {
         List<String> strContentList = Arrays.asList(review.getContent().split("\\."));
         List<String> strResumeReview = new ArrayList<>();
-        int max = AppConstant.MAX_REVIEW_LENGTH;
-        if (strContentList.size() < max) max = strContentList.size();
+        int max = strContentList.size() < AppConstant.MAX_REVIEW_LENGTH ? strContentList.size() : AppConstant.MAX_REVIEW_LENGTH;
         for (int i = 0; i < max; i++) {
             strResumeReview.add(strContentList.get(i));
         }

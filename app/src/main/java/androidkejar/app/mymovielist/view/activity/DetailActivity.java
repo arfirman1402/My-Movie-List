@@ -26,7 +26,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +35,6 @@ import androidkejar.app.mymovielist.controller.MovieController;
 import androidkejar.app.mymovielist.event.moviedetail.MovieDetailErrorEvent;
 import androidkejar.app.mymovielist.event.moviedetail.MovieDetailEvent;
 import androidkejar.app.mymovielist.model.Credit;
-import androidkejar.app.mymovielist.model.CreditResponse;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
@@ -52,84 +50,82 @@ import butterknife.ButterKnife;
 import butterknife.OnLongClick;
 
 public class DetailActivity extends AppCompatActivity {
-    @BindView(R.id.detail_movie_pic)
-    ImageView detailMoviePic;
-    @BindView(R.id.detail_movie_poster)
-    ImageView detailMoviePoster;
-    @BindView(R.id.detail_movie_overview)
-    TextView detailMovieOverview;
-    @BindView(R.id.detail_movie_genre)
-    TextView detailMovieGenre;
-    @BindView(R.id.detail_movie_language)
-    TextView detailMovieLanguage;
-    @BindView(R.id.detail_movie_rating)
-    TextView detailMovieRating;
-    @BindView(R.id.detail_movie_release_date)
-    TextView detailMovieReleaseDate;
-    @BindView(R.id.detail_movie_runtime)
-    TextView detailMovieRuntime;
-    @BindView(R.id.detail_movie_revenue)
-    TextView detailMovieRevenue;
-    @BindView(R.id.detail_movie_budget)
-    TextView detailMovieBudget;
+    @BindView(R.id.iv_detail_movie_backdrop)
+    ImageView ivDetailMovieBackdrop;
+    @BindView(R.id.iv_detail_movie_poster)
+    ImageView ivDetailMoviePoster;
+    @BindView(R.id.tv_detail_movie_overview)
+    TextView tvDetailMovieOverview;
+    @BindView(R.id.tv_detail_movie_genre)
+    TextView tvDetailMovieGenre;
+    @BindView(R.id.tv_detail_movie_language)
+    TextView tvDetailMovieLanguage;
+    @BindView(R.id.tv_detail_movie_rating)
+    TextView tvDetailMovieRating;
+    @BindView(R.id.tv_detail_movie_release_date)
+    TextView tvDetailMovieReleaseDate;
+    @BindView(R.id.tv_detail_movie_runtime)
+    TextView tvDetailMovieRuntime;
+    @BindView(R.id.tv_detail_movie_revenue)
+    TextView tvDetailMovieRevenue;
+    @BindView(R.id.tv_detail_movie_budget)
+    TextView tvDetailMovieBudget;
     @BindView(R.id.rl_movie_loading)
-    RelativeLayout detailMovieLoading;
-    @BindView(R.id.detail_movie_reviews)
-    RecyclerView detailMovieReviews;
-    @BindView(R.id.detail_movie_casts)
-    RecyclerView detailMovieCasts;
-    @BindView(R.id.detail_movie_crews)
-    RecyclerView detailMovieCrews;
-    @BindView(R.id.detail_movie_trailers)
-    RecyclerView detailMovieTrailers;
-    @BindView(R.id.detail_movie_layout)
-    LinearLayout detailMovieLayout;
-    @BindView(R.id.detail_movie_reviews_empty)
-    TextView detailMovieReviewsEmpty;
-    @BindView(R.id.detail_movie_casts_empty)
-    TextView detailMovieCastsEmpty;
-    @BindView(R.id.detail_movie_crews_empty)
-    TextView detailMovieCrewsEmpty;
-    @BindView(R.id.detail_movie_trailers_empty)
-    TextView detailMovieTrailersEmpty;
+    RelativeLayout rlDetailMovieLoading;
+    @BindView(R.id.rv_detail_movie_reviews)
+    RecyclerView rvDetailMovieReviews;
+    @BindView(R.id.rv_detail_movie_casts)
+    RecyclerView rvDetailMovieCasts;
+    @BindView(R.id.rv_detail_movie_crews)
+    RecyclerView rvDetailMovieCrews;
+    @BindView(R.id.rv_detail_movie_trailers)
+    RecyclerView rvDetailMovieTrailers;
+    @BindView(R.id.ll_detail_movie_layout)
+    LinearLayout llDetailMovieLayout;
+    @BindView(R.id.tv_detail_movie_reviews_empty)
+    TextView tvDetailMovieReviewsEmpty;
+    @BindView(R.id.tv_detail_movie_casts_empty)
+    TextView tvDetailMovieCastsEmpty;
+    @BindView(R.id.tv_detail_movie_crews_empty)
+    TextView tvDetailMovieCrewsEmpty;
+    @BindView(R.id.tv_detail_movie_trailers_empty)
+    TextView tvDetailMovieTrailersEmpty;
     @BindView(R.id.rl_movie_error)
-    RelativeLayout detailMovieError;
+    RelativeLayout rlDetailMovieError;
     @BindView(R.id.iv_movie_error_icon)
-    ImageView detailMovieErrorPic;
+    ImageView ivDetailMovieErrorIcon;
     @BindView(R.id.tv_movie_error_desc)
-    TextView detailMovieErrorContent;
-    @BindView(R.id.detail_movie_refresh)
-    SwipeRefreshLayout detailMovieRefresh;
+    TextView tvDetailMovieErrorContent;
+    @BindView(R.id.srl_detail_movie_refresh)
+    SwipeRefreshLayout srlDetailMovieRefresh;
 
-    private int mIdMovie;
-    private Movie mMovie;
+    private int mMovieId;
 
     private MovieController mController;
-    private EventBus mEventBus;
+    private EventBus mEventBus = App.getInstance().getEventBus();
 
-    private ArrayList<Review> reviews;
-    private ReviewsAdapter reviewsAdapter;
+    private ArrayList<Review> mReviews;
+    private ReviewsAdapter mReviewsAdapter;
 
-    private ArrayList<Credit.Cast> casts;
-    private CastsAdapter castsAdapter;
+    private ArrayList<Credit.Cast> mCasts;
+    private CastsAdapter mCastsAdapter;
 
-    private ArrayList<Credit.Crew> crews;
-    private CrewsAdapter crewsAdapter;
+    private ArrayList<Credit.Crew> mCrews;
+    private CrewsAdapter mCrewsAdapter;
 
-    private ArrayList<Video> trailers;
-    private TrailersAdapter trailersAdapter;
+    private ArrayList<Video> mTrailers;
+    private TrailersAdapter mTrailersAdapter;
+
+    private String mMoviePosterUrl;
+    private String mMovieShareInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        initView();
-
         mController = new MovieController();
 
-        mEventBus = App.getInstance().getEventBus();
-        mEventBus.register(this);
+        initView();
 
         getDetailMovies();
     }
@@ -137,45 +133,41 @@ public class DetailActivity extends AppCompatActivity {
     private void initView() {
         ButterKnife.bind(this);
 
-        LinearLayoutManager linearLayoutManagerReviews = new LinearLayoutManager(getApplicationContext());
-        detailMovieReviews.setLayoutManager(linearLayoutManagerReviews);
-        detailMovieReviews.setHasFixedSize(true);
+        rvDetailMovieReviews.setLayoutManager(new LinearLayoutManager(this));
+        rvDetailMovieReviews.setHasFixedSize(true);
 
-        reviews = new ArrayList<>();
-        reviewsAdapter = new ReviewsAdapter(reviews);
-        detailMovieReviews.setAdapter(reviewsAdapter);
+        mReviews = new ArrayList<>();
+        mReviewsAdapter = new ReviewsAdapter(mReviews);
+        rvDetailMovieReviews.setAdapter(mReviewsAdapter);
 
-        LinearLayoutManager linearLayoutManagerCasts = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        detailMovieCasts.setLayoutManager(linearLayoutManagerCasts);
-        detailMovieCasts.setHasFixedSize(true);
+        rvDetailMovieCasts.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvDetailMovieCasts.setHasFixedSize(true);
 
-        casts = new ArrayList<>();
-        castsAdapter = new CastsAdapter(casts);
-        detailMovieCasts.setAdapter(castsAdapter);
+        mCasts = new ArrayList<>();
+        mCastsAdapter = new CastsAdapter(mCasts);
+        rvDetailMovieCasts.setAdapter(mCastsAdapter);
 
-        LinearLayoutManager linearLayoutManagerCrews = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-        detailMovieCrews.setLayoutManager(linearLayoutManagerCrews);
-        detailMovieCrews.setHasFixedSize(true);
+        rvDetailMovieCrews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvDetailMovieCrews.setHasFixedSize(true);
 
-        crews = new ArrayList<>();
-        crewsAdapter = new CrewsAdapter(crews);
-        detailMovieCrews.setAdapter(crewsAdapter);
+        mCrews = new ArrayList<>();
+        mCrewsAdapter = new CrewsAdapter(mCrews);
+        rvDetailMovieCrews.setAdapter(mCrewsAdapter);
 
-        LinearLayoutManager linearLayoutManagerTrailers = new LinearLayoutManager(getApplicationContext());
-        detailMovieTrailers.setLayoutManager(linearLayoutManagerTrailers);
-        detailMovieTrailers.setHasFixedSize(true);
+        rvDetailMovieTrailers.setLayoutManager(new LinearLayoutManager(this));
+        rvDetailMovieTrailers.setHasFixedSize(true);
 
-        trailers = new ArrayList<>();
-        trailersAdapter = new TrailersAdapter(trailers);
-        detailMovieTrailers.setAdapter(trailersAdapter);
+        mTrailers = new ArrayList<>();
+        mTrailersAdapter = new TrailersAdapter(mTrailers);
+        rvDetailMovieTrailers.setAdapter(mTrailersAdapter);
 
-        mIdMovie = getIntent().getExtras().getInt(AppConstant.MOVIE_ID);
-        String titleMovies = getIntent().getExtras().getString(AppConstant.MOVIE_TITLE);
+        mMovieId = getIntent().getIntExtra(AppConstant.MOVIE_ID, 0);
+        String titleMovies = getIntent().getStringExtra(AppConstant.MOVIE_TITLE);
 
-        this.setTitle(titleMovies);
+        setTitle(titleMovies);
 
-        detailMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
-        detailMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        srlDetailMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
+        srlDetailMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getDetailMovies();
@@ -184,108 +176,151 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onResume() {
+        super.onResume();
+        mEventBus.register(this);
+    }
+
+    @Override
+    protected void onPause() {
         mEventBus.unregister(this);
-        super.onDestroy();
+        super.onPause();
     }
 
     private void getDetailMovies() {
-        detailMovieLayout.setVisibility(View.GONE);
-        detailMovieLoading.setVisibility(View.VISIBLE);
-        detailMovieRefresh.setRefreshing(false);
+        llDetailMovieLayout.setVisibility(View.GONE);
+        rlDetailMovieError.setVisibility(View.GONE);
+        rlDetailMovieLoading.setVisibility(View.VISIBLE);
+        srlDetailMovieRefresh.setRefreshing(false);
 
         getMovies();
     }
 
     private void getMovies() {
-        mController.getMovieDetail(mIdMovie);
+        mController.getMovieDetail(mMovieId);
     }
 
-    private void setDataResponse(Movie body) {
-        mMovie = body;
-        if (mMovie.getBackdropPath() != null) {
-            CommonFunction.setImage(this, RestAPIURL.getUrlImage(mMovie.getBackdropPath()), detailMoviePic);
+    private void setDataResponse(Movie movie) {
+        if (movie.getBackdropPath() != null) {
+            CommonFunction.setImage(this, RestAPIURL.getUrlImage(movie.getBackdropPath()), ivDetailMovieBackdrop);
         } else {
-            CommonFunction.setImage(this, RestAPIURL.getUrlImage(mMovie.getPosterPath()), detailMoviePic);
+            CommonFunction.setImage(this, RestAPIURL.getUrlImage(movie.getPosterPath()), ivDetailMovieBackdrop);
         }
 
-        CommonFunction.setImage(this, RestAPIURL.getUrlImage(mMovie.getPosterPath()), detailMoviePoster);
+        CommonFunction.setImage(this, RestAPIURL.getUrlImage(movie.getPosterPath()), ivDetailMoviePoster);
 
-        detailMovieOverview.setText(mMovie.getOverview());
-        detailMovieGenre.setText(getStringGenre(mMovie.getGenres()));
-        detailMovieLanguage.setText(getStringLanguage(mMovie));
-        detailMovieRating.setText(getStringRating(mMovie.getVoteAverage(), mMovie.getVoteCount()));
-        detailMovieRuntime.setText(getStringRuntime(mMovie.getRuntime()));
-        detailMovieRevenue.setText(getStringRevenue(mMovie.getRevenue()));
-        detailMovieBudget.setText(getStringBugdet(mMovie.getBudget()));
-        detailMovieReleaseDate.setText(getStringReleaseDate(mMovie.getReleaseDate()));
+        tvDetailMovieOverview.setText(movie.getOverview());
+        tvDetailMovieGenre.setText(getStringGenre(movie.getGenres()));
+        tvDetailMovieLanguage.setText(getStringLanguage(movie.getOriginalLanguage(), movie.getSpokenLanguages()));
+        tvDetailMovieRating.setText(getStringRating(movie.getVoteAverage(), movie.getVoteCount()));
+        tvDetailMovieRuntime.setText(getStringRuntime(movie.getRuntime()));
+        tvDetailMovieRevenue.setText(getStringRevenue(movie.getRevenue()));
+        tvDetailMovieBudget.setText(getStringBugdet(movie.getBudget()));
+        tvDetailMovieReleaseDate.setText(getStringReleaseDate(movie.getReleaseDate()));
 
-        setReviewsMovie(mMovie.getReviewResponse().getResults());
-        setCreditsMovie(mMovie.getCredits());
-        setVideosMovie(mMovie.getVideoResponse().getResults());
+        setReviewsMovie(movie.getReviewResponse().getResults());
+        setCastsMovie(movie.getCredits().getCasts());
+        setCrewsMovie(movie.getCredits().getCrews());
+        setVideosMovie(movie.getVideoResponse().getResults());
+
+        rlDetailMovieLoading.setVisibility(View.GONE);
+        llDetailMovieLayout.setVisibility(View.VISIBLE);
+
+        mMoviePosterUrl = movie.getPosterPath();
+        mMovieShareInfo = String.format(AppConstant.SHARE_MOVIE_FORMAT, movie.getTitle(), RestAPIURL.getYoutubeLink(movie.getVideoResponse().getResults().get(0).getKey()));
     }
 
-    @OnLongClick(R.id.detail_movie_poster)
+    @OnLongClick(R.id.iv_detail_movie_poster)
     boolean showBigPictures() {
-        CommonFunction.showPoster(this, mMovie.getPosterPath());
-        return false;
+        CommonFunction.showPoster(this, mMoviePosterUrl);
+        return true;
     }
 
-    private void setVideosMovie(List<Video> results) {
-        if (!results.isEmpty()) {
-            detailMovieTrailersEmpty.setVisibility(View.GONE);
-            trailers.addAll(results);
-            trailersAdapter.notifyDataSetChanged();
-        } else {
-            detailMovieTrailersEmpty.setVisibility(View.VISIBLE);
-        }
-
-        detailMovieLoading.setVisibility(View.GONE);
-        detailMovieLayout.setVisibility(View.VISIBLE);
+    private String getStringGenre(List<Movie.Genre> genres) {
+        ArrayList<String> genresName = new ArrayList<>();
+        for (Movie.Genre genre : genres) genresName.add(genre.getName());
+        if (!genresName.isEmpty()) {
+            String lastGenre = genresName.remove(genresName.size() - 1);
+            return (genresName.size() > 0 ? TextUtils.join(", ", genresName) + " and " : "") + lastGenre;
+        } else return AppConstant.NO_GENRES;
     }
 
-    private void setCreditsMovie(CreditResponse credits) {
-        List<Credit.Cast> castList = credits.getCasts();
+    private String getStringLanguage(String originalLanguage, List<Movie.SpokenLanguages> spokenLanguages) {
+        ArrayList<String> spokenLanguageNames = new ArrayList<>();
+        for (Movie.SpokenLanguages spokenLanguage : spokenLanguages)
+            spokenLanguageNames.add(spokenLanguage.getIsoLanguage() + (TextUtils.isEmpty(spokenLanguage.getName()) ? "" : "(" + spokenLanguage.getName() + ")"));
+        if (!spokenLanguageNames.isEmpty()) {
+            String lastSpokenLanguage = spokenLanguageNames.remove(spokenLanguageNames.size() - 1);
+            return originalLanguage + " - " + (spokenLanguageNames.size() > 0 ? TextUtils.join(", ", spokenLanguageNames) + " and " : "") + lastSpokenLanguage;
+        } else return originalLanguage;
+    }
 
-        if (!castList.isEmpty()) {
-            detailMovieCastsEmpty.setVisibility(View.GONE);
-            casts.addAll(castList);
-            castsAdapter.notifyDataSetChanged();
+    private String getStringRating(double voteAverage, int voteCount) {
+        return voteCount > AppConstant.RATING_MAX_COUNT ? new DecimalFormat("#.#").format(voteAverage) + " of " + AppConstant.RATING_MAX : AppConstant.NO_RATING;
+    }
 
-        } else {
-            detailMovieCastsEmpty.setVisibility(View.VISIBLE);
-        }
+    private String getStringRuntime(int runtime) {
+        int runTimeHours = runtime / 60;
+        int runTimeMinutes = runtime % 60;
+        return (runTimeHours > 0 ? runTimeHours + " h " : "") + runTimeMinutes + " m";
+    }
 
-        List<Credit.Crew> crewList = credits.getCrews();
+    private String getStringRevenue(int revenue) {
+        return revenue > 0 ? "USD " + NumberFormat.getNumberInstance(Locale.US).format(revenue) : AppConstant.NO_REVENUE;
+    }
 
-        if (!crewList.isEmpty()) {
-            detailMovieCrewsEmpty.setVisibility(View.GONE);
-            crews.addAll(crewList);
-            crewsAdapter.notifyDataSetChanged();
-        } else {
-            detailMovieCrewsEmpty.setVisibility(View.VISIBLE);
+    private String getStringBugdet(int budget) {
+        return budget > 0 ? "USD " + NumberFormat.getNumberInstance(Locale.US).format(budget) : AppConstant.NO_REVENUE;
+    }
+
+    private String getStringReleaseDate(String releaseDate) {
+        try {
+            return new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(releaseDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return AppConstant.NO_RELEASE_DATE;
         }
     }
 
     private void setReviewsMovie(List<Review> reviewList) {
         if (!reviewList.isEmpty()) {
-            detailMovieReviewsEmpty.setVisibility(View.GONE);
-            reviews.addAll(reviewList);
-            reviewsAdapter.notifyDataSetChanged();
+            tvDetailMovieReviewsEmpty.setVisibility(View.GONE);
+            mReviews.addAll(reviewList);
+            mReviewsAdapter.notifyDataSetChanged();
         } else {
-            detailMovieReviewsEmpty.setVisibility(View.VISIBLE);
+            tvDetailMovieReviewsEmpty.setVisibility(View.VISIBLE);
         }
     }
 
-    private String getStringLanguage(Movie myMovie) {
-        String originalLanguage = myMovie.getOriginalLanguage();
-        ArrayList<String> spokenLanguageNames = new ArrayList<>();
-        for (int i = 0; i < myMovie.getSpokenLanguages().size(); i++) {
-            spokenLanguageNames.add(myMovie.getSpokenLanguages().get(i).getIsoLanguage() + "(" + myMovie.getSpokenLanguages().get(i).getName() + ")");
+    private void setCastsMovie(List<Credit.Cast> castList) {
+        if (!castList.isEmpty()) {
+            tvDetailMovieCastsEmpty.setVisibility(View.GONE);
+            mCasts.addAll(castList);
+            mCastsAdapter.notifyDataSetChanged();
+
+        } else {
+            tvDetailMovieCastsEmpty.setVisibility(View.VISIBLE);
         }
-        if (!spokenLanguageNames.isEmpty())
-            return originalLanguage + " - " + TextUtils.join(", ", spokenLanguageNames);
-        else return originalLanguage;
+    }
+
+    private void setCrewsMovie(List<Credit.Crew> crewList) {
+        if (!crewList.isEmpty()) {
+            tvDetailMovieCrewsEmpty.setVisibility(View.GONE);
+            mCrews.addAll(crewList);
+            mCrewsAdapter.notifyDataSetChanged();
+        } else {
+            tvDetailMovieCrewsEmpty.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setVideosMovie(List<Video> results) {
+        if (!results.isEmpty()) {
+            tvDetailMovieTrailersEmpty.setVisibility(View.GONE);
+            mTrailers.addAll(results);
+            mTrailersAdapter.notifyDataSetChanged();
+        } else {
+            tvDetailMovieTrailersEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -311,94 +346,19 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void shareMovie() {
-        if (mMovie != null) {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, getMovieToShare());
-            sendIntent.setType("text/plain");
-            startActivity(sendIntent);
-        }
-    }
-
-    private String getMovieToShare() {
-        String content = AppConstant.SHARE_TITLE + "\n";
-        content += mMovie.getTitle() + " ";
-        if (isPlaying(mMovie.getReleaseDate()))
-            content += "Release on " + getStringReleaseDate(mMovie.getReleaseDate()) + " ";
-        content += RestAPIURL.getYoutubeLink(mMovie.getVideoResponse().getResults().get(0).getKey()) + "\n";
-        content += "Download My Movie List App to get more info about movies.\n\n";
-        content += AppConstant.PLAY_STORE_URL;
-        return content;
-    }
-
-    private boolean isPlaying(String releaseDate) {
-        try {
-            return GregorianCalendar.getInstance().getTime().before(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(releaseDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private String getStringBugdet(int budget) {
-        String strBudget;
-        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
-        String moneyString = formatter.format(budget);
-        if (budget > 0) strBudget = "USD " + moneyString;
-        else strBudget = AppConstant.NO_BUDGET;
-        return strBudget;
-    }
-
-    private String getStringReleaseDate(String releaseDate) {
-        try {
-            return new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(releaseDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return AppConstant.NO_RELEASE_DATE;
-        }
-    }
-
-    private String getStringRevenue(int revenue) {
-        if (revenue > 0) return "USD " + NumberFormat.getNumberInstance(Locale.US).format(revenue);
-        else return AppConstant.NO_REVENUE;
-    }
-
-    private String getStringRuntime(int runtime) {
-        String strRuntime = "";
-        int hRuntime = runtime / 60;
-        int mRuntime = runtime % 60;
-        if (hRuntime > 0) {
-            strRuntime += hRuntime + " h ";
-        }
-        strRuntime += mRuntime + " m";
-        return strRuntime;
-    }
-
-    private String getStringRating(double voteAverage, int voteCount) {
-        if (voteCount > AppConstant.RATING_MAX_COUNT) {
-            return new DecimalFormat("#.#").format(voteAverage) + " of " + AppConstant.RATING_MAX;
-        } else return AppConstant.NO_RATING;
-    }
-
-    private String getStringGenre(List<Movie.Genre> genres) {
-        ArrayList<String> genresName = new ArrayList<>();
-        for (int i = 0; i < genres.size(); i++) {
-            genresName.add(genres.get(i).getName());
-        }
-        if (!genresName.isEmpty()) {
-            String lastGenre = genresName.remove(genresName.size() - 1);
-            if (genresName.size() > 0)
-                return TextUtils.join(", ", genresName) + " and " + lastGenre + ".";
-            else return lastGenre;
-        } else return AppConstant.NO_GENRES;
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mMovieShareInfo);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     private void setErrorLayout(String error) {
-        detailMovieLayout.setVisibility(View.GONE);
-        detailMovieLoading.setVisibility(View.GONE);
-        detailMovieError.setVisibility(View.VISIBLE);
-        detailMovieErrorContent.setText(error);
-        detailMovieErrorPic.setImageResource(R.drawable.ic_signal);
+        llDetailMovieLayout.setVisibility(View.GONE);
+        rlDetailMovieLoading.setVisibility(View.GONE);
+        rlDetailMovieError.setVisibility(View.VISIBLE);
+        tvDetailMovieErrorContent.setText(error);
+        ivDetailMovieErrorIcon.setImageResource(R.drawable.ic_signal);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
