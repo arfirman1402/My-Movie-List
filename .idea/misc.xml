@@ -5,6 +5,9 @@
       <item index="0" class="java.lang.String" itemvalue="com.google.gson.annotations.SerializedName" />
       <item index="1" class="java.lang.String" itemvalue="org.greenrobot.eventbus.Subscribe" />
     </list>
+    <writeAnnotations>
+      <writeAnnotation name="com.google.gson.annotations.SerializedName" />
+    </writeAnnotations>
   </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />

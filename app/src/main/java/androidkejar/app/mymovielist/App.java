@@ -4,15 +4,9 @@ import android.app.Application;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
-
-import androidkejar.app.mymovielist.restapi.RestAPIInterface;
 import androidkejar.app.mymovielist.restapi.RestApi;
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
+import androidkejar.app.mymovielist.utility.ClientInterceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -36,34 +30,21 @@ public class App extends Application {
     }
 
     private void createRetrofitClient() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        Interceptor clientInterceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                HttpUrl originalHttpUrl = original.url();
-
-                HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("api_key", getApplicationContext().getString(R.string.movie_api_key))
-                        .build();
-
-                Request.Builder requestBuilder = original.newBuilder()
-                        .url(url);
-
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
-        };
-
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(clientInterceptor).build();
-
-        mRetrofit = new Retrofit.Builder()
+        Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(RestApi.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
+                .addConverterFactory(GsonConverterFactory.create());
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        ClientInterceptor clientInterceptor = new ClientInterceptor();
+
+        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+        okHttpClient.addInterceptor(loggingInterceptor);
+        okHttpClient.addInterceptor(clientInterceptor);
+
+        builder.client(okHttpClient.build());
+        mRetrofit = builder.build();
     }
 
     public Retrofit getRetrofitClient() {
@@ -86,7 +67,7 @@ public class App extends Application {
         return mEventBus;
     }
 
-    public RestAPIInterface getApiService() {
-        return getRetrofitClient().create(RestAPIInterface.class);
+    public <T> T getRetrofitService(Class<T> serviceClass) {
+        return getRetrofitClient().create(serviceClass);
     }
 }

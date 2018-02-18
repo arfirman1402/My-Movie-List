@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
-public interface RestAPIInterface {
+public interface RestApiInterface {
     @GET("movie/{type}")
     Call<MovieResponse> getMovies(@Path("type") String type, @Query("page") int page, @QueryMap HashMap<String, String> optionQuery);
 
