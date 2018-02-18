@@ -7,7 +7,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 
 import androidkejar.app.mymovielist.restapi.RestAPIInterface;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -60,7 +60,7 @@ public class App extends Application {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(clientInterceptor).build();
 
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(RestAPIURL.getBaseUrl())
+                .baseUrl(RestApi.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

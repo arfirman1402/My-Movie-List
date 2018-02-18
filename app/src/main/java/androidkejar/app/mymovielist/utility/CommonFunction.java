@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 
 public class CommonFunction {
     public static void setImage(Context context, String url, ImageView imageView) {
@@ -41,7 +41,7 @@ public class CommonFunction {
         dialog.setContentView(R.layout.layout_movie_poster);
         ImageView imageView = dialog.findViewById(R.id.iv_poster);
         if (!TextUtils.isEmpty(imagePath)) {
-            CommonFunction.setImage(context, RestAPIURL.getUrlImage(imagePath), imageView);
+            CommonFunction.setImage(context, RestApi.getUrlImage(imagePath), imageView);
         }
         dialog.show();
     }

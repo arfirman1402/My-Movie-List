@@ -3,6 +3,7 @@ package androidkejar.app.mymovielist.view.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +39,7 @@ import androidkejar.app.mymovielist.model.Credit;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.adapter.CastsAdapter;
@@ -100,6 +101,7 @@ public class DetailActivity extends AppCompatActivity {
     SwipeRefreshLayout srlDetailMovieRefresh;
 
     private int mMovieId;
+    private String mMovieTitle;
 
     private MovieController mController;
     private EventBus mEventBus = App.getInstance().getEventBus();
@@ -125,6 +127,9 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         mController = new MovieController();
 
+        mMovieId = getIntent().getIntExtra(AppConstant.MOVIE_ID, 0);
+        mMovieTitle = getIntent().getStringExtra(AppConstant.MOVIE_TITLE);
+
         initView();
 
         getDetailMovies();
@@ -133,8 +138,12 @@ public class DetailActivity extends AppCompatActivity {
     private void initView() {
         ButterKnife.bind(this);
 
+        setTitle(mMovieTitle);
+
         rvDetailMovieReviews.setLayoutManager(new LinearLayoutManager(this));
         rvDetailMovieReviews.setHasFixedSize(true);
+
+        ViewCompat.setNestedScrollingEnabled(rvDetailMovieReviews, false);
 
         mReviews = new ArrayList<>();
         mReviewsAdapter = new ReviewsAdapter(mReviews);
@@ -143,12 +152,16 @@ public class DetailActivity extends AppCompatActivity {
         rvDetailMovieCasts.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvDetailMovieCasts.setHasFixedSize(true);
 
+        ViewCompat.setNestedScrollingEnabled(rvDetailMovieCasts, false);
+
         mCasts = new ArrayList<>();
         mCastsAdapter = new CastsAdapter(mCasts);
         rvDetailMovieCasts.setAdapter(mCastsAdapter);
 
         rvDetailMovieCrews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvDetailMovieCrews.setHasFixedSize(true);
+
+        ViewCompat.setNestedScrollingEnabled(rvDetailMovieCrews, false);
 
         mCrews = new ArrayList<>();
         mCrewsAdapter = new CrewsAdapter(mCrews);
@@ -157,14 +170,11 @@ public class DetailActivity extends AppCompatActivity {
         rvDetailMovieTrailers.setLayoutManager(new LinearLayoutManager(this));
         rvDetailMovieTrailers.setHasFixedSize(true);
 
+        ViewCompat.setNestedScrollingEnabled(rvDetailMovieTrailers, false);
+
         mTrailers = new ArrayList<>();
         mTrailersAdapter = new TrailersAdapter(mTrailers);
         rvDetailMovieTrailers.setAdapter(mTrailersAdapter);
-
-        mMovieId = getIntent().getIntExtra(AppConstant.MOVIE_ID, 0);
-        String titleMovies = getIntent().getStringExtra(AppConstant.MOVIE_TITLE);
-
-        setTitle(titleMovies);
 
         srlDetailMovieRefresh.setColorSchemeColors(Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE);
         srlDetailMovieRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -202,12 +212,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setDataResponse(Movie movie) {
         if (movie.getBackdropPath() != null) {
-            CommonFunction.setImage(this, RestAPIURL.getUrlImage(movie.getBackdropPath()), ivDetailMovieBackdrop);
+            CommonFunction.setImage(this, RestApi.getUrlImage(movie.getBackdropPath()), ivDetailMovieBackdrop);
         } else {
-            CommonFunction.setImage(this, RestAPIURL.getUrlImage(movie.getPosterPath()), ivDetailMovieBackdrop);
+            CommonFunction.setImage(this, RestApi.getUrlImage(movie.getPosterPath()), ivDetailMovieBackdrop);
         }
 
-        CommonFunction.setImage(this, RestAPIURL.getUrlImage(movie.getPosterPath()), ivDetailMoviePoster);
+        CommonFunction.setImage(this, RestApi.getUrlImage(movie.getPosterPath()), ivDetailMoviePoster);
 
         tvDetailMovieOverview.setText(movie.getOverview());
         tvDetailMovieGenre.setText(getStringGenre(movie.getGenres()));
@@ -215,7 +225,7 @@ public class DetailActivity extends AppCompatActivity {
         tvDetailMovieRating.setText(getStringRating(movie.getVoteAverage(), movie.getVoteCount()));
         tvDetailMovieRuntime.setText(getStringRuntime(movie.getRuntime()));
         tvDetailMovieRevenue.setText(getStringRevenue(movie.getRevenue()));
-        tvDetailMovieBudget.setText(getStringBugdet(movie.getBudget()));
+        tvDetailMovieBudget.setText(getStringBudget(movie.getBudget()));
         tvDetailMovieReleaseDate.setText(getStringReleaseDate(movie.getReleaseDate()));
 
         setReviewsMovie(movie.getReviewResponse().getResults());
@@ -227,7 +237,7 @@ public class DetailActivity extends AppCompatActivity {
         llDetailMovieLayout.setVisibility(View.VISIBLE);
 
         mMoviePosterUrl = movie.getPosterPath();
-        mMovieShareInfo = String.format(AppConstant.SHARE_MOVIE_FORMAT, movie.getTitle(), RestAPIURL.getYoutubeLink(movie.getVideoResponse().getResults().get(0).getKey()));
+        mMovieShareInfo = String.format(AppConstant.SHARE_MOVIE_FORMAT, movie.getTitle(), RestApi.getYoutubeLink(movie.getVideoResponse().getResults().get(0).getKey()));
     }
 
     @OnLongClick(R.id.iv_detail_movie_poster)
@@ -242,7 +252,7 @@ public class DetailActivity extends AppCompatActivity {
         if (!genresName.isEmpty()) {
             String lastGenre = genresName.remove(genresName.size() - 1);
             return (genresName.size() > 0 ? TextUtils.join(", ", genresName) + " and " : "") + lastGenre;
-        } else return AppConstant.NO_GENRES;
+        } else return getString(R.string.empty_genres);
     }
 
     private String getStringLanguage(String originalLanguage, List<Movie.SpokenLanguages> spokenLanguages) {
@@ -256,7 +266,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private String getStringRating(double voteAverage, int voteCount) {
-        return voteCount > AppConstant.RATING_MAX_COUNT ? new DecimalFormat("#.#").format(voteAverage) + " of " + AppConstant.RATING_MAX : AppConstant.NO_RATING;
+        return voteCount > AppConstant.RATING_MAX_COUNT ? new DecimalFormat("#.#").format(voteAverage) + " of " + AppConstant.RATING_MAX : getString(R.string.not_rated);
     }
 
     private String getStringRuntime(int runtime) {
@@ -266,11 +276,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private String getStringRevenue(int revenue) {
-        return revenue > 0 ? "USD " + NumberFormat.getNumberInstance(Locale.US).format(revenue) : AppConstant.NO_REVENUE;
+        return revenue > 0 ? "USD " + NumberFormat.getNumberInstance(Locale.US).format(revenue) : getString(R.string.empty_revenue);
     }
 
-    private String getStringBugdet(int budget) {
-        return budget > 0 ? "USD " + NumberFormat.getNumberInstance(Locale.US).format(budget) : AppConstant.NO_REVENUE;
+    private String getStringBudget(int budget) {
+        return budget > 0 ? "USD " + NumberFormat.getNumberInstance(Locale.US).format(budget) : getString(R.string.empty_budget);
     }
 
     private String getStringReleaseDate(String releaseDate) {
@@ -278,7 +288,7 @@ public class DetailActivity extends AppCompatActivity {
             return new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()).format(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(releaseDate));
         } catch (ParseException e) {
             e.printStackTrace();
-            return AppConstant.NO_RELEASE_DATE;
+            return getString(R.string.empty_release_date);
         }
     }
 
@@ -370,6 +380,6 @@ public class DetailActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getMovieDetailError(MovieDetailErrorEvent event) {
         Log.e("errorResultData", event.getMessage());
-        setErrorLayout(AppConstant.ERROR_CONNECTION_TEXT);
+        setErrorLayout(getString(R.string.error_connection_text));
     }
 }

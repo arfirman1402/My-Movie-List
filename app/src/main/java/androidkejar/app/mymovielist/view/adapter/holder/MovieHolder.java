@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Movie;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
@@ -24,19 +24,19 @@ import butterknife.ButterKnife;
  */
 
 public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-    @BindView(R.id.movie_item_title)
-    TextView movieTitle;
-    @BindView(R.id.movie_item_pic)
-    ImageView moviePic;
+    @BindView(R.id.tv_movie_item_title)
+    TextView tvMovieTitle;
+    @BindView(R.id.iv_movie_item_poster)
+    ImageView tvMoviePoster;
 
-    private MovieCallback movieCallback;
+    private MovieCallback mMovieCallback;
 
     private static final int HOLDER_LAYOUT = R.layout.view_holder_movie;
 
     private MovieHolder(View itemView, MovieCallback movieCallback) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        this.movieCallback = movieCallback;
+        this.mMovieCallback = movieCallback;
 
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
@@ -44,12 +44,12 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        movieCallback.onMovieItemClick(this);
+        mMovieCallback.onMovieItemClick(this);
     }
 
     @Override
     public boolean onLongClick(View v) {
-        movieCallback.onMovieItemLongClick(this);
+        mMovieCallback.onMovieItemLongClick(this);
         return false;
     }
 
@@ -63,9 +63,9 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
     }
 
     public void bindViewHolder(Movie movie) {
-        movieTitle.setText(movie.getTitle());
+        tvMovieTitle.setText(movie.getTitle());
         if (!TextUtils.isEmpty(movie.getPosterPath())) {
-            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(movie.getPosterPath()), moviePic);
+            CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(movie.getPosterPath()), tvMoviePoster);
         }
     }
 

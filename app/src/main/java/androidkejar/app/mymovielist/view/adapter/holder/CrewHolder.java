@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Credit;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,12 +20,12 @@ import butterknife.ButterKnife;
  */
 
 public class CrewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.crew_item_name)
-    TextView crewName;
-    @BindView(R.id.crew_item_job)
-    TextView crewJob;
-    @BindView(R.id.crew_item_pic)
-    ImageView crewPic;
+    @BindView(R.id.tv_crew_item_name)
+    TextView tvCrewName;
+    @BindView(R.id.tv_crew_item_job)
+    TextView tvCrewJob;
+    @BindView(R.id.iv_crew_item_image)
+    ImageView tvCrewImage;
 
     private static final int HOLDER_LAYOUT = R.layout.view_holder_crew;
 
@@ -45,10 +45,10 @@ public class CrewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindViewHolder(Credit.Crew crew) {
-        crewName.setText(crew.getName());
-        crewJob.setText(crew.getJob());
+        tvCrewName.setText(crew.getName());
+        tvCrewJob.setText(crew.getJob());
         if (!TextUtils.isEmpty(crew.getProfilePath())) {
-            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(crew.getProfilePath()), crewPic);
+            CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(crew.getProfilePath()), tvCrewImage);
         }
     }
 }

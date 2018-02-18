@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:contentPadding="8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -17,13 +17,13 @@
             android:background="@color/colorGray">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_person" />
 
             <ImageView
-                android:id="@+id/cast_item_pic"
+                android:id="@+id/iv_cast_item_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
@@ -35,19 +35,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/cast_item_name"
+                android:id="@+id/tv_cast_item_name"
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huwala"
+                android:text="@string/app_name"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/cast_item_character"
+                android:id="@+id/tv_cast_item_character"
                 style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huwala" />
+                android:text="@string/app_name" />
         </LinearLayout>
     </LinearLayout>
 

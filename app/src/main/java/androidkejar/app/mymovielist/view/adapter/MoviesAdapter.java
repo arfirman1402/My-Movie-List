@@ -34,11 +34,11 @@ public class MoviesAdapter extends RecyclerView.Adapter implements MovieCallback
 
     @Override
     public void onMovieItemClick(MovieHolder holder) {
-        MovieHolder.castParent(holder).showDetail(mMovies.get(holder.getAdapterPosition()));
+        holder.showDetail(mMovies.get(holder.getAdapterPosition()));
     }
 
     @Override
     public void onMovieItemLongClick(MovieHolder holder) {
-        MovieHolder.castParent(holder).showPoster(mMovies.get(holder.getAdapterPosition()));
+        holder.showPoster(mMovies.get(holder.getAdapterPosition()));
     }
 }

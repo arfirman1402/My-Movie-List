@@ -25,12 +25,12 @@ import butterknife.ButterKnife;
  */
 
 public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    @BindView(R.id.review_item_content)
-    TextView reviewContent;
-    @BindView(R.id.review_item_author)
-    TextView reviewAuthor;
+    @BindView(R.id.tv_review_item_content)
+    TextView tvReviewContent;
+    @BindView(R.id.tv_review_item_author)
+    TextView tvReviewAuthor;
 
-    private ReviewCallback reviewCallback;
+    private ReviewCallback mReviewCallback;
 
     private static final int HOLDER_LAYOUT = R.layout.view_holder_review;
 
@@ -38,14 +38,14 @@ public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClic
         super(itemView);
         ButterKnife.bind(this, itemView);
         setIsRecyclable(false);
-        this.reviewCallback = callback;
+        this.mReviewCallback = callback;
 
         itemView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        reviewCallback.onReviewItemClick(this);
+        mReviewCallback.onReviewItemClick(this);
     }
 
     public static RecyclerView.ViewHolder createViewHolder(ViewGroup parent, ReviewCallback callback) {
@@ -65,8 +65,8 @@ public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClic
             strResumeReview.add(strContentList.get(i));
         }
         String strReview = "\"" + TextUtils.join(". ", strResumeReview) + "." + "\"";
-        reviewContent.setText(strReview);
-        reviewAuthor.setText(review.getAuthor());
+        tvReviewContent.setText(strReview);
+        tvReviewAuthor.setText(review.getAuthor());
     }
 
     public void showReview(Review review) {

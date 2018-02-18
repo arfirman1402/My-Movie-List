@@ -2,7 +2,7 @@ package androidkejar.app.mymovielist.restapi;
 
 import java.util.HashMap;
 
-public class RestAPIURL {
+public class RestApi {
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String BASE_URL_IMAGE = "https://image.tmdb.org/t/p/w500%s";
     private static final String BASE_URL_IMAGE_YOUTUBE = "http://img.youtube.com/vi/%s/0.jpg";

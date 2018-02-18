@@ -32,7 +32,7 @@ import androidkejar.app.mymovielist.event.movie.MovieErrorEvent;
 import androidkejar.app.mymovielist.event.movie.MovieEvent;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.MovieResponse;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import androidkejar.app.mymovielist.view.activity.DetailActivity;
@@ -101,7 +101,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mMovieType = getArguments().getString(AppConstant.ARG_MOVIE_TYPE, AppConstant.MOVIE_TYPE_POPULAR);
+            mMovieType = getArguments().getString(AppConstant.ARG_MOVIE_TYPE, AppConstant.MOVIE_FLAG_POPULAR);
             mMovieQuery = getArguments().getString(AppConstant.ARG_MOVIE_QUERY, "");
         }
     }
@@ -200,7 +200,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getMovies() {
-        if (mMovieType.equals(AppConstant.MOVIE_TYPE_SEARCH)) {
+        if (mMovieType.equals(AppConstant.MOVIE_FLAG_SEARCH)) {
             mController.getDataSearch(mMovieQuery, mPage);
         } else {
             mController.getMovies(mMovieType, mPage);
@@ -221,9 +221,9 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
         mRandomList = tempRandomList;
 
         if (mMovies.get(mRandomList).getBackdropPath() != null) {
-            CommonFunction.setImage(getContext(), RestAPIURL.getUrlImage(mMovies.get(mRandomList).getBackdropPath()), ivMovieHeaderBackdrop);
+            CommonFunction.setImage(getContext(), RestApi.getUrlImage(mMovies.get(mRandomList).getBackdropPath()), ivMovieHeaderBackdrop);
         } else {
-            CommonFunction.setImage(getContext(), RestAPIURL.getUrlImage(mMovies.get(mRandomList).getPosterPath()), ivMovieHeaderBackdrop);
+            CommonFunction.setImage(getContext(), RestApi.getUrlImage(mMovies.get(mRandomList).getPosterPath()), ivMovieHeaderBackdrop);
         }
 
         tvMovieHeaderTitle.setText(mMovies.get(mRandomList).getTitle());
@@ -294,7 +294,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
             rlMovieLayout.setVisibility(View.VISIBLE);
             setBackdropLayout();
         } else {
-            setErrorLayout(AppConstant.ErrorType.EMPTY, AppConstant.NO_MOVIES);
+            setErrorLayout(AppConstant.ErrorType.EMPTY, getString(R.string.empty_movies));
         }
 
         rlMovieLoading.setVisibility(View.GONE);
@@ -303,13 +303,13 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getMovieListError(MovieErrorEvent event) {
         Log.e("errorResultData", event.getMessage());
-        setErrorLayout(AppConstant.ErrorType.CONNECTION, AppConstant.ERROR_CONNECTION_TEXT);
+        setErrorLayout(AppConstant.ErrorType.CONNECTION, getString(R.string.error_connection_text));
     }
 
     private void setErrorLayout(AppConstant.ErrorType connection, String errorConnectionText) {
         if (mPage > 1) {
-            Snackbar.make(rlMovieLayout, AppConstant.ERROR_CONNECTION_TEXT, Snackbar.LENGTH_SHORT)
-                    .setAction("Okay", null)
+            Snackbar.make(rlMovieLayout, getString(R.string.error_connection_text), Snackbar.LENGTH_SHORT)
+                    .setAction(getString(R.string.snackbar_okay), null)
                     .show();
             mPage--;
         } else {

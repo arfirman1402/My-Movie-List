@@ -16,13 +16,13 @@
             android:background="@color/colorGray">
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_video" />
 
             <ImageView
-                android:id="@+id/trailer_item_pic"
+                android:id="@+id/iv_trailer_item_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
@@ -30,23 +30,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="8dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/trailer_item_name"
+                android:id="@+id/tv_trailer_item_name"
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huwala"
+                android:text="@string/app_name"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/trailer_item_source"
+                android:id="@+id/tv_trailer_item_source"
                 style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Huwala" />
+                android:text="@string/app_name" />
         </LinearLayout>
     </LinearLayout>
 

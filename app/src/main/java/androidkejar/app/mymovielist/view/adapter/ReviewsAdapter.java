@@ -33,6 +33,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter implements ReviewCallba
 
     @Override
     public void onReviewItemClick(ReviewHolder holder) {
-        ReviewHolder.castParent(holder).showReview(mReviews.get(holder.getAdapterPosition()));
+        holder.showReview(mReviews.get(holder.getAdapterPosition()));
     }
 }

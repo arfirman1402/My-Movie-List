@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.model.Credit;
-import androidkejar.app.mymovielist.restapi.RestAPIURL;
+import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,12 +20,12 @@ import butterknife.ButterKnife;
  */
 
 public class CastHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.cast_item_name)
-    TextView castName;
-    @BindView(R.id.cast_item_character)
-    TextView castCharacter;
-    @BindView(R.id.cast_item_pic)
-    ImageView castPic;
+    @BindView(R.id.tv_cast_item_name)
+    TextView tvCastName;
+    @BindView(R.id.tv_cast_item_character)
+    TextView tvCastCharacter;
+    @BindView(R.id.iv_cast_item_image)
+    ImageView tvCastImage;
 
     private static final int HOLDER_LAYOUT = R.layout.view_holder_cast;
 
@@ -45,10 +45,10 @@ public class CastHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindViewHolder(Credit.Cast cast) {
-        castName.setText(cast.getName());
-        castCharacter.setText(cast.getCharacter());
+        tvCastName.setText(cast.getName());
+        tvCastCharacter.setText(cast.getCharacter());
         if (!TextUtils.isEmpty(cast.getProfilePath())) {
-            CommonFunction.setImage(itemView.getContext(), RestAPIURL.getUrlImage(cast.getProfilePath()), castPic);
+            CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(cast.getProfilePath()), tvCastImage);
         }
     }
 }

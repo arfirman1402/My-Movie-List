@@ -14,9 +14,8 @@
     <string name="trailer_title">TRAILER</string>
     <string name="trailer_empty">Trailer isn\'t available</string>
     <string name="movies_not_found">No movies are avaiable now.</string>
-    <string name="splash_title">MY MOVIE LIST</string>
-    <string name="about_creator">AR FIRMAN SYAHPUTRA</string>
-    <string name="about_iak2016">INDONESIA ANDROID KEJAR 2 (2016)</string>
+    <string name="about_creator">Ar Firman Syahputra</string>
+    <string name="about_iak2016">Indonesia Android Kejar 2 (2016)</string>
     <string name="about_creator_email">ar.firman.syahputra@gmail.com</string>
     <string name="about_supported_title">Supported By :</string>
     <string name="movie_adult">Adult</string>
@@ -38,4 +37,13 @@
     <string name="title_people">People</string>
     <string name="title_peoples_popular">Popular</string>
     <string name="movie_header_title_sample">Movie Title</string>
+    <string name="error_connection_text">Connection Problem. Please try again.</string>
+    <string name="snackbar_okay">Okay</string>
+    <string name="empty_movies">No Movies Available</string>
+    <string name="empty_genres">No Genre Available</string>
+    <string name="not_rated">Not Rated</string>
+    <string name="empty_revenue">Revenue Not Recorded</string>
+    <string name="empty_budget">Budget Not Recorded</string>
+    <string name="empty_release_date">Release Date Unpublished</string>
+    <string name="share_format"></string>
 </resources>
