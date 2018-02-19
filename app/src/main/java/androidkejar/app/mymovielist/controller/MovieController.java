@@ -1,5 +1,7 @@
 package androidkejar.app.mymovielist.controller;
 
+import android.util.Log;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.net.HttpURLConnection;
@@ -20,20 +22,27 @@ import retrofit2.Response;
 public class MovieController {
     private EventBus mEventBus = App.getInstance().getEventBus();
     private RestApiInterface service = App.getInstance().getRetrofitService(RestApiInterface.class);
+    private static final String TAG = "MovieController";
 
     public void getDataSearch(String query, int page) {
         Call<MovieResponse> movieResponseCall = service.getSearchMovies(query, page, RestApi.getMoviesSearchOptional());
         movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.code() == HttpURLConnection.HTTP_OK)
-                    mEventBus.post(new MovieEvent(response.message(), response.body()));
-                else mEventBus.post(new MovieErrorEvent(response.message()));
+                if (response.isSuccessful()) {
+                    if (response.code() == HttpURLConnection.HTTP_OK)
+                        mEventBus.post(new MovieEvent(response.message(), response.body()));
+                    else mEventBus.post(new MovieErrorEvent(response.message()));
+                } else mEventBus.post(new MovieErrorEvent(response.message()));
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                mEventBus.post(new MovieErrorEvent(t.getMessage()));
+                if (call.isCanceled()) {
+                    Log.e(TAG, "onFailure: getDataSearch is Cancelled", t);
+                } else {
+                    mEventBus.post(new MovieErrorEvent(t.getMessage()));
+                }
             }
         });
     }
@@ -43,13 +52,18 @@ public class MovieController {
         movieResponseCall.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.code() == HttpURLConnection.HTTP_OK)
-                    mEventBus.post(new MovieEvent(response.message(), response.body()));
-                else mEventBus.post(new MovieErrorEvent(response.message()));
+                if (response.isSuccessful()) {
+                    if (response.code() == HttpURLConnection.HTTP_OK)
+                        mEventBus.post(new MovieEvent(response.message(), response.body()));
+                    else mEventBus.post(new MovieErrorEvent(response.message()));
+                } else mEventBus.post(new MovieErrorEvent(response.message()));
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
+                if (call.isCanceled()) {
+                    Log.e(TAG, "onFailure: getMovies isCanceled", t);
+                }
                 mEventBus.post(new MovieErrorEvent(t.getMessage()));
             }
         });
@@ -60,14 +74,20 @@ public class MovieController {
         movieCall.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
-                if (response.code() == HttpURLConnection.HTTP_OK)
-                    mEventBus.post(new MovieDetailEvent(response.message(), response.body()));
-                else mEventBus.post(new MovieDetailErrorEvent(response.message()));
+                if (response.isSuccessful()) {
+                    if (response.code() == HttpURLConnection.HTTP_OK)
+                        mEventBus.post(new MovieDetailEvent(response.message(), response.body()));
+                    else mEventBus.post(new MovieDetailErrorEvent(response.message()));
+                } else mEventBus.post(new MovieDetailErrorEvent(response.message()));
             }
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
-                mEventBus.post(new MovieDetailErrorEvent(t.getMessage()));
+                if (call.isCanceled()) {
+                    Log.e(TAG, "onFailure: getMovieDetail is Canceled", t);
+                } else {
+                    mEventBus.post(new MovieDetailErrorEvent(t.getMessage()));
+                }
             }
         });
     }

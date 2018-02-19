@@ -4,6 +4,8 @@ import android.app.Application;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.concurrent.TimeUnit;
+
 import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.ClientInterceptor;
 import okhttp3.OkHttpClient;
@@ -42,6 +44,9 @@ public class App extends Application {
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         okHttpClient.addInterceptor(loggingInterceptor);
         okHttpClient.addInterceptor(clientInterceptor);
+        okHttpClient.connectTimeout(60, TimeUnit.SECONDS);
+        okHttpClient.readTimeout(30, TimeUnit.SECONDS);
+        okHttpClient.writeTimeout(30, TimeUnit.SECONDS);
 
         builder.client(okHttpClient.build());
         mRetrofit = builder.build();

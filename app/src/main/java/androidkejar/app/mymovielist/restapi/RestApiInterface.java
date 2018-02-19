@@ -12,11 +12,11 @@ import retrofit2.http.QueryMap;
 
 public interface RestApiInterface {
     @GET("movie/{type}")
-    Call<MovieResponse> getMovies(@Path("type") String type, @Query("page") int page, @QueryMap HashMap<String, String> optionQuery);
+    Call<MovieResponse> getMovies(@Path("type") String type, @Query("page") Integer page, @QueryMap HashMap<String, String> optionQuery);
 
     @GET("search/movie")
-    Call<MovieResponse> getSearchMovies(@Query("query") String query, @Query("page") int page, @QueryMap HashMap<String, String> optionQuery);
+    Call<MovieResponse> getSearchMovies(@Query("query") String query, @Query("page") Integer page, @QueryMap HashMap<String, String> optionQuery);
 
     @GET("movie/{id}")
-    Call<Movie> getMovieDetails(@Path("id") int id, @QueryMap HashMap<String, String> optionQuery);
+    Call<Movie> getMovieDetails(@Path("id") Integer id, @QueryMap HashMap<String, String> optionQuery);
 }
