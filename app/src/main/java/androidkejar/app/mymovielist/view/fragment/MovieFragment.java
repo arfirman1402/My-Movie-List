@@ -101,7 +101,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mMovieType = getArguments().getString(AppConstant.ARG_MOVIE_TYPE, AppConstant.MOVIE_FLAG_POPULAR);
+            mMovieType = getArguments().getString(AppConstant.ARG_MOVIE_TYPE, AppConstant.CONTENT_MOVIE_POPULAR);
             mMovieQuery = getArguments().getString(AppConstant.ARG_MOVIE_QUERY, "");
         }
     }
@@ -200,7 +200,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getMovies() {
-        if (mMovieType.equals(AppConstant.MOVIE_FLAG_SEARCH)) {
+        if (mMovieType.equals(AppConstant.CONTENT_SEARCH)) {
             mController.getDataSearch(mMovieQuery, mPage);
         } else {
             mController.getMovies(mMovieType, mPage);

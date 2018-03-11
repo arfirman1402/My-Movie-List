@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
 
-        setFragment(AppConstant.MOVIE_FLAG_NOW_PLAYING, getString(R.string.title_movies_now_playing));
+        setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
     }
 
     private void initView() {
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mMainSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                setFragment(AppConstant.MOVIE_FLAG_SEARCH, query);
+                setFragment(AppConstant.CONTENT_SEARCH, AppConstant.CONTENT_SEARCH, query);
                 return true;
             }
 
@@ -103,19 +104,19 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.nav_movies_now_playing:
-                    setFragment(AppConstant.MOVIE_FLAG_NOW_PLAYING, getString(R.string.title_movies_now_playing));
+                    setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
                     break;
                 case R.id.nav_movies_popular:
-                    setFragment(AppConstant.MOVIE_FLAG_POPULAR, getString(R.string.title_movies_popular));
+                    setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_POPULAR, getString(R.string.title_movies_popular));
                     break;
                 case R.id.nav_movies_top_rated:
-                    setFragment(AppConstant.MOVIE_FLAG_TOP_RATED, getString(R.string.title_movies_top_rated));
+                    setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_TOP_RATED, getString(R.string.title_movies_top_rated));
                     break;
                 case R.id.nav_movies_coming_soon:
-                    setFragment(AppConstant.MOVIE_FLAG_UPCOMING, getString(R.string.title_movies_coming_soon));
+                    setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_UPCOMING, getString(R.string.title_movies_coming_soon));
                     break;
                 case R.id.nav_about:
-                    setFragment(AppConstant.MOVIE_FLAG_ABOUT, getString(R.string.title_about));
+                    setFragment(AppConstant.CONTENT_ABOUT, AppConstant.CONTENT_ABOUT, getString(R.string.title_about));
                     break;
                 default:
                     break;
@@ -125,23 +126,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setFragment(String movieType, String title) {
-        if (movieType.equals(AppConstant.MOVIE_FLAG_SEARCH) || mMovieShow == null || !mMovieShow.equals(movieType)) {
+    private void setFragment(String content, String subContent, String title) {
+        if (subContent.equals(AppConstant.CONTENT_SEARCH) || mMovieShow == null || !mMovieShow.equals(subContent)) {
 
-            mMovieShow = movieType;
+            mMovieShow = TextUtils.join("-", new String[]{content, subContent});
 
             setTitle(title);
 
             Fragment fragment;
-            switch (movieType) {
-                case AppConstant.MOVIE_FLAG_ABOUT:
+            switch (content) {
+                case AppConstant.CONTENT_ABOUT:
                     fragment = new AboutFragment();
                     break;
-                case AppConstant.MOVIE_FLAG_SEARCH:
-                    fragment = MovieFragment.newInstance(movieType, title);
+                case AppConstant.CONTENT_SEARCH:
+                    fragment = MovieFragment.newInstance(subContent, title);
+                    break;
+                case AppConstant.CONTENT_MOVIE:
+                    fragment = MovieFragment.newInstance(subContent);
                     break;
                 default:
-                    fragment = MovieFragment.newInstance(movieType);
+                    fragment = new Fragment();
                     break;
             }
 
@@ -157,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (dlMainNav.isDrawerOpen(Gravity.START))
             dlMainNav.closeDrawer(Gravity.START);
-        else if (!mMovieShow.equals(AppConstant.MOVIE_FLAG_NOW_PLAYING)) {
-            setFragment(AppConstant.MOVIE_FLAG_NOW_PLAYING, getString(R.string.title_movies_now_playing));
+        else if (!mMovieShow.equals(TextUtils.join("-", new String[]{AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_NOW_PLAYING}))) {
+            setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_NOW_PLAYING, getString(R.string.title_movies_now_playing));
         } else super.onBackPressed();
     }
 }

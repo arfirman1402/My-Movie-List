@@ -22,12 +22,16 @@ public interface AppConstant {
     String ARG_MOVIE_TYPE           = "movie_type";
     String ARG_MOVIE_QUERY          = "movie_query";
 
-    String MOVIE_FLAG_NOW_PLAYING   = "now_playing";
-    String MOVIE_FLAG_POPULAR       = "popular";
-    String MOVIE_FLAG_TOP_RATED     = "top_rated";
-    String MOVIE_FLAG_UPCOMING      = "upcoming";
-    String MOVIE_FLAG_SEARCH        = "search";
-    String MOVIE_FLAG_ABOUT         = "about";
+    String CONTENT_MOVIE            = "movie";
+    String CONTENT_TV_SHOW          = "tv_show";
+    String CONTENT_PERSON           = "people";
+    String CONTENT_SEARCH           = "search";
+    String CONTENT_ABOUT            = "about";
+
+    String CONTENT_MOVIE_NOW_PLAYING    = "now_playing";
+    String CONTENT_MOVIE_POPULAR        = "popular";
+    String CONTENT_MOVIE_TOP_RATED      = "top_rated";
+    String CONTENT_MOVIE_UPCOMING       = "upcoming";
 
     enum ErrorType {CONNECTION, EMPTY}
 }
