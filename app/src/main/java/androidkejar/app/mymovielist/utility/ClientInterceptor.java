@@ -1,5 +1,9 @@
 package androidkejar.app.mymovielist.utility;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import java.io.IOException;
 
 import androidkejar.app.mymovielist.App;
@@ -14,19 +18,25 @@ import okhttp3.Response;
  */
 
 public class ClientInterceptor implements Interceptor {
+    private static final String TAG = "ClientInterceptor";
+
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         Request original = chain.request();
         HttpUrl originalHttpUrl = original.url();
 
+        Context context = App.getInstance().getApplicationContext();
         HttpUrl url = originalHttpUrl.newBuilder()
-                .addQueryParameter("api_key", App.getInstance().getApplicationContext().getString(R.string.movie_api_key))
+                .addQueryParameter(context.getString(R.string.param_api_key), context.getString(R.string.movie_api_key))
                 .build();
 
         Request.Builder requestBuilder = original.newBuilder()
                 .url(url);
 
         Request request = requestBuilder.build();
-        return chain.proceed(request);
+        Response response = chain.proceed(request);
+        if (response.code() > 500) Log.d(TAG, "intercept: Server Error");
+        else if (response.code() > 400) Log.d(TAG, "intercept: Client Error");
+        return response;
     }
 }

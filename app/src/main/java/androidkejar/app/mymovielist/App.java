@@ -2,14 +2,12 @@ package androidkejar.app.mymovielist;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
+
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.concurrent.TimeUnit;
-
 import androidkejar.app.mymovielist.restapi.RestApi;
-import androidkejar.app.mymovielist.utility.ClientInterceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import androidkejar.app.mymovielist.utility.CommonFunction;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,30 +27,24 @@ public class App extends Application {
         createEventBus();
         createRetrofitClient();
 
+        declareStetho();
+
+    }
+
+    private void declareStetho() {
+        Stetho.initializeWithDefaults(this);
     }
 
     private void createRetrofitClient() {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(RestApi.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create());
+        Retrofit.Builder builder = new Retrofit.Builder();
+        builder.baseUrl(RestApi.getBaseUrl());
+        builder.addConverterFactory(GsonConverterFactory.create());
 
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        ClientInterceptor clientInterceptor = new ClientInterceptor();
-
-        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
-        okHttpClient.addInterceptor(loggingInterceptor);
-        okHttpClient.addInterceptor(clientInterceptor);
-        okHttpClient.connectTimeout(60, TimeUnit.SECONDS);
-        okHttpClient.readTimeout(30, TimeUnit.SECONDS);
-        okHttpClient.writeTimeout(30, TimeUnit.SECONDS);
-
-        builder.client(okHttpClient.build());
+        builder.client(CommonFunction.createOkHttpClient());
         mRetrofit = builder.build();
     }
 
-    public Retrofit getRetrofitClient() {
+    private Retrofit getRetrofitClient() {
         return mRetrofit;
     }
 

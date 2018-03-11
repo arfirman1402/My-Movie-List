@@ -10,9 +10,15 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
+import java.util.concurrent.TimeUnit;
+
+import androidkejar.app.mymovielist.BuildConfig;
 import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.restapi.RestApi;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class CommonFunction {
     public static void setImage(Context context, String url, ImageView imageView) {
@@ -22,10 +28,6 @@ public class CommonFunction {
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .centerCrop()
                 .into(imageView);
-    }
-
-    public static void moveActivity(Context from, Class dest, boolean isFinished) {
-        moveActivity(from, dest, new Bundle(), isFinished);
     }
 
     public static void moveActivity(Context from, Class dest, Bundle bundle, boolean isFinished) {
@@ -44,5 +46,21 @@ public class CommonFunction {
             CommonFunction.setImage(context, RestApi.getUrlImage(imagePath), imageView);
         }
         dialog.show();
+    }
+
+    public static OkHttpClient createOkHttpClient() {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
+
+        ClientInterceptor clientInterceptor = new ClientInterceptor();
+
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.addInterceptor(loggingInterceptor);
+        okHttpClientBuilder.addInterceptor(clientInterceptor);
+        if (BuildConfig.DEBUG) okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+        okHttpClientBuilder.connectTimeout(60, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(30, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS);
+        return okHttpClientBuilder.build();
     }
 }

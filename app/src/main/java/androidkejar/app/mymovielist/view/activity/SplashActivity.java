@@ -18,7 +18,7 @@ public class SplashActivity extends Activity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                CommonFunction.moveActivity(SplashActivity.this, MainActivity.class, true);
+                CommonFunction.moveActivity(SplashActivity.this, MainActivity.class, new Bundle(), true);
             }
         };
 

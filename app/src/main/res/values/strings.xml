@@ -45,5 +45,5 @@
     <string name="empty_revenue">Revenue Not Recorded</string>
     <string name="empty_budget">Budget Not Recorded</string>
     <string name="empty_release_date">Release Date Unpublished</string>
-    <string name="share_format"></string>
+    <string name="param_api_key">api_key</string>
 </resources>
