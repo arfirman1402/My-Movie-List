@@ -1,17 +1,18 @@
 package androidkejar.app.mymovielist.event.movie;
 
 import androidkejar.app.mymovielist.event.BaseEvent;
-import androidkejar.app.mymovielist.model.MovieResponse;
+import androidkejar.app.mymovielist.model.Movie;
+import androidkejar.app.mymovielist.model.ResultResponse;
 
 public class MovieEvent extends BaseEvent {
-    private MovieResponse body;
+    private ResultResponse<Movie> body;
 
-    public MovieEvent(String message, MovieResponse body) {
+    public MovieEvent(String message, ResultResponse<Movie> body) {
         super(message);
         this.body = body;
     }
 
-    public MovieResponse getBody() {
+    public ResultResponse<Movie> getBody() {
         return body;
     }
 }

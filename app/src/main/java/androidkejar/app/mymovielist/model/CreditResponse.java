@@ -9,20 +9,20 @@ public class CreditResponse {
     private int id;
 
     @SerializedName("cast")
-    private List<Credit.Cast> casts;
+    private List<CreditCast> casts;
 
     @SerializedName("crew")
-    private List<Credit.Crew> crews;
+    private List<CreditCrew> crews;
 
     public int getId() {
         return id;
     }
 
-    public List<Credit.Cast> getCasts() {
+    public List<CreditCast> getCasts() {
         return casts;
     }
 
-    public List<Credit.Crew> getCrews() {
+    public List<CreditCrew> getCrews() {
         return crews;
     }
 }

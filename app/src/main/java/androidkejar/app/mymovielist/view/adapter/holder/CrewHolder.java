@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.model.Credit;
+import androidkejar.app.mymovielist.model.CreditCrew;
 import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import butterknife.BindView;
@@ -44,7 +44,7 @@ public class CrewHolder extends RecyclerView.ViewHolder {
         return (CrewHolder) holder;
     }
 
-    public void bindViewHolder(Credit.Crew crew) {
+    public void bindViewHolder(CreditCrew crew) {
         tvCrewName.setText(crew.getName());
         tvCrewJob.setText(crew.getJob());
         if (!TextUtils.isEmpty(crew.getProfilePath())) {

@@ -31,7 +31,7 @@ import androidkejar.app.mymovielist.controller.MovieController;
 import androidkejar.app.mymovielist.event.movie.MovieErrorEvent;
 import androidkejar.app.mymovielist.event.movie.MovieEvent;
 import androidkejar.app.mymovielist.model.Movie;
-import androidkejar.app.mymovielist.model.MovieResponse;
+import androidkejar.app.mymovielist.model.ResultResponse;
 import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.utility.CommonFunction;
@@ -281,7 +281,7 @@ public class MovieFragment extends Fragment implements View.OnClickListener {
         setDataResponse(event.getBody());
     }
 
-    private void setDataResponse(MovieResponse body) {
+    private void setDataResponse(ResultResponse<Movie> body) {
         mPage = body.getPage();
         mMaxPage = body.getTotalPages();
 

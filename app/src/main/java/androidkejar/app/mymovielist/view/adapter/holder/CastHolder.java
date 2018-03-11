@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidkejar.app.mymovielist.R;
-import androidkejar.app.mymovielist.model.Credit;
+import androidkejar.app.mymovielist.model.CreditCast;
 import androidkejar.app.mymovielist.restapi.RestApi;
 import androidkejar.app.mymovielist.utility.CommonFunction;
 import butterknife.BindView;
@@ -44,7 +44,7 @@ public class CastHolder extends RecyclerView.ViewHolder {
         return (CastHolder) holder;
     }
 
-    public void bindViewHolder(Credit.Cast cast) {
+    public void bindViewHolder(CreditCast cast) {
         tvCastName.setText(cast.getName());
         tvCastCharacter.setText(cast.getCharacter());
         if (!TextUtils.isEmpty(cast.getProfilePath())) {

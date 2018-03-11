@@ -5,13 +5,13 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import androidkejar.app.mymovielist.model.Credit;
+import androidkejar.app.mymovielist.model.CreditCast;
 import androidkejar.app.mymovielist.view.adapter.holder.CastHolder;
 
 public class CastsAdapter extends RecyclerView.Adapter {
-    private List<Credit.Cast> mCasts;
+    private List<CreditCast> mCasts;
 
-    public CastsAdapter(List<Credit.Cast> casts) {
+    public CastsAdapter(List<CreditCast> casts) {
         this.mCasts = casts;
     }
 

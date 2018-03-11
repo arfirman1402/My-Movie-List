@@ -236,22 +236,6 @@ public class Movie {
         return reviewResponse;
     }
 
-    private class Country {
-        @SerializedName("iso_3666_1")
-        private String isoCountry;
-
-        @SerializedName("name")
-        private String name;
-
-        public String getIsoCountry() {
-            return isoCountry;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
     public class SpokenLanguages {
         @SerializedName("iso_639_1")
         private String isoLanguage;
@@ -261,73 +245,6 @@ public class Movie {
 
         public String getIsoLanguage() {
             return isoLanguage;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    private class Company {
-        @SerializedName("description")
-        private String description;
-
-        @SerializedName("headquarters")
-        private String headquarters;
-
-        @SerializedName("homepage")
-        private String homepage;
-
-        @SerializedName("id")
-        private String id;
-
-        @SerializedName("logo_path")
-        private String logoPath;
-
-        @SerializedName("name")
-        private String name;
-
-        @SerializedName("parent_company")
-        private String parentCompany;
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getHeadquarters() {
-            return headquarters;
-        }
-
-        public String getHomepage() {
-            return homepage;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getLogoPath() {
-            return logoPath;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getParentCompany() {
-            return parentCompany;
-        }
-    }
-
-    public class Genre {
-        @SerializedName("id")
-        private int id;
-
-        @SerializedName("name")
-        private String name;
-
-        public int getId() {
-            return id;
         }
 
         public String getName() {

@@ -35,7 +35,9 @@ import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.controller.MovieController;
 import androidkejar.app.mymovielist.event.moviedetail.MovieDetailErrorEvent;
 import androidkejar.app.mymovielist.event.moviedetail.MovieDetailEvent;
-import androidkejar.app.mymovielist.model.Credit;
+import androidkejar.app.mymovielist.model.CreditCast;
+import androidkejar.app.mymovielist.model.CreditCrew;
+import androidkejar.app.mymovielist.model.Genre;
 import androidkejar.app.mymovielist.model.Movie;
 import androidkejar.app.mymovielist.model.Review;
 import androidkejar.app.mymovielist.model.Video;
@@ -109,10 +111,10 @@ public class DetailActivity extends AppCompatActivity {
     private ArrayList<Review> mReviews;
     private ReviewsAdapter mReviewsAdapter;
 
-    private ArrayList<Credit.Cast> mCasts;
+    private ArrayList<CreditCast> mCasts;
     private CastsAdapter mCastsAdapter;
 
-    private ArrayList<Credit.Crew> mCrews;
+    private ArrayList<CreditCrew> mCrews;
     private CrewsAdapter mCrewsAdapter;
 
     private ArrayList<Video> mTrailers;
@@ -246,9 +248,9 @@ public class DetailActivity extends AppCompatActivity {
         return true;
     }
 
-    private String getStringGenre(List<Movie.Genre> genres) {
+    private String getStringGenre(List<Genre> genres) {
         ArrayList<String> genresName = new ArrayList<>();
-        for (Movie.Genre genre : genres) genresName.add(genre.getName());
+        for (Genre genre : genres) genresName.add(genre.getName());
         if (!genresName.isEmpty()) {
             String lastGenre = genresName.remove(genresName.size() - 1);
             return (genresName.size() > 0 ? TextUtils.join(", ", genresName) + " and " : "") + lastGenre;
@@ -302,7 +304,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setCastsMovie(List<Credit.Cast> castList) {
+    private void setCastsMovie(List<CreditCast> castList) {
         if (!castList.isEmpty()) {
             tvDetailMovieCastsEmpty.setVisibility(View.GONE);
             mCasts.addAll(castList);
@@ -313,7 +315,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setCrewsMovie(List<Credit.Crew> crewList) {
+    private void setCrewsMovie(List<CreditCrew> crewList) {
         if (!crewList.isEmpty()) {
             tvDetailMovieCrewsEmpty.setVisibility(View.GONE);
             mCrews.addAll(crewList);
