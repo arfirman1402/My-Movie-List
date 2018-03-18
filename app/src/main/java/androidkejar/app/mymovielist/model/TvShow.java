@@ -20,6 +20,9 @@ public class TvShow {
     @SerializedName("genres")
     private List<Genre> genres;
 
+    @SerializedName("genre_ids")
+    private List<Integer> genreIds;
+
     @SerializedName("homepage")
     private String homepage;
 

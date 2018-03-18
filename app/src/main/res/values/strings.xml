@@ -46,4 +46,6 @@
     <string name="empty_budget">Budget Not Recorded</string>
     <string name="empty_release_date">Release Date Unpublished</string>
     <string name="param_api_key">api_key</string>
+    <string name="tv_show_header_title_sample">Tv Show Title</string>
+    <string name="tv_shows_not_found">No tv shows are avaiable now</string>
 </resources>

@@ -37,16 +37,22 @@ public class RestApi {
         return moviesOptional;
     }
 
+    public static HashMap<String, String> getTvShowOptional() {
+        HashMap<String, String> tvShowOptional = new HashMap<>();
+        tvShowOptional.put("language", LANG_SOURCE);
+        return tvShowOptional;
+    }
+
     public static HashMap<String, String> getMoviesSearchOptional() {
-        HashMap<String, String> moviesOptional = new HashMap<>();
-        moviesOptional.put("language", LANG_SOURCE);
-        return moviesOptional;
+        HashMap<String, String> moviesSearchOptional = new HashMap<>();
+        moviesSearchOptional.put("language", LANG_SOURCE);
+        return moviesSearchOptional;
     }
 
     public static HashMap<String, String> getMovieDetailOptional() {
-        HashMap<String, String> moviesOptional = new HashMap<>();
-        moviesOptional.put("language", LANG_SOURCE);
-        moviesOptional.put("append_to_response", MOVIE_APPEND_TO_RESPONSE_SHORT);
-        return moviesOptional;
+        HashMap<String, String> movieDetailOptional = new HashMap<>();
+        movieDetailOptional.put("language", LANG_SOURCE);
+        movieDetailOptional.put("append_to_response", MOVIE_APPEND_TO_RESPONSE_SHORT);
+        return movieDetailOptional;
     }
 }

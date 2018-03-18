@@ -5,8 +5,8 @@ public interface AppConstant {
     long SPLASH_TIME                = 1500;
     long HEADER_TIME                = 5000;
 
-    String MOVIE_ID                 = "id";
-    String MOVIE_TITLE              = "title";
+    String MOVIE_ID                 = "movie_id";
+    String MOVIE_TITLE              = "movie_title";
 
     String ANDROID_KEJAR_IMAGE_URL  = "http://rectmedia.com/wp-content/uploads/2016/04/android-indonesia-kejar.jpg";
     String GOOGLE_DEV_IMAGE_URL     = "http://dash.coolsmartphone.com/wp-content/uploads/2013/07/Google-Developers-Logo.png";
@@ -22,6 +22,12 @@ public interface AppConstant {
     String ARG_MOVIE_TYPE           = "movie_type";
     String ARG_MOVIE_QUERY          = "movie_query";
 
+    String ARG_TV_SHOW_TYPE         = "tv_show_type";
+    String ARG_TV_SHOW_QUERY        = "tv_show_query";
+
+    String ARG_PERSON_TYPE         = "people_type";
+    String ARG_PERSON_QUERY        = "people_query";
+
     String CONTENT_MOVIE            = "movie";
     String CONTENT_TV_SHOW          = "tv_show";
     String CONTENT_PERSON           = "people";
@@ -32,6 +38,16 @@ public interface AppConstant {
     String CONTENT_MOVIE_POPULAR        = "popular";
     String CONTENT_MOVIE_TOP_RATED      = "top_rated";
     String CONTENT_MOVIE_UPCOMING       = "upcoming";
+
+    String CONTENT_TV_SHOW_AIRING_TODAY = "airing_today";
+    String CONTENT_TV_SHOW_ON_THE_AIR   = "on_the_air";
+    String CONTENT_TV_SHOW_POPULAR      = "popular";
+    String CONTENT_TV_SHOW_TOP_RATED    = "top_rated";
+
+    String CONTENT_PERSON_POPULAR   = "popular";
+
+    String TV_SHOW_ID   = "tv_show_id";
+    String TV_SHOW_NAME = "tv_show_name";
 
     enum ErrorType {CONNECTION, EMPTY}
 }

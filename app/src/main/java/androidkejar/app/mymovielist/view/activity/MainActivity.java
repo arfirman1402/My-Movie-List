@@ -20,6 +20,7 @@ import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.fragment.AboutFragment;
 import androidkejar.app.mymovielist.view.fragment.MovieFragment;
+import androidkejar.app.mymovielist.view.fragment.TvShowFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -115,6 +116,21 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_movies_coming_soon:
                     setFragment(AppConstant.CONTENT_MOVIE, AppConstant.CONTENT_MOVIE_UPCOMING, getString(R.string.title_movies_coming_soon));
                     break;
+                case R.id.nav_tv_shows_airing_today:
+                    setFragment(AppConstant.CONTENT_TV_SHOW, AppConstant.CONTENT_TV_SHOW_AIRING_TODAY, getString(R.string.title_tv_shows_airing_today));
+                    break;
+                case R.id.nav_tv_shows_on_the_air:
+                    setFragment(AppConstant.CONTENT_TV_SHOW, AppConstant.CONTENT_TV_SHOW_ON_THE_AIR, getString(R.string.title_tv_shows_on_the_air));
+                    break;
+                case R.id.nav_tv_shows_popular:
+                    setFragment(AppConstant.CONTENT_TV_SHOW, AppConstant.CONTENT_TV_SHOW_POPULAR, getString(R.string.title_tv_shows_popular));
+                    break;
+                case R.id.nav_tv_shows_top_rated:
+                    setFragment(AppConstant.CONTENT_TV_SHOW, AppConstant.CONTENT_TV_SHOW_TOP_RATED, getString(R.string.title_tv_shows_top_rated));
+                    break;
+                case R.id.nav_peoples_popular:
+                    setFragment(AppConstant.CONTENT_PERSON, AppConstant.CONTENT_PERSON_POPULAR, getString(R.string.title_peoples_popular));
+                    break;
                 case R.id.nav_about:
                     setFragment(AppConstant.CONTENT_ABOUT, AppConstant.CONTENT_ABOUT, getString(R.string.title_about));
                     break;
@@ -144,6 +160,12 @@ public class MainActivity extends AppCompatActivity {
                 case AppConstant.CONTENT_MOVIE:
                     fragment = MovieFragment.newInstance(subContent);
                     break;
+                case AppConstant.CONTENT_TV_SHOW:
+                    fragment = TvShowFragment.newInstance(subContent);
+                    break;
+                /*case AppConstant.CONTENT_PERSON:
+                    fragment = PersonFragment.newInstance(subContent);
+                    break;*/
                 default:
                     fragment = new Fragment();
                     break;
