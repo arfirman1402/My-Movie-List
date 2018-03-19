@@ -1,0 +1,16 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/srl_person_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_person_list" />
+
+        <include layout="@layout/layout_person_error" />
+
+        <include layout="@layout/layout_person_loading" />
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

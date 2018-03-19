@@ -55,4 +55,10 @@ public class RestApi {
         movieDetailOptional.put("append_to_response", MOVIE_APPEND_TO_RESPONSE_SHORT);
         return movieDetailOptional;
     }
+
+    public static HashMap<String, String> getPersonOptional() {
+        HashMap<String, String> personOptional = new HashMap<>();
+        personOptional.put("language", LANG_SOURCE);
+        return personOptional;
+    }
 }

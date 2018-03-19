@@ -3,6 +3,7 @@ package androidkejar.app.mymovielist.restapi;
 import java.util.HashMap;
 
 import androidkejar.app.mymovielist.model.Movie;
+import androidkejar.app.mymovielist.model.Person;
 import androidkejar.app.mymovielist.model.ResultResponse;
 import androidkejar.app.mymovielist.model.TvShow;
 import retrofit2.Call;
@@ -20,6 +21,9 @@ public interface RestApiInterface {
 
     @GET("tv/{type}")
     Call<ResultResponse<TvShow>> getTvShows(@Path("type") String type, @Query("page") Integer page, @QueryMap HashMap<String, String> optionQuery);
+
+    @GET("person/{type}")
+    Call<ResultResponse<Person>> getPersons(@Path("type") String type, @Query("page") Integer page, @QueryMap HashMap<String, String> optionQuery);
 
     @GET("movie/{id}")
     Call<Movie> getMovieDetails(@Path("id") Integer id, @QueryMap HashMap<String, String> optionQuery);

@@ -8,8 +8,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.net.HttpURLConnection;
 
 import androidkejar.app.mymovielist.App;
-import androidkejar.app.mymovielist.event.movie.MovieErrorEvent;
-import androidkejar.app.mymovielist.event.movie.MovieEvent;
 import androidkejar.app.mymovielist.event.tvshow.TvShowErrorEvent;
 import androidkejar.app.mymovielist.event.tvshow.TvShowEvent;
 import androidkejar.app.mymovielist.model.ResultResponse;
@@ -44,7 +42,7 @@ public class TvShowController {
             @Override
             public void onFailure(@NonNull Call<ResultResponse<TvShow>> call, @NonNull Throwable t) {
                 if (call.isCanceled()) {
-                    Log.e(TAG, "onFailure: getMovies isCanceled", t);
+                    Log.e(TAG, "onFailure: getTvShows isCanceled", t);
                 }
                 mEventBus.post(new TvShowErrorEvent(t.getMessage()));
             }

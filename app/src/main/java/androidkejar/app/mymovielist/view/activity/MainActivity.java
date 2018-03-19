@@ -20,6 +20,7 @@ import androidkejar.app.mymovielist.R;
 import androidkejar.app.mymovielist.utility.AppConstant;
 import androidkejar.app.mymovielist.view.fragment.AboutFragment;
 import androidkejar.app.mymovielist.view.fragment.MovieFragment;
+import androidkejar.app.mymovielist.view.fragment.PersonFragment;
 import androidkejar.app.mymovielist.view.fragment.TvShowFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -163,9 +164,9 @@ public class MainActivity extends AppCompatActivity {
                 case AppConstant.CONTENT_TV_SHOW:
                     fragment = TvShowFragment.newInstance(subContent);
                     break;
-                /*case AppConstant.CONTENT_PERSON:
+                case AppConstant.CONTENT_PERSON:
                     fragment = PersonFragment.newInstance(subContent);
-                    break;*/
+                    break;
                 default:
                     fragment = new Fragment();
                     break;

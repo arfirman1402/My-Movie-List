@@ -48,4 +48,8 @@
     <string name="param_api_key">api_key</string>
     <string name="tv_show_header_title_sample">Tv Show Title</string>
     <string name="tv_shows_not_found">No tv shows are avaiable now</string>
+    <string name="person_header_title_sample">Person Title</string>
+    <string name="persons_not_found">No persons are avaiable now</string>
+    <string name="empty_tv_shows">No Tv Shows Available</string>
+    <string name="empty_persons">No Persons Available</string>
 </resources>

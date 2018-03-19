@@ -288,7 +288,7 @@ public class TvShowFragment extends Fragment implements View.OnClickListener {
             rlTvShowLayout.setVisibility(View.VISIBLE);
             setBackdropLayout();
         } else {
-            setErrorLayout(AppConstant.ErrorType.EMPTY, getString(R.string.empty_movies));
+            setErrorLayout(AppConstant.ErrorType.EMPTY, getString(R.string.empty_tv_shows));
         }
 
         rlTvShowLoading.setVisibility(View.GONE);

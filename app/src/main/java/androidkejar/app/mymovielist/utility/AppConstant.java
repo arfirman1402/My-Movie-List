@@ -49,5 +49,8 @@ public interface AppConstant {
     String TV_SHOW_ID   = "tv_show_id";
     String TV_SHOW_NAME = "tv_show_name";
 
+    String PERSON_ID    = "person_id";
+    String PERSON_NAME  = "person_name";
+
     enum ErrorType {CONNECTION, EMPTY}
 }
