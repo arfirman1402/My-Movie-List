@@ -63,7 +63,7 @@ public class PersonHolder extends RecyclerView.ViewHolder implements View.OnClic
 
     public void bindViewHolder(Person person) {
         tvPersonTitle.setText(person.getName());
-        if (!TextUtils.isEmpty(person.getProfilePath())) {
+        if (!TextUtils.isEmpty(person.getProfilePath()) && !person.getProfilePath().equals("null")) {
             CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(person.getProfilePath()), ivPersonPoster);
         }
     }

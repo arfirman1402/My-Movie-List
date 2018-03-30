@@ -47,7 +47,7 @@ public class CastHolder extends RecyclerView.ViewHolder {
     public void bindViewHolder(CreditCast cast) {
         tvCastName.setText(cast.getName());
         tvCastCharacter.setText(cast.getCharacter());
-        if (!TextUtils.isEmpty(cast.getProfilePath())) {
+        if (!TextUtils.isEmpty(cast.getProfilePath()) && !cast.getProfilePath().equals("null")) {
             CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(cast.getProfilePath()), tvCastImage);
         }
     }

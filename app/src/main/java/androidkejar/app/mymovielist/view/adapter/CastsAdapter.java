@@ -1,5 +1,6 @@
 package androidkejar.app.mymovielist.view.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -15,13 +16,14 @@ public class CastsAdapter extends RecyclerView.Adapter {
         this.mCasts = casts;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return CastHolder.createViewHolder(parent);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         CastHolder.castParent(holder).bindViewHolder(mCasts.get(position));
     }
 

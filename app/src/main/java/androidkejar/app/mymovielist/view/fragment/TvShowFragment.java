@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -196,9 +197,9 @@ public class TvShowFragment extends Fragment implements View.OnClickListener {
 
         mRandomList = tempRandomList;
 
-        if (mTvShows.get(mRandomList).getBackdropPath() != null) {
+        if (!TextUtils.isEmpty(mTvShows.get(mRandomList).getBackdropPath()) && !mTvShows.get(mRandomList).getBackdropPath().equals("null")) {
             CommonFunction.setImage(getContext(), RestApi.getUrlImage(mTvShows.get(mRandomList).getBackdropPath()), ivTvShowHeaderBackdrop);
-        } else {
+        } else if (!TextUtils.isEmpty(mTvShows.get(mRandomList).getPosterPath()) && !mTvShows.get(mRandomList).getPosterPath().equals("null")) {
             CommonFunction.setImage(getContext(), RestApi.getUrlImage(mTvShows.get(mRandomList).getPosterPath()), ivTvShowHeaderBackdrop);
         }
 

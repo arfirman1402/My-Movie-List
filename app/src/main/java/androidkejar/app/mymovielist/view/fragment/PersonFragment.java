@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -237,7 +238,7 @@ public class PersonFragment extends Fragment implements View.OnClickListener {
 
         mRandomList = tempRandomList;
 
-        if (mPersons.get(mRandomList).getProfilePath() != null) {
+        if (!TextUtils.isEmpty(mPersons.get(mRandomList).getProfilePath()) && !mPersons.get(mRandomList).getProfilePath().equals("null")) {
             CommonFunction.setImage(getContext(), RestApi.getUrlImage(mPersons.get(mRandomList).getProfilePath()), ivPersonHeaderBackdrop);
         }
 

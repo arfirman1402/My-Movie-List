@@ -42,7 +42,7 @@ public class CommonFunction {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_movie_poster);
         ImageView imageView = dialog.findViewById(R.id.iv_poster);
-        if (!TextUtils.isEmpty(imagePath)) {
+        if (!TextUtils.isEmpty(imagePath) && !imagePath.equals("null")) {
             CommonFunction.setImage(context, RestApi.getUrlImage(imagePath), imageView);
         }
         dialog.show();

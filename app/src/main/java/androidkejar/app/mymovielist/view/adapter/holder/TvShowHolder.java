@@ -63,7 +63,7 @@ public class TvShowHolder extends RecyclerView.ViewHolder implements View.OnClic
 
     public void bindViewHolder(TvShow tvShow) {
         tvTvShowTitle.setText(tvShow.getName());
-        if (!TextUtils.isEmpty(tvShow.getPosterPath())) {
+        if (!TextUtils.isEmpty(tvShow.getPosterPath()) && !tvShow.getPosterPath().equals("null")) {
             CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(tvShow.getPosterPath()), tvTvShowPoster);
         }
     }

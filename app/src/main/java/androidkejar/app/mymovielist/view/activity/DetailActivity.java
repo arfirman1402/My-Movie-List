@@ -213,13 +213,15 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setDataResponse(Movie movie) {
-        if (movie.getBackdropPath() != null) {
+        if (!TextUtils.isEmpty(movie.getBackdropPath()) && !movie.getBackdropPath().equals("null")) {
             CommonFunction.setImage(this, RestApi.getUrlImage(movie.getBackdropPath()), ivDetailMovieBackdrop);
-        } else {
+        } else if (!TextUtils.isEmpty(movie.getPosterPath()) && !movie.getPosterPath().equals("null")) {
             CommonFunction.setImage(this, RestApi.getUrlImage(movie.getPosterPath()), ivDetailMovieBackdrop);
         }
 
-        CommonFunction.setImage(this, RestApi.getUrlImage(movie.getPosterPath()), ivDetailMoviePoster);
+        if (!TextUtils.isEmpty(movie.getPosterPath()) && !movie.getPosterPath().equals("null")) {
+            CommonFunction.setImage(this, RestApi.getUrlImage(movie.getPosterPath()), ivDetailMoviePoster);
+        }
 
         tvDetailMovieOverview.setText(movie.getOverview());
         tvDetailMovieGenre.setText(getStringGenre(movie.getGenres()));

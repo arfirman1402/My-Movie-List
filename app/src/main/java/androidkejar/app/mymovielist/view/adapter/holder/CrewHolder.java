@@ -47,7 +47,7 @@ public class CrewHolder extends RecyclerView.ViewHolder {
     public void bindViewHolder(CreditCrew crew) {
         tvCrewName.setText(crew.getName());
         tvCrewJob.setText(crew.getJob());
-        if (!TextUtils.isEmpty(crew.getProfilePath())) {
+        if (!TextUtils.isEmpty(crew.getProfilePath()) && !crew.getProfilePath().equals("null")) {
             CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(crew.getProfilePath()), tvCrewImage);
         }
     }

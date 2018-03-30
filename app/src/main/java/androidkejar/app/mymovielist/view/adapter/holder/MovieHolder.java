@@ -64,7 +64,7 @@ public class MovieHolder extends RecyclerView.ViewHolder implements View.OnClick
 
     public void bindViewHolder(Movie movie) {
         tvMovieTitle.setText(movie.getTitle());
-        if (!TextUtils.isEmpty(movie.getPosterPath())) {
+        if (!TextUtils.isEmpty(movie.getPosterPath()) && !movie.getPosterPath().equals("null")) {
             CommonFunction.setImage(itemView.getContext(), RestApi.getUrlImage(movie.getPosterPath()), tvMoviePoster);
         }
     }
